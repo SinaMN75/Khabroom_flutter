@@ -1,11 +1,8 @@
 import "package:khabroom/main.dart";
 import "package:khabroom/utils/responsive.dart";
-import "package:khabroom/view/pages/contracts/my_contracts_page.dart";
 import "package:khabroom/view/pages/notifications/notification_page.dart";
 import "package:khabroom/view/pages/profile/personal_info/personal_info_page.dart";
 import "package:khabroom/view/pages/profile/profile_controller.dart";
-import "package:khabroom/view/pages/reservations/reservations_page.dart";
-import "package:khabroom/view/pages/wallet/wallet_page.dart";
 import "package:khabroom/view/widgets/app_widgets.dart";
 import "package:u/utilities.dart";
 
@@ -27,6 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
+    appBar: AppBar(title: Text(U.s.profile)),
     body: RefreshIndicator(
       onRefresh: c.init,
       child: SingleChildScrollView(
@@ -47,8 +45,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    _MenuRow(icon: Icons.confirmation_number_outlined, title: U.s.myReservations, onTap: () => UNavigator.push(const ReservationsPage())),
-                    _MenuRow(icon: Icons.assignment_outlined, title: U.s.dormContracts, onTap: () => UNavigator.push(const MyContractsPage())),
+                    _MenuRow(icon: Icons.confirmation_number_outlined, title: U.s.myReservations, onTap: () => AppShell.go(1)),
+                    _MenuRow(icon: Icons.assignment_outlined, title: U.s.dormContracts, onTap: () => AppShell.go(2)),
                     _MenuRow(icon: Icons.person_outline_rounded, title: U.s.personalInformation, onTap: () => UNavigator.push(const PersonalInfoPage())),
                     _MenuRow(icon: Icons.notifications_none_rounded, title: U.s.notifications, onTap: () => UNavigator.push(const NotificationPage())),
                     _MenuRow(icon: Icons.dark_mode_outlined, title: U.s.theme, onTap: () => UApp.isDarkTheme() ? UApp.toLightMode() : UApp.toDarkMode(), showDivider: false),
@@ -107,7 +105,7 @@ class _ProfilePageState extends State<ProfilePage> {
     radius: 18,
     padding: const EdgeInsets.all(18),
     gradient: const LinearGradient(colors: AppColors.gradient, begin: Alignment.topRight, end: Alignment.bottomLeft),
-    onTap: () => UNavigator.push(const WalletPage()),
+    onTap: () => AppShell.go(3),
     child: URow(
       children: <Widget>[
         UColumn(

@@ -1,3 +1,4 @@
+import "package:khabroom/utils/responsive.dart";
 import "package:khabroom/view/pages/login/login_mobile_verification/login_mobile_verification_controller.dart";
 import "package:khabroom/view/widgets/widgets.dart";
 import "package:u/utilities.dart";
@@ -27,10 +28,12 @@ class _LoginMobileVerificationPageState extends State<LoginMobileVerificationPag
       appBar: AppBar(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
-        child: UColumn(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            AppAuthHeader(
+        child: AppContent(
+          maxWidth: 420,
+          child: UColumn(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              AppAuthHeader(
               title: U.s.verificationCode,
               subtitle: U.s.weSentAVerificationCodeToThisNumber,
               trailing: UContainer(
@@ -74,8 +77,9 @@ class _LoginMobileVerificationPageState extends State<LoginMobileVerificationPag
                   ).fadeSlideIn(milliseconds: 600),
                 ],
               ),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );

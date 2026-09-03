@@ -1,11 +1,22 @@
 import "package:khabroom/main.dart";
 import "package:khabroom/utils/responsive.dart";
+import "package:khabroom/view/pages/contracts/my_contracts_page.dart";
 import "package:khabroom/view/pages/home/home_page.dart";
-import "package:khabroom/view/pages/notifications/notification_page.dart";
 import "package:khabroom/view/pages/profile/profile_page.dart";
 import "package:khabroom/view/pages/reservations/reservations_page.dart";
+import "package:khabroom/view/pages/splash/splash_page.dart";
+import "package:khabroom/view/pages/wallet/wallet_page.dart";
 import "package:khabroom/view/widgets/widgets.dart";
 import "package:u/utilities.dart";
+
+class AppDestination {
+  const AppDestination({required this.id, required this.title, required this.icon, required this.activeIcon});
+
+  final String id;
+  final String title;
+  final IconData icon;
+  final IconData activeIcon;
+}
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key, this.initialIndex = 0});
@@ -13,136 +24,133 @@ class MainPage extends StatefulWidget {
   final int initialIndex;
 
   @override
-  State<MainPage> createState() => MainPageState();
+  State<MainPage> createState() => _MainPageState();
 }
 
-class MainPageState extends State<MainPage> {
-  final RxInt selectedIndex = 0.obs;
+class _MainPageState extends State<MainPage> {
+  late final USideMenuController menu;
+
+  List<AppDestination> get _destinations => <AppDestination>[
+    AppDestination(id: "home", title: U.s.accommodation, icon: Icons.holiday_village_outlined, activeIcon: Icons.holiday_village_rounded),
+    AppDestination(id: "reservations", title: U.s.myReservations, icon: Icons.confirmation_number_outlined, activeIcon: Icons.confirmation_number_rounded),
+    AppDestination(id: "contracts", title: U.s.dormContracts, icon: Icons.assignment_outlined, activeIcon: Icons.assignment_rounded),
+    AppDestination(id: "wallet", title: U.s.wallet, icon: Icons.account_balance_wallet_outlined, activeIcon: Icons.account_balance_wallet_rounded),
+    AppDestination(id: "profile", title: U.s.profile, icon: Icons.person_outline_rounded, activeIcon: Icons.person_rounded),
+  ];
 
   @override
   void initState() {
-    selectedIndex(widget.initialIndex);
+    AppShell.tabIndex(widget.initialIndex);
+    menu = USideMenuController(selectedId: _destinations[widget.initialIndex].id);
     super.initState();
   }
 
-  List<_NavDestination> get _destinations => <_NavDestination>[
-    _NavDestination(icon: Icons.holiday_village_outlined, activeIcon: Icons.holiday_village_rounded, label: U.s.accommodation),
-    _NavDestination(icon: Icons.confirmation_number_outlined, activeIcon: Icons.confirmation_number_rounded, label: U.s.myReservations),
-    _NavDestination(icon: Icons.person_outline_rounded, activeIcon: Icons.person_rounded, label: U.s.profile),
-  ];
+  @override
+  void dispose() {
+    menu.dispose();
+    super.dispose();
+  }
+
+  void _select(int index) {
+    AppShell.go(index);
+    menu.select(_destinations[index].id);
+  }
 
   @override
   Widget build(BuildContext context) {
     final bool compact = AppResponsive.isCompact(context);
     return Obx(
       () => UScaffold(
-        appBar: compact ? null : _TopBar(destinations: _destinations, selectedIndex: selectedIndex.value, onSelect: selectedIndex.call),
-        body: IndexedStack(
-          index: selectedIndex.value,
-          children: const <Widget>[
-            HomePage(),
-            ReservationsPage(),
-            ProfilePage(),
+        safeArea: false,
+        body: URow(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            if (!compact) _sideMenu(context),
+            const Expanded(child: _ShellPages()),
           ],
         ),
-        bottomNavigationBar: compact ? _BottomBar(destinations: _destinations, selectedIndex: selectedIndex.value, onSelect: selectedIndex.call) : null,
+        bottomNavigationBar: compact ? _bottomBar() : null,
       ),
     );
   }
-}
 
-class _NavDestination {
-  const _NavDestination({required this.icon, required this.activeIcon, required this.label});
-
-  final IconData icon;
-  final IconData activeIcon;
-  final String label;
-}
-
-class _BottomBar extends StatelessWidget {
-  const _BottomBar({required this.destinations, required this.selectedIndex, required this.onSelect});
-
-  final List<_NavDestination> destinations;
-  final int selectedIndex;
-  final ValueChanged<int> onSelect;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _sideMenu(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
-    return UContainer(
-      color: scheme.surface,
-      border: Border(top: BorderSide(color: scheme.outlineVariant)),
-      padding: const EdgeInsets.only(top: 6, bottom: 6),
-      child: SafeArea(
-        top: false,
-        child: URow(
-          children: <Widget>[
-            for (int i = 0; i < destinations.length; i++)
-              UColumn(
-                expanded: 1,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Icon(i == selectedIndex ? destinations[i].activeIcon : destinations[i].icon, size: 22, color: i == selectedIndex ? scheme.primary : scheme.onSurfaceVariant),
-                  const SizedBox(height: 4),
-                  UTextLabelSmall(destinations[i].label, color: i == selectedIndex ? scheme.primary : scheme.onSurfaceVariant, fontWeight: i == selectedIndex ? FontWeight.w700 : FontWeight.w500),
-                ],
-              ).pSymmetric(vertical: 6).onTap(() => onSelect(i)),
-          ],
+    return USideMenu(
+      controller: menu,
+      enableSearch: false,
+      enablePinning: false,
+      showRailOnMobile: false,
+      header: URow(
+        children: <Widget>[
+          const AppBrandMark(size: 36),
+          const SizedBox(width: 10),
+          UTextTitleLarge(AppConstants.appName, color: scheme.onPrimary, expanded: 1),
+        ],
+      ),
+      profileName: "${U.user.firstName ?? ""} ${U.user.lastName ?? ""}".trim(),
+      profileSubtitle: U.user.phoneNumber,
+      isDarkMode: UApp.isDarkTheme(),
+      onToggleTheme: (bool dark) {
+        dark ? UApp.toDarkMode() : UApp.toLightMode();
+        setState(() {});
+      },
+      profileMenuItems: <UMenuItem>[
+        UMenuItem(id: "profile", title: U.s.personalInformation, icon: Icons.person_outline_rounded),
+        UMenuItem(id: "logout", title: U.s.logout, icon: Icons.logout_rounded),
+      ],
+      onProfileMenuSelected: (String id) async {
+        if (id == "profile") {
+          _select(_destinations.length - 1);
+          return;
+        }
+        await ULocalStorage.clear();
+        await UFileStorage.clear();
+        await UNavigator.offAll(const SplashPage());
+      },
+      items: <UMenuEntry>[
+        for (int i = 0; i < _destinations.length; i++)
+          UMenuItem(
+            id: _destinations[i].id,
+            title: _destinations[i].title,
+            icon: _destinations[i].icon,
+            selectedIcon: _destinations[i].activeIcon,
+            pinnable: false,
+            onTap: () => _select(i),
+          ),
+      ],
+    );
+  }
+
+  Widget _bottomBar() => BottomNavigationBar(
+    currentIndex: AppShell.tabIndex.value,
+    onTap: _select,
+    items: <BottomNavigationBarItem>[
+      for (final AppDestination destination in _destinations)
+        BottomNavigationBarItem(
+          icon: Icon(destination.icon, size: 21),
+          activeIcon: Icon(destination.activeIcon, size: 21),
+          label: destination.title,
         ),
-      ),
-    );
-  }
+    ],
+  );
 }
 
-class _TopBar extends StatelessWidget implements PreferredSizeWidget {
-  const _TopBar({required this.destinations, required this.selectedIndex, required this.onSelect});
-
-  final List<_NavDestination> destinations;
-  final int selectedIndex;
-  final ValueChanged<int> onSelect;
+/// Kept out of the shell's Obx so switching tabs doesn't rebuild the pages themselves.
+class _ShellPages extends StatelessWidget {
+  const _ShellPages();
 
   @override
-  Size get preferredSize => const Size.fromHeight(68);
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme scheme = Theme.of(context).colorScheme;
-    return UContainer(
-      height: 68,
-      color: scheme.surface,
-      border: Border(bottom: BorderSide(color: scheme.outlineVariant)),
-      child: AppContent(
-        child: URow(
-          children: <Widget>[
-            const AppBrandMark(size: 34),
-            const SizedBox(width: 10),
-            UTextTitleLarge(AppConstants.appName, color: scheme.onSurface),
-            const SizedBox(width: 28),
-            for (int i = 0; i < destinations.length; i++)
-              UContainer(
-                margin: const EdgeInsets.symmetric(horizontal: 3),
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-                radius: 11,
-                color: i == selectedIndex ? scheme.primaryContainer : null,
-                onTap: () => onSelect(i),
-                child: URow(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(i == selectedIndex ? destinations[i].activeIcon : destinations[i].icon, size: 17, color: i == selectedIndex ? scheme.primary : scheme.onSurfaceVariant),
-                    const SizedBox(width: 7),
-                    UTextLabelLarge(destinations[i].label, color: i == selectedIndex ? scheme.primary : scheme.onSurfaceVariant, fontWeight: i == selectedIndex ? FontWeight.w700 : FontWeight.w500),
-                  ],
-                ),
-              ),
-            const Spacer(),
-            UButton(
-              type: UButtonType.icon,
-              icon: const Icon(Icons.notifications_none_rounded),
-              onTap: () => UNavigator.push(const NotificationPage()),
-            ),
-          ],
-        ).pSymmetric(horizontal: 20),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Obx(
+    () => IndexedStack(
+      index: AppShell.tabIndex.value,
+      children: const <Widget>[
+        HomePage(),
+        ReservationsPage(),
+        MyContractsPage(),
+        WalletPage(),
+        ProfilePage(),
+      ],
+    ),
+  );
 }

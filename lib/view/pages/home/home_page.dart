@@ -1,7 +1,6 @@
 import "package:khabroom/main.dart";
 import "package:khabroom/utils/responsive.dart";
 import "package:khabroom/view/pages/dorm/dorm_detail/dorm_detail_page.dart";
-import "package:khabroom/view/pages/contracts/my_contracts_page.dart";
 import "package:khabroom/view/pages/home/home_controller.dart";
 import "package:khabroom/view/pages/hotel/hotel_detail/hotel_detail_page.dart";
 import "package:khabroom/view/pages/notifications/notification_page.dart";
@@ -26,9 +25,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final bool compact = AppResponsive.isCompact(context);
-    return UScaffold(
+  Widget build(BuildContext context) => UScaffold(
+      appBar: AppBar(
+        title: const Text(AppConstants.appName),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.notifications_none_rounded),
+            onPressed: () => UNavigator.push(const NotificationPage()),
+          ),
+          const SizedBox(width: 4),
+        ],
+      ),
       body: RefreshIndicator(
         onRefresh: c.init,
         child: SingleChildScrollView(
@@ -38,7 +45,7 @@ class _HomePageState extends State<HomePage> {
             child: UColumn(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                _header(context, compact).fadeSlideIn(),
+                _header(context).fadeSlideIn(),
                 const SizedBox(height: 20),
                 Obx(() => c.stayState.isLoaded() ? _stayBanner(context) : const SizedBox.shrink()),
                 AppSectionHeader(title: U.s.hotels, subtitle: U.s.hotelReservation).pOnly(bottom: 14),
@@ -74,29 +81,16 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
 
-  Widget _header(BuildContext context, bool compact) {
+  Widget _header(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
-    return URow(
+    return UColumn(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        UColumn(
-          expanded: 1,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            UTextBodySmall("${U.s.welcome} ${U.user.firstName ?? ""}".trim(), color: scheme.onSurfaceVariant),
-            const SizedBox(height: 4),
-            UTextHeadlineMedium(U.s.whereAreYouStaying, color: scheme.onSurface),
-          ],
-        ),
-        if (compact)
-          UButton(
-            type: UButtonType.icon,
-            icon: const Icon(Icons.notifications_none_rounded),
-            onTap: () => UNavigator.push(const NotificationPage()),
-          ),
+        UTextBodySmall("${U.s.welcome} ${U.user.firstName ?? ""}".trim(), color: scheme.onSurfaceVariant),
+        const SizedBox(height: 4),
+        UTextHeadlineMedium(U.s.whereAreYouStaying, color: scheme.onSurface),
       ],
     );
   }
@@ -140,7 +134,7 @@ class _HomePageState extends State<HomePage> {
       final UDormBedInvoiceResponse invoice = c.unpaidInvoices.first;
       final bool overdue = invoice.dueDate.isBefore(DateTime.now());
       return AppCard(
-        onTap: () => UNavigator.push(const MyContractsPage()),
+        onTap: () => AppShell.go(2),
         child: URow(
           children: <Widget>[
             UIconBackground(Icons.receipt_long_outlined, color: overdue ? scheme.error : AppColors.warning),
@@ -187,12 +181,19 @@ class _HotelSpotlight extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[cover, _body(context)],
             )
-          : URow(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                SizedBox(width: 300, child: cover),
-                UColumn(expanded: 1, crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[_body(context)]),
-              ],
+          : IntrinsicHeight(
+              child: URow(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  SizedBox(width: 272, child: cover),
+                  UColumn(
+                    expanded: 1,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[_body(context)],
+                  ),
+                ],
+              ),
             ),
     );
   }

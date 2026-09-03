@@ -1,6 +1,5 @@
 import "package:khabroom/utils/responsive.dart";
 import "package:khabroom/utils/status_helpers.dart";
-import "package:khabroom/view/pages/contracts/my_contracts_page.dart";
 import "package:khabroom/view/pages/reservations/reservation_detail/reservation_detail_page.dart";
 import "package:khabroom/view/pages/reservations/reservations_controller.dart";
 import "package:khabroom/view/widgets/app_widgets.dart";
@@ -24,6 +23,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
+    appBar: AppBar(title: Text(U.s.myReservations)),
     body: RefreshIndicator(
       onRefresh: c.read,
       child: SingleChildScrollView(
@@ -34,12 +34,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
           child: UColumn(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              AppSectionHeader(
-                title: U.s.myReservations,
-                actionTitle: U.s.dormContracts,
-                onAction: () => UNavigator.push(const MyContractsPage()),
-              ),
-              const SizedBox(height: 16),
               Obx(
                 () => USegmentedControl<int>(
                   selectedValue: c.selectedTab.value,

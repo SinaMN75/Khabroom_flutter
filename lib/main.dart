@@ -72,12 +72,14 @@ abstract class Core {
     brightness: scheme.brightness,
     scaffoldBackgroundColor: background,
     appBarTheme: AppBarTheme(
-      backgroundColor: background,
+      backgroundColor: scheme.surface,
       foregroundColor: scheme.onSurface,
-      surfaceTintColor: background,
+      surfaceTintColor: scheme.surface,
       elevation: 0,
       scrolledUnderElevation: 0,
       centerTitle: true,
+      // Hairline under the bar so it reads as a separate surface next to the side menu.
+      shape: Border(bottom: BorderSide(color: scheme.outlineVariant)),
       iconTheme: IconThemeData(color: scheme.onSurface),
       titleTextStyle: TextStyle(fontFamily: UFonts.vazir.fontFamily, color: scheme.onSurface, fontSize: 16, fontWeight: FontWeight.bold),
     ),
@@ -151,6 +153,15 @@ abstract class Core {
       ),
     ),
     listTileTheme: const ListTileThemeData(contentPadding: EdgeInsets.symmetric(horizontal: 8)),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: scheme.surface,
+      selectedItemColor: scheme.primary,
+      unselectedItemColor: scheme.onSurfaceVariant,
+      selectedLabelStyle: TextStyle(fontFamily: UFonts.vazir.fontFamily, fontSize: 10.5, fontWeight: FontWeight.w700),
+      unselectedLabelStyle: TextStyle(fontFamily: UFonts.vazir.fontFamily, fontSize: 10.5, fontWeight: FontWeight.w500),
+      type: BottomNavigationBarType.fixed,
+      elevation: 0,
+    ),
     dialogTheme: DialogThemeData(
       backgroundColor: scheme.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -169,6 +180,13 @@ abstract class AppConstants {
 
   /// Prices and wallet balances are stored in Rial; the app shows Toman everywhere.
   static const bool amountsAreRial = true;
+}
+
+/// The shell's selected tab. Pages switch tabs through this instead of pushing a duplicate route.
+abstract class AppShell {
+  static final RxInt tabIndex = 0.obs;
+
+  static void go(int index) => tabIndex(index);
 }
 
 /// Single place that turns a stored amount into the text the user reads.

@@ -1,37 +1,41 @@
 import "package:u/utilities.dart";
 
-/// Layout tiers the whole app reads from: phones get one column and a bottom bar,
-/// wider windows get a centred content column and a top bar.
+/// Layout tiers the shell reads from: phones get a bottom bar, wider windows get the side menu.
 enum AppLayout { compact, medium, expanded }
 
 abstract class AppResponsive {
   static const double compactMaxWidth = 840;
-  static const double mediumMaxWidth = 1180;
+  static const double expandedMinWidth = 1280;
   static const double contentMaxWidth = 1120;
-  static const double readableMaxWidth = 720;
-  static const double sideCardWidth = 360;
+  static const double readableMaxWidth = 760;
+
+  /// Content-area widths at which a block can afford more columns. These are measured
+  /// against the space a widget actually gets, not the window, because the side menu
+  /// eats ~280px on desktop.
+  static const double twoColumnWidth = 560;
+  static const double threeColumnWidth = 900;
+  static const double sideBySideWidth = 880;
+  static const double sideCardWidth = 320;
 
   static AppLayout of(BuildContext context) {
     final double width = MediaQuery.sizeOf(context).width;
     if (width < compactMaxWidth) return AppLayout.compact;
-    if (width < mediumMaxWidth) return AppLayout.medium;
+    if (width < expandedMinWidth) return AppLayout.medium;
     return AppLayout.expanded;
   }
 
   static bool isCompact(BuildContext context) => of(context) == AppLayout.compact;
 
-  static bool isExpanded(BuildContext context) => of(context) == AppLayout.expanded;
-
-  static int columns(BuildContext context) => switch (of(context)) {
-    AppLayout.compact => 1,
-    AppLayout.medium => 2,
-    AppLayout.expanded => 3,
-  };
-
   static EdgeInsets pagePadding(BuildContext context) =>
-      isCompact(context) ? const EdgeInsets.fromLTRB(16, 8, 16, 32) : const EdgeInsets.fromLTRB(28, 20, 28, 48);
+      isCompact(context) ? const EdgeInsets.fromLTRB(16, 16, 16, 32) : const EdgeInsets.fromLTRB(32, 24, 32, 48);
 
   static double gap(BuildContext context) => isCompact(context) ? 14 : 20;
+
+  static int columnsFor(double width) {
+    if (width >= threeColumnWidth) return 3;
+    if (width >= twoColumnWidth) return 2;
+    return 1;
+  }
 }
 
 /// Centres a page's content and caps its width so wide windows don't stretch lines of text.
@@ -51,8 +55,7 @@ class AppContent extends StatelessWidget {
   );
 }
 
-/// Reflows its children from one column on phones up to three on wide screens,
-/// letting each item keep its natural height.
+/// Reflows its children by the width it is actually given, so the side menu can't squash it.
 class AppGrid extends StatelessWidget {
   const AppGrid({required this.children, super.key, this.spacing = 16, this.columns});
 
@@ -63,7 +66,7 @@ class AppGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (BuildContext context, BoxConstraints constraints) {
-      final int count = columns ?? AppResponsive.columns(context);
+      final int count = columns ?? AppResponsive.columnsFor(constraints.maxWidth);
       final double itemWidth = (constraints.maxWidth - spacing * (count - 1)) / count;
       return Wrap(
         spacing: spacing,
@@ -76,7 +79,7 @@ class AppGrid extends StatelessWidget {
   );
 }
 
-/// Detail-page skeleton: a single scroll on phones, content plus a sticky side card on desktop.
+/// Detail-page skeleton: one column when narrow, content plus a side card when there is room.
 class AppDetailLayout extends StatelessWidget {
   const AppDetailLayout({required this.content, required this.side, super.key, this.compactSideFirst = false});
 
@@ -85,20 +88,22 @@ class AppDetailLayout extends StatelessWidget {
   final bool compactSideFirst;
 
   @override
-  Widget build(BuildContext context) {
-    if (AppResponsive.isCompact(context))
-      return UColumn(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: compactSideFirst ? <Widget>[side, const SizedBox(height: 20), content] : <Widget>[content, const SizedBox(height: 20), side],
-      );
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (BuildContext context, BoxConstraints constraints) {
+      if (constraints.maxWidth < AppResponsive.sideBySideWidth)
+        return UColumn(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: compactSideFirst ? <Widget>[side, const SizedBox(height: 20), content] : <Widget>[content, const SizedBox(height: 20), side],
+        );
 
-    return URow(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Expanded(child: content),
-        const SizedBox(width: 24),
-        SizedBox(width: AppResponsive.sideCardWidth, child: side),
-      ],
-    );
-  }
+      return URow(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(child: content),
+          const SizedBox(width: 24),
+          SizedBox(width: AppResponsive.sideCardWidth, child: side),
+        ],
+      );
+    },
+  );
 }
