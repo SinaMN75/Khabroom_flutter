@@ -23,16 +23,11 @@ Future<void> main() async {
     locale = "fa";
   }
   runApp(
-    Center(
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 700),
-        child: UMaterialApp(
-          locale: Locale(locale),
-          lightThemeData: Core.lightThemeData,
-          darkThemeData: Core.darkThemeData,
-          home: const SplashPage(),
-        ),
-      ),
+    UMaterialApp(
+      locale: Locale(locale),
+      lightThemeData: Core.lightThemeData,
+      darkThemeData: Core.darkThemeData,
+      home: const SplashPage(),
     ),
   );
 }
@@ -166,11 +161,18 @@ abstract class Core {
 }
 
 abstract class AppConstants {
-  static const String baseUrl = "https://api.khabroom.com/api";
+  static const String appName = "خوابروم";
+  static const String baseUrl = "https://api.sinamn75.com/api";
   static const String apiKey = "123";
   static const String termsUrl = "https://khabroom.com/terms";
   static const String privacyUrl = "https://khabroom.com/privacy";
+
+  /// Prices and wallet balances are stored in Rial; the app shows Toman everywhere.
+  static const bool amountsAreRial = true;
 }
+
+/// Single place that turns a stored amount into the text the user reads.
+String money(double? amount) => AppConstants.amountsAreRial ? amount.rial() : amount.toman();
 
 abstract class AppImages {
   static const String _base = "lib/assets/images";
