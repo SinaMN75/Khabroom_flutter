@@ -135,11 +135,11 @@ class _DormDetailPageState extends State<DormDetailPage> {
             children: <Widget>[
               UIconBackground(Icons.handshake_outlined, color: scheme.primary),
               const SizedBox(width: 12),
-              UTextTitleSmall(U.s.dormReservationIsInPersonOnly, color: scheme.onSurface, expanded: 1),
+              UTextTitleSmall(U.s.dormBedsAreBookedInPersonOnly, color: scheme.onSurface, expanded: 1),
             ],
           ),
           const SizedBox(height: 12),
-          UTextBodySmall(U.s.dormReservationInPersonNote, color: scheme.onSurfaceVariant),
+          UTextBodySmall(U.s.toTakeABedCallTheDormOrVisitInPersonOnceYouAreRegisteredTheContractAndItsMonthlyInvoicesShowUpRightHere, color: scheme.onSurfaceVariant),
           const SizedBox(height: 16),
           AppInfoRow(label: U.s.monthlyRent, value: money(dorm.minMonthlyRent), emphasize: true),
           if (dorm.jsonData.visitingHours != null) AppInfoRow(label: U.s.visitingHours, value: dorm.jsonData.visitingHours!),
@@ -192,7 +192,7 @@ class _RoomRow extends StatelessWidget {
             URow(
               children: <Widget>[
                 UTextTitleSmall(room.title, color: scheme.onSurface, expanded: 1),
-                AppChip(label: "${beds.length.toString().toPersianNumber()} ${U.s.bedTitle}", filled: false),
+                AppChip(label: "${beds.length.toString().toPersianNumber()} ${U.s.bed}", filled: false),
               ],
             ),
             if (room.capacity > 0 || room.jsonData.floor != null) ...<Widget>[

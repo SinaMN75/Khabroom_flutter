@@ -73,7 +73,7 @@ class ReservationDetailController extends UBaseController {
   }
 
   Future<void> cancel() async {
-    final bool confirmed = await UNavigator.confirmAsync(title: U.s.cancelReservation, message: U.s.cancellationRefundNote, destructive: true);
+    final bool confirmed = await UNavigator.confirmAsync(title: U.s.cancelReservation, message: U.s.cancelBeforeTheFreeWindowEndsAndTheFullAmountGoesBackToYourWallet, destructive: true);
     if (!confirmed) return;
 
     ULoading.show();

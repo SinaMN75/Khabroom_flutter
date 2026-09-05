@@ -61,17 +61,17 @@ class _BookingPageState extends State<BookingPage> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             AppInfoRow(label: U.s.hotels, value: widget.hotel.title),
-            AppInfoRow(label: U.s.roomTitle, value: widget.availability.room.title),
+            AppInfoRow(label: U.s.room, value: widget.availability.room.title),
             AppInfoRow(label: U.s.checkInDate, value: widget.checkInDate.toJalaliDate()),
             AppInfoRow(label: U.s.checkOutDate, value: widget.checkOutDate.toJalaliDate()),
-            AppInfoRow(label: U.s.nightsCountLabel, value: "${widget.availability.nightCount.toString().toPersianNumber()} ${U.s.night}"),
-            AppInfoRow(label: U.s.guestCount, value: widget.guestCount.toString().toPersianNumber()),
+            AppInfoRow(label: U.s.numberOfNights, value: "${widget.availability.nightCount.toString().toPersianNumber()} ${U.s.night}"),
+            AppInfoRow(label: U.s.numberOfGuests, value: widget.guestCount.toString().toPersianNumber()),
           ],
         ),
       ),
       const SizedBox(height: 16),
       AppSectionCard(
-        title: U.s.guestInformation,
+        title: U.s.guestDetails,
         icon: Icons.people_outline_rounded,
         child: Obx(
           () => UColumn(
@@ -101,12 +101,12 @@ class _BookingPageState extends State<BookingPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          UTextLabelMedium(index == 0 ? U.s.mainGuest : "${U.s.guestNumber} ${(index + 1).toString().toPersianNumber()}", color: scheme.onSurfaceVariant),
+          UTextLabelMedium(index == 0 ? U.s.mainGuest : "${U.s.guest} ${(index + 1).toString().toPersianNumber()}", color: scheme.onSurfaceVariant),
           const SizedBox(height: 8),
           UTextField(labelText: U.s.fullName, controller: form.controllerName),
           const SizedBox(height: 10),
           UTextField(
-            labelText: U.s.nationalCodeOptional,
+            labelText: U.s.nationalIdOptional,
             controller: form.controllerNationalCode,
             keyboardType: TextInputType.number,
             maxLength: 10,
@@ -132,7 +132,7 @@ class _BookingPageState extends State<BookingPage> {
           const Divider(height: 22),
           AppInfoRow(label: U.s.totalPrice, value: money(_total), emphasize: true, valueColor: scheme.primary),
           const SizedBox(height: 16),
-          UTextTitleSmall(U.s.choosePaymentMethod, color: scheme.onSurface),
+          UTextTitleSmall(U.s.chooseAPaymentMethod, color: scheme.onSurface),
           const SizedBox(height: 10),
           Obx(
             () => UColumn(
@@ -143,7 +143,7 @@ class _BookingPageState extends State<BookingPage> {
                   context,
                   selected: c.useWallet.value,
                   title: U.s.payFromWallet,
-                  subtitle: c.walletState.isLoaded() ? "${U.s.walletBalance}: ${money(c.walletBalance)}" : U.s.payFromWalletBalance,
+                  subtitle: c.walletState.isLoaded() ? "${U.s.walletBalance}: ${money(c.walletBalance)}" : U.s.payFromYourWalletBalance,
                   icon: Icons.account_balance_wallet_outlined,
                   enabled: c.canPayFromWallet(_total),
                   onTap: () => c.useWallet(true),
@@ -152,8 +152,8 @@ class _BookingPageState extends State<BookingPage> {
                 _paymentOption(
                   context,
                   selected: !c.useWallet.value,
-                  title: U.s.payWithGateway,
-                  subtitle: U.s.payOnlineWithCard,
+                  title: U.s.payWithTheBankGateway,
+                  subtitle: U.s.payOnlineWithABankCard,
                   icon: Icons.credit_card_rounded,
                   enabled: true,
                   onTap: () => c.useWallet(false),

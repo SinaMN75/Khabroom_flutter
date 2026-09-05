@@ -54,7 +54,7 @@ class AppLegalNote extends StatelessWidget {
     return UColumn(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        UTextBodySmall(U.s.byContinuingYouAcceptTheTermsAndPrivacyPolicy, color: scheme.onSurfaceVariant, textAlign: TextAlign.center),
+        UTextBodySmall(U.s.byContinuingYouAcceptTheTermsAndConditionsAndThePrivacyPolicy, color: scheme.onSurfaceVariant, textAlign: TextAlign.center),
         URow(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,

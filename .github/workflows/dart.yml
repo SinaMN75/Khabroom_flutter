@@ -1,0 +1,36 @@
+name: Dart
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build & Release
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '17.x'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.0'
+      - name: Init Utilities
+        run: git submodule update --init
+      - name: Get Utilities
+        run: git submodule update --remote -f
+      - name: Get Packages
+        run: flutter pub get
+      - name: Build Web
+        run: flutter build web --release --pwa-strategy=none
+      - name: Deploy Production
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          local-dir: Build/web/
+          server: 185.204.169.91
+          username: ftp_app_khabroom_com
+          password: ftp_app_khabroom_com
+          timeout: 180000

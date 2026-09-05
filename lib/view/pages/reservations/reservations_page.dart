@@ -45,11 +45,11 @@ class _ReservationsPageState extends State<ReservationsPage> {
               AppStateView(
                 state: c.reservationState,
                 onRetry: c.read,
-                emptyTitle: U.s.youHaveNoReservations,
+                emptyTitle: U.s.youHaveNoReservationsYet,
                 emptyIcon: Icons.confirmation_number_outlined,
                 onLoaded: (BuildContext context) => Obx(() {
                   final List<UHotelReservationResponse> items = c.selectedTab.value == 0 ? c.upcoming : c.past;
-                  if (items.isEmpty) return AppEmpty(title: U.s.youHaveNoReservations, icon: Icons.confirmation_number_outlined);
+                  if (items.isEmpty) return AppEmpty(title: U.s.youHaveNoReservationsYet, icon: Icons.confirmation_number_outlined);
                   return UColumn(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[

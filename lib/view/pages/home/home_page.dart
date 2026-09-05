@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
                 AppStateView(
                   state: c.hotelState,
                   onRetry: c.readHotels,
-                  emptyTitle: U.s.noPlacesYet,
+                  emptyTitle: U.s.noPlacesHaveBeenAddedYet,
                   emptyIcon: Icons.apartment_outlined,
                   onLoaded: (BuildContext context) => UColumn(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -63,11 +63,11 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                AppSectionHeader(title: U.s.dorms, subtitle: U.s.dormReservationIsInPersonOnly).pOnly(bottom: 14),
+                AppSectionHeader(title: U.s.dorms, subtitle: U.s.dormBedsAreBookedInPersonOnly).pOnly(bottom: 14),
                 AppStateView(
                   state: c.dormState,
                   onRetry: c.readDorms,
-                  emptyTitle: U.s.noPlacesYet,
+                  emptyTitle: U.s.noPlacesHaveBeenAddedYet,
                   emptyIcon: Icons.bedroom_parent_outlined,
                   onLoaded: (BuildContext context) => AppGrid(
                     children: <Widget>[

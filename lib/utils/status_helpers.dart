@@ -16,13 +16,13 @@ abstract class AppStatus {
     if (tags.contains(TagHotelInvoice.refunded.number)) return (U.s.refundAmount, AppTone.neutral);
     if (!tags.contains(TagHotelInvoice.notPaid.number)) return (U.s.paid, AppTone.positive);
     if (dueDate.isBefore(DateTime.now())) return (U.s.overdue, AppTone.danger);
-    return (U.s.notPaid, AppTone.warning);
+    return (U.s.unpaid, AppTone.warning);
   }
 
   static (String, AppTone) dormInvoice(List<int> tags, DateTime dueDate) {
     if (!tags.contains(TagDormBedInvoice.notPaid.number)) return (U.s.paid, AppTone.positive);
     if (dueDate.isBefore(DateTime.now())) return (U.s.overdue, AppTone.danger);
-    return (U.s.notPaid, AppTone.warning);
+    return (U.s.unpaid, AppTone.warning);
   }
 }
 

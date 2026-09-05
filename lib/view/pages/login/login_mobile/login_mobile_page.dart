@@ -15,7 +15,7 @@ class _LoginMobilePageState extends State<LoginMobilePage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
-    appBar: AppBar(title: Text(U.s.login)),
+    appBar: AppBar(title: Text(U.s.logIn)),
     body: SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: AppContent(
@@ -24,7 +24,7 @@ class _LoginMobilePageState extends State<LoginMobilePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             AppAuthHeader(
-              title: U.s.loginToYourAccount,
+              title: U.s.logInToYourAccount,
               subtitle: U.s.pleaseEnterYourMobileNumberToLogIn,
             ).fadeSlideIn(),
             const SizedBox(height: 28),
@@ -43,7 +43,7 @@ class _LoginMobilePageState extends State<LoginMobilePage> {
                   ).ltr().fadeSlideIn(milliseconds: 200),
                   const SizedBox(height: 16),
                   UButton(
-                    title: U.s.continueWord,
+                    title: U.s.continue_,
                     fullWidth: true,
                     onTap: c.submit,
                   ).fadeSlideIn(milliseconds: 400),

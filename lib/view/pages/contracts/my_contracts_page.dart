@@ -51,7 +51,7 @@ class _MyContractsPageState extends State<MyContractsPage> {
   Widget _contractCard(BuildContext context, UDormBedContractResponse contract) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     final List<UDormBedInvoiceResponse> invoices = c.invoicesByContract[contract.id] ?? <UDormBedInvoiceResponse>[];
-    final String dormTitle = contract.bed?.room?.dorm?.title ?? U.s.dormTitle;
+    final String dormTitle = contract.bed?.room?.dorm?.title ?? U.s.dorm;
 
     return AppCard(
       child: UColumn(
@@ -69,7 +69,7 @@ class _MyContractsPageState extends State<MyContractsPage> {
                   UTextTitleMedium(dormTitle, color: scheme.onSurface),
                   const SizedBox(height: 5),
                   UTextBodySmall(
-                    "${contract.bed?.room?.title ?? U.s.roomTitle} · ${U.s.bedTitle} ${contract.bed?.title.toPersianNumber() ?? ""}",
+                    "${contract.bed?.room?.title ?? U.s.room} · ${U.s.bed} ${contract.bed?.title.toPersianNumber() ?? ""}",
                     color: scheme.onSurfaceVariant,
                   ),
                 ],
@@ -138,7 +138,7 @@ class _MyContractsPageState extends State<MyContractsPage> {
                 children: <Widget>[
                   UButton(expanded: 1, title: U.s.payFromWallet, type: UButtonType.outlined, onTap: () => c.payFromWallet(invoice)),
                   const SizedBox(width: 10),
-                  UButton(expanded: 1, title: U.s.payWithGateway, onTap: () => c.payWithGateway(invoice)),
+                  UButton(expanded: 1, title: U.s.payWithTheBankGateway, onTap: () => c.payWithGateway(invoice)),
                 ],
               ),
             ],

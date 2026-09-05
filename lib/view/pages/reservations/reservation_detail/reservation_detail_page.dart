@@ -48,11 +48,11 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     if (r.jsonData.reservationCode != null) AppInfoRow(label: U.s.reservationCode, value: r.jsonData.reservationCode!),
-                    AppInfoRow(label: U.s.roomTitle, value: r.room?.title ?? "-"),
+                    AppInfoRow(label: U.s.room, value: r.room?.title ?? "-"),
                     AppInfoRow(label: U.s.checkInDate, value: r.checkInDate.toJalaliDate()),
                     AppInfoRow(label: U.s.checkOutDate, value: r.checkOutDate.toJalaliDate()),
-                    AppInfoRow(label: U.s.nightsCountLabel, value: "${(r.jsonData.nightCount ?? 0).toString().toPersianNumber()} ${U.s.night}"),
-                    AppInfoRow(label: U.s.guestCount, value: r.guestCount.toString().toPersianNumber()),
+                    AppInfoRow(label: U.s.numberOfNights, value: "${(r.jsonData.nightCount ?? 0).toString().toPersianNumber()} ${U.s.night}"),
+                    AppInfoRow(label: U.s.numberOfGuests, value: r.guestCount.toString().toPersianNumber()),
                     AppInfoRow(label: U.s.totalPrice, value: money(r.totalPrice), emphasize: true),
                   ],
                 ),
@@ -60,7 +60,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
               if (r.jsonData.guests.isNotEmpty) ...<Widget>[
                 const SizedBox(height: 16),
                 AppSectionCard(
-                  title: U.s.guestInformation,
+                  title: U.s.guestDetails,
                   icon: Icons.people_outline_rounded,
                   child: UColumn(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -86,7 +86,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       AppInfoRow(label: U.s.date, value: r.jsonData.cancelledAt!.toJalaliDate()),
-                      AppInfoRow(label: U.s.cancellationPenalty, value: money(r.jsonData.cancellationPenalty)),
+                      AppInfoRow(label: U.s.cancellationFee, value: money(r.jsonData.cancellationPenalty)),
                       AppInfoRow(label: U.s.refundAmount, value: money(r.jsonData.refundAmount), emphasize: true),
                     ],
                   ),
@@ -170,7 +170,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
               children: <Widget>[
                 UButton(expanded: 1, title: U.s.payFromWallet, type: UButtonType.outlined, onTap: c.payFromWallet),
                 const SizedBox(width: 10),
-                UButton(expanded: 1, title: U.s.payWithGateway, onTap: c.payWithGateway),
+                UButton(expanded: 1, title: U.s.payWithTheBankGateway, onTap: c.payWithGateway),
               ],
             ),
           ],

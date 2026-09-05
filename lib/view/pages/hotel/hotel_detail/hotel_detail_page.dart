@@ -118,10 +118,10 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              AppInfoRow(label: U.s.freeCancellationUntilHoursBeforeCheckIn, value: "${hotel.jsonData.cancellationFreeHours.toString().toPersianNumber()} ${U.s.hour}"),
-              AppInfoRow(label: U.s.cancellationPenalty, value: "${hotel.jsonData.cancellationPenaltyNights.toString().toPersianNumber()} ${U.s.night}"),
+              AppInfoRow(label: U.s.freeCancellationUpToAFewHoursBeforeCheckIn, value: "${hotel.jsonData.cancellationFreeHours.toString().toPersianNumber()} ${U.s.hour}"),
+              AppInfoRow(label: U.s.cancellationFee, value: "${hotel.jsonData.cancellationPenaltyNights.toString().toPersianNumber()} ${U.s.night}"),
               const SizedBox(height: 4),
-              UTextBodySmall(U.s.cancellationRefundNote, color: scheme.onSurfaceVariant),
+              UTextBodySmall(U.s.cancelBeforeTheFreeWindowEndsAndTheFullAmountGoesBackToYourWallet, color: scheme.onSurfaceVariant),
             ],
           ),
         ),
@@ -169,10 +169,10 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
   }
 
   Widget _rooms(BuildContext context) => Obx(() {
-    if (!c.hasDates) return UTextBodySmall(U.s.selectYourDatesToSeePrices, color: Theme.of(context).colorScheme.onSurfaceVariant);
+    if (!c.hasDates) return UTextBodySmall(U.s.pickYourDatesToSeePrices, color: Theme.of(context).colorScheme.onSurfaceVariant);
     if (c.availabilityState.isLoading()) return const UProgressCircular(size: 28, strokeWidth: 3).alignAtCenter().pSymmetric(vertical: 20);
     if (c.availabilityState.isError()) return UErrorRetry(onTap: c.readAvailability);
-    if (c.availability.isEmpty) return AppEmpty(title: U.s.noRoomsAvailableForTheseDates, icon: Icons.bed_outlined);
+    if (c.availability.isEmpty) return AppEmpty(title: U.s.noRoomsAreAvailableForTheseDates, icon: Icons.bed_outlined);
 
     return UColumn(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -245,7 +245,7 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
             ],
           ),
           const SizedBox(height: 14),
-          UTextTitleSmall(U.s.guestCount, color: scheme.onSurface),
+          UTextTitleSmall(U.s.numberOfGuests, color: scheme.onSurface),
           const SizedBox(height: 8),
           Obx(
             () => URow(
@@ -259,7 +259,7 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
           const SizedBox(height: 14),
           Obx(
             () => AppInfoRow(
-              label: U.s.nightsCountLabel,
+              label: U.s.numberOfNights,
               value: "${c.nightCount.toString().toPersianNumber()} ${U.s.night}",
               emphasize: true,
             ),
@@ -323,9 +323,9 @@ class _RoomTile extends StatelessWidget {
           ],
           const SizedBox(height: 12),
           if (onBook == null)
-            AppChip(label: item.fitsGuestCount ? U.s.roomIsFullyBooked : U.s.guestCountExceedsCapacity, tone: AppTone.danger)
+            AppChip(label: item.fitsGuestCount ? U.s.thisRoomIsFullForTheseDates : U.s.overTheRoomCapacity, tone: AppTone.danger)
           else
-            UButton(title: U.s.reserveThisRoom, fullWidth: true, onTap: onBook),
+            UButton(title: U.s.bookThisRoom, fullWidth: true, onTap: onBook),
         ],
       ),
     );
