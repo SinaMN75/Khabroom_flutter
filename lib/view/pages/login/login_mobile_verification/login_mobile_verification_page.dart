@@ -70,7 +70,7 @@ class _LoginMobileVerificationPageState extends State<LoginMobileVerificationPag
                       UButton(
                         type: UButtonType.text,
                         title: U.s.changeMobileNumber,
-                        textStyle: TextStyle(fontFamily: UFonts.vazir.fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: scheme.onSurfaceVariant),
+                        textStyle: TextStyle(fontFamily: U.vazir.fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: scheme.onSurfaceVariant),
                         onTap: () => UNavigator.back(),
                       ),
                     ],

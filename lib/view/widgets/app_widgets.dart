@@ -49,7 +49,7 @@ class AppSectionHeader extends StatelessWidget {
           UButton(
             title: actionTitle,
             type: UButtonType.text,
-            textStyle: TextStyle(fontFamily: UFonts.vazir.fontFamily, fontSize: 12.5, fontWeight: FontWeight.w600, color: scheme.primary),
+            textStyle: TextStyle(fontFamily: U.vazir.fontFamily, fontSize: 12.5, fontWeight: FontWeight.w600, color: scheme.primary),
             onTap: onAction,
           ),
       ],

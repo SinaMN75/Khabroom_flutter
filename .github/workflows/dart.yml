@@ -25,7 +25,7 @@ jobs:
       - name: Get Packages
         run: flutter pub get
       - name: Build Web
-        run: flutter build web --release --pwa-strategy=none
+        run: flutter build web --release --no-web-resources-cdn
       - name: Deploy Production
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:

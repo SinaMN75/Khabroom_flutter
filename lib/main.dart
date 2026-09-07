@@ -78,10 +78,9 @@ abstract class Core {
       elevation: 0,
       scrolledUnderElevation: 0,
       centerTitle: true,
-      // Hairline under the bar so it reads as a separate surface next to the side menu.
       shape: Border(bottom: BorderSide(color: scheme.outlineVariant)),
       iconTheme: IconThemeData(color: scheme.onSurface),
-      titleTextStyle: TextStyle(fontFamily: UFonts.vazir.fontFamily, color: scheme.onSurface, fontSize: 16, fontWeight: FontWeight.bold),
+      titleTextStyle: TextStyle(fontFamily: U.vazir.fontFamily, color: scheme.onSurface, fontSize: 16, fontWeight: FontWeight.bold),
     ),
     dividerTheme: DividerThemeData(color: scheme.outlineVariant, space: 0, thickness: 1),
     cardTheme: CardThemeData(
@@ -96,7 +95,7 @@ abstract class Core {
       ),
     ),
     colorScheme: scheme,
-    fontFamily: UFonts.vazir.fontFamily,
+    fontFamily: U.vazir.fontFamily,
     textTheme: TextTheme(
       displayLarge: TextStyle(fontSize: 38, fontWeight: FontWeight.bold, letterSpacing: -0.6, color: scheme.onSurface),
       displayMedium: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, letterSpacing: -0.5, color: scheme.onSurface),
@@ -136,8 +135,8 @@ abstract class Core {
         borderSide: BorderSide(color: scheme.error, width: 1.2),
       ),
       outlineBorder: const BorderSide(color: Colors.transparent),
-      labelStyle: TextStyle(fontFamily: UFonts.vazir.fontFamily, color: scheme.onSurfaceVariant, fontSize: 12),
-      hintStyle: TextStyle(fontFamily: UFonts.vazir.fontFamily, color: scheme.onSurfaceVariant, fontSize: 13),
+      labelStyle: TextStyle(fontFamily: U.vazir.fontFamily, color: scheme.onSurfaceVariant, fontSize: 12),
+      hintStyle: TextStyle(fontFamily: U.vazir.fontFamily, color: scheme.onSurfaceVariant, fontSize: 13),
       filled: true,
       fillColor: scheme.surface,
       contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -145,7 +144,7 @@ abstract class Core {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         foregroundColor: scheme.onPrimary,
-        textStyle: TextStyle(fontFamily: UFonts.vazir.fontFamily, fontSize: 14.5, fontWeight: FontWeight.w600),
+        textStyle: TextStyle(fontFamily: U.vazir.fontFamily, fontSize: 14.5, fontWeight: FontWeight.w600),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
         backgroundColor: scheme.primary,
         elevation: 0,
@@ -157,8 +156,8 @@ abstract class Core {
       backgroundColor: scheme.surface,
       selectedItemColor: scheme.primary,
       unselectedItemColor: scheme.onSurfaceVariant,
-      selectedLabelStyle: TextStyle(fontFamily: UFonts.vazir.fontFamily, fontSize: 10.5, fontWeight: FontWeight.w700),
-      unselectedLabelStyle: TextStyle(fontFamily: UFonts.vazir.fontFamily, fontSize: 10.5, fontWeight: FontWeight.w500),
+      selectedLabelStyle: TextStyle(fontFamily: U.vazir.fontFamily, fontSize: 10.5, fontWeight: FontWeight.w700),
+      unselectedLabelStyle: TextStyle(fontFamily: U.vazir.fontFamily, fontSize: 10.5, fontWeight: FontWeight.w500),
       type: BottomNavigationBarType.fixed,
       elevation: 0,
     ),
@@ -177,19 +176,15 @@ abstract class AppConstants {
   static const String apiKey = "123";
   static const String termsUrl = "https://khabroom.com/terms";
   static const String privacyUrl = "https://khabroom.com/privacy";
-
-  /// Prices and wallet balances are stored in Rial; the app shows Toman everywhere.
   static const bool amountsAreRial = true;
 }
 
-/// The shell's selected tab. Pages switch tabs through this instead of pushing a duplicate route.
 abstract class AppShell {
   static final RxInt tabIndex = 0.obs;
 
   static void go(int index) => tabIndex(index);
 }
 
-/// Single place that turns a stored amount into the text the user reads.
 String money(double? amount) => AppConstants.amountsAreRial ? amount.rial() : amount.toman();
 
 abstract class AppImages {

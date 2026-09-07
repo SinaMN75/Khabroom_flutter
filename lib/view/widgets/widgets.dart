@@ -62,14 +62,14 @@ class AppLegalNote extends StatelessWidget {
             UButton(
               title: U.s.termsAndConditions,
               type: UButtonType.text,
-              textStyle: TextStyle(fontFamily: UFonts.vazir.fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: scheme.primary),
+              textStyle: TextStyle(fontFamily: U.vazir.fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: scheme.primary),
               onTap: () => ULaunch.url(AppConstants.termsUrl),
             ),
             UTextBodySmall("·", color: scheme.onSurfaceVariant),
             UButton(
               title: U.s.privacyPolicy,
               type: UButtonType.text,
-              textStyle: TextStyle(fontFamily: UFonts.vazir.fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: scheme.primary),
+              textStyle: TextStyle(fontFamily: U.vazir.fontFamily, fontSize: 12, fontWeight: FontWeight.w600, color: scheme.primary),
               onTap: () => ULaunch.url(AppConstants.privacyUrl),
             ),
           ],
