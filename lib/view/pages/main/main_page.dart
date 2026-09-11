@@ -104,8 +104,7 @@ class _MainPageState extends State<MainPage> {
           _select(_destinations.length - 1);
           return;
         }
-        await ULocalStorage.clear();
-        await UFileStorage.clear();
+        await UAuth.signOut();
         await UNavigator.offAll(const SplashPage());
       },
       items: <UMenuEntry>[

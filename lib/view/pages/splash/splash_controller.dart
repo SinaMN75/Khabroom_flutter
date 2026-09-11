@@ -4,7 +4,7 @@ import "package:u/utilities.dart";
 
 class SplashController extends UBaseController {
   Future<void> init() async => delay(900, () async {
-    if (!ULocalStorage.hasToken()) {
+    if (!UAuth.isSignedIn) {
       await UNavigator.offAll(const LoginMobilePage());
       return;
     }

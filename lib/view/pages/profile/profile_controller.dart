@@ -25,8 +25,7 @@ class ProfileController extends UBaseController {
   Future<void> logout() async {
     final bool confirmed = await UNavigator.confirmAsync(title: U.s.logout, message: U.s.areYouSure, destructive: true);
     if (!confirmed) return;
-    await ULocalStorage.clear();
-    await UFileStorage.clear();
+    await UAuth.signOut();
     await UNavigator.offAll(const SplashPage());
   }
 }
