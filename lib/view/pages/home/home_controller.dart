@@ -72,7 +72,7 @@ class HomeController extends UBaseController {
       p: UDormBedInvoiceReadParams(
         pageSize: 20,
         isPaid: false,
-        selectorArgs: const InvoiceSelectorArgs(contract: ContractSelectorArgs(bed: DormBedSelectorArgs(room: DormRoomSelectorArgs(dorm: DormSelectorArgs())))),
+        selectorArgs: const DormBedInvoiceSelectorArgs(contract: DormBedContractSelectorArgs(bed: DormBedSelectorArgs(room: DormRoomSelectorArgs(dorm: DormSelectorArgs())))),
       ),
       onOk: (UResponse<List<UDormBedInvoiceResponse>> response) {
         unpaidInvoices = (response.result ?? <UDormBedInvoiceResponse>[]).where((UDormBedInvoiceResponse i) => i.tags.contains(TagDormBedInvoice.notPaid.number)).toList()

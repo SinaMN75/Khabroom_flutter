@@ -12,7 +12,7 @@ class MyContractsController extends UBaseController {
       p: UDormBedContractReadParams(
         userId: U.user.id,
         pageSize: 30,
-        selectorArgs: const ContractSelectorArgs(bed: DormBedSelectorArgs(room: DormRoomSelectorArgs(dorm: DormSelectorArgs()))),
+        selectorArgs: const DormBedContractSelectorArgs(bed: DormBedSelectorArgs(room: DormRoomSelectorArgs(dorm: DormSelectorArgs()))),
       ),
       onOk: (UResponse<List<UDormBedContractResponse>> response) async {
         contracts = response.result ?? <UDormBedContractResponse>[];
@@ -32,7 +32,7 @@ class MyContractsController extends UBaseController {
       p: UDormBedInvoiceReadParams(
         userId: U.user.id,
         pageSize: 200,
-        selectorArgs: const InvoiceSelectorArgs(contract: ContractSelectorArgs()),
+        selectorArgs: const DormBedInvoiceSelectorArgs(contract: DormBedContractSelectorArgs()),
       ),
       onOk: (UResponse<List<UDormBedInvoiceResponse>> response) {
         invoicesByContract = <String, List<UDormBedInvoiceResponse>>{};

@@ -66,7 +66,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      for (final UReservationGuest guest in r.jsonData.guests)
+                      for (final UReservationGuestJson guest in r.jsonData.guests)
                         AppInfoRow(label: guest.fullName, value: guest.nationalCode?.toPersianNumber() ?? "-"),
                     ],
                   ),
