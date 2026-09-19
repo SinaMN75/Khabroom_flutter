@@ -80,7 +80,6 @@ class _MainPageState extends State<MainPage> {
       controller: menu,
       enableSearch: false,
       enablePinning: false,
-      showRailOnMobile: false,
       header: URow(
         children: <Widget>[
           const AppBrandMark(size: 36),

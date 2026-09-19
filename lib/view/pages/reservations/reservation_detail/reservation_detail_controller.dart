@@ -49,6 +49,7 @@ class ReservationDetailController extends UBaseController {
       onOk: (UEmptyResponse response) async {
         ULoading.dismiss();
         UToast.success(message: response.message);
+        await _showReceipt(U.s.payWithWallet);
         await read();
       },
       onError: (UResponse<dynamic> response) {
@@ -65,12 +66,32 @@ class ReservationDetailController extends UBaseController {
   Future<void> payWithGateway() async {
     if (invoice == null) return;
     final bool paid = await UIpgFlow.pay(
-      amount: invoice!.debtAmount + invoice!.penaltyAmount - invoice!.creditorAmount,
-      tag: TagTxn.hotelInvoice,
-      invoiceId: invoice!.id,
+      p: UIpgPayParams(
+        amount: payableAmount,
+        tag: TagTxn.hotelInvoice,
+        invoiceId: invoice!.id,
+      ),
+      receipt: UReceipt(
+        title: U.s.hotelReservation,
+        amount: payableAmount.toInt(),
+        icon: Icons.hotel_outlined,
+        method: U.s.onlinePayment,
+      ),
     );
     if (paid) await read();
   }
+
+  double get payableAmount => invoice == null ? 0 : invoice!.debtAmount + invoice!.penaltyAmount - invoice!.creditorAmount;
+
+  Future<void> _showReceipt(String method) async => UReceiptSheet.show(
+    UReceipt(
+      title: U.s.hotelReservation,
+      amount: payableAmount.toInt(),
+      icon: Icons.hotel_outlined,
+      method: method,
+      rows: await UReceiptKeyValues.latestWalletTxnRows(),
+    ),
+  );
 
   Future<void> cancel() async {
     final bool confirmed = await UNavigator.confirmAsync(title: U.s.cancelReservation, message: U.s.cancelBeforeTheFreeWindowEndsAndTheFullAmountGoesBackToYourWallet, destructive: true);

@@ -57,6 +57,7 @@ class MyContractsController extends UBaseController {
       onOk: (UEmptyResponse response) async {
         ULoading.dismiss();
         UToast.success(message: response.message);
+        await _showReceipt(invoice, U.s.payWithWallet, await UReceiptKeyValues.latestWalletTxnRows());
         await read();
       },
       onError: (UResponse<dynamic> response) {
@@ -72,10 +73,28 @@ class MyContractsController extends UBaseController {
 
   Future<void> payWithGateway(UDormBedInvoiceResponse invoice) async {
     final bool paid = await UIpgFlow.pay(
-      amount: invoice.debtAmount + invoice.penaltyAmount - invoice.creditorAmount,
-      tag: TagTxn.dormInvoice,
-      invoiceId: invoice.id,
+      p: UIpgPayParams(
+        amount: _payableAmount(invoice),
+        tag: TagTxn.dormInvoice,
+        invoiceId: invoice.id,
+      ),
+      receipt: UReceipt(
+        title: U.s.payInvoice,
+        amount: _payableAmount(invoice).toInt(),
+        method: U.s.onlinePayment,
+      ),
     );
     if (paid) await read();
   }
+
+  double _payableAmount(UDormBedInvoiceResponse invoice) => invoice.debtAmount + invoice.penaltyAmount - invoice.creditorAmount;
+
+  Future<void> _showReceipt(UDormBedInvoiceResponse invoice, String method, List<UReceiptRow> rows) => UReceiptSheet.show(
+    UReceipt(
+      title: U.s.payInvoice,
+      amount: _payableAmount(invoice).toInt(),
+      method: method,
+      rows: rows,
+    ),
+  );
 }

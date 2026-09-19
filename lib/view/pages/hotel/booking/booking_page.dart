@@ -259,9 +259,9 @@ class _BookingPageState extends State<BookingPage> {
       return;
     }
     final bool paid = await UIpgFlow.pay(
-      amount: invoice.debtAmount + invoice.penaltyAmount - invoice.creditorAmount,
-      tag: TagTxn.hotelInvoice,
-      invoiceId: invoice.id,
+      p: UIpgPayParams(      amount: invoice.debtAmount + invoice.penaltyAmount - invoice.creditorAmount,
+        tag: TagTxn.hotelInvoice,
+        invoiceId: invoice.id,),
     );
     if (paid) UToast.success(message: U.s.yourReservationIsRegistered);
     await UNavigator.off(ReservationDetailPage(reservationId: reservation.id));

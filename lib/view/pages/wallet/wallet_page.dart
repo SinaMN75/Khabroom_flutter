@@ -73,7 +73,7 @@ class _WalletPageState extends State<WalletPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      for (final UWalletTxnResponse txn in c.txns) _TxnRow(txn: txn),
+                      for (final UWalletTxnResponse txn in c.txns) _TxnRow(txn: txn, onTap: () => c.showReceipt(txn)),
                     ],
                   ),
                 ),
@@ -87,9 +87,10 @@ class _WalletPageState extends State<WalletPage> {
 }
 
 class _TxnRow extends StatelessWidget {
-  const _TxnRow({required this.txn});
+  const _TxnRow({required this.txn, required this.onTap});
 
   final UWalletTxnResponse txn;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +99,7 @@ class _TxnRow extends StatelessWidget {
     final String title = TagWalletTxn.values.firstWhereOrNull((TagWalletTxn t) => txn.tags.contains(t.number))?.titleFa ?? U.s.transactions;
 
     return URow(
+      onTap: onTap,
       children: <Widget>[
         UIconBackground(
           incoming ? Icons.south_west_rounded : Icons.north_east_rounded,
