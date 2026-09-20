@@ -2,6 +2,7 @@ import "package:khabroom/main.dart";
 import "package:khabroom/utils/responsive.dart";
 import "package:khabroom/view/pages/dorm/dorm_detail/dorm_detail_controller.dart";
 import "package:khabroom/view/widgets/app_widgets.dart";
+import "package:khabroom/view/widgets/place_widgets.dart";
 import "package:khabroom/view/widgets/review_widgets.dart";
 import "package:u/utilities.dart";
 
@@ -60,6 +61,7 @@ class _DormDetailPageState extends State<DormDetailPage> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               AppCoverImage(media: dorm.media, height: AppResponsive.isCompact(context) ? 200 : 280, fallbackIcon: Icons.bedroom_parent_rounded),
+              AppGallery(media: dorm.media),
               UColumn(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
@@ -73,6 +75,7 @@ class _DormDetailPageState extends State<DormDetailPage> {
                   ),
                   const SizedBox(height: 10),
                   AppRating(score: dorm.averageScore, count: dorm.commentCount),
+                  _badges(dorm),
                   if (dorm.jsonData.nearbyUniversity != null) ...<Widget>[
                     const SizedBox(height: 10),
                     URow(
@@ -94,10 +97,15 @@ class _DormDetailPageState extends State<DormDetailPage> {
           AppSectionCard(title: U.s.aboutThisPlace, icon: Icons.info_outline_rounded, child: UTextBodyMedium(dorm.jsonData.description!, color: scheme.onSurface)),
           const SizedBox(height: 16),
         ],
-        if (dorm.jsonData.amenities.isNotEmpty) ...<Widget>[
-          AppSectionCard(title: U.s.amenities, icon: Icons.check_circle_outline_rounded, child: AppChipList(items: dorm.jsonData.amenities)),
+        if (dorm.jsonData.highlights.isNotEmpty) ...<Widget>[
+          AppSectionCard(title: U.s.highlights, icon: Icons.auto_awesome_rounded, child: AppHighlightList(items: dorm.jsonData.highlights)),
           const SizedBox(height: 16),
         ],
+        if (dorm.jsonData.amenities.isNotEmpty) ...<Widget>[
+          AppSectionCard(title: U.s.amenities, icon: Icons.check_circle_outline_rounded, child: AppAmenityList(keys: dorm.jsonData.amenities)),
+          const SizedBox(height: 16),
+        ],
+        _information(dorm),
         AppSectionCard(
           title: U.s.roomsAndBeds,
           icon: Icons.bed_outlined,
@@ -117,10 +125,81 @@ class _DormDetailPageState extends State<DormDetailPage> {
           const SizedBox(height: 16),
           AppSectionCard(title: U.s.rules, icon: Icons.gavel_rounded, child: AppBulletList(items: dorm.jsonData.rules)),
         ],
+        _policies(dorm),
+        if (dorm.jsonData.nearby.isNotEmpty || (dorm.jsonData.howToGetThere ?? "").isNotEmpty) ...<Widget>[
+          const SizedBox(height: 16),
+          AppSectionCard(
+            title: U.s.nearbyPlaces,
+            icon: Icons.place_outlined,
+            child: UColumn(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                if ((dorm.jsonData.howToGetThere ?? "").isNotEmpty) UTextBodyMedium(dorm.jsonData.howToGetThere!, color: scheme.onSurface).pOnly(bottom: 8),
+                AppNearbyList(items: dorm.jsonData.nearby),
+              ],
+            ),
+          ),
+        ],
+        if (dorm.jsonData.faqs.isNotEmpty) ...<Widget>[
+          const SizedBox(height: 16),
+          AppSectionCard(title: U.s.faqs, icon: Icons.help_outline_rounded, child: AppFaqList(items: dorm.jsonData.faqs)),
+        ],
         const SizedBox(height: 16),
         ReviewSection(comments: dorm.comments ?? <UCommentResponse>[], dormId: dorm.id, onSubmitted: c.read),
       ],
     );
+  }
+
+  AppSocialLinks _social(UDormResponse dorm) {
+    final UDormJson d = dorm.jsonData;
+    return AppSocialLinks(website: d.website, whatsapp: d.whatsapp, instagram: d.instagram, telegram: d.telegram);
+  }
+
+  /// Trust badges under the title.
+  Widget _badges(UDormResponse dorm) {
+    final bool verified = dorm.tags.contains(TagDorm.verified.number);
+    final bool featured = dorm.tags.contains(TagDorm.featured.number);
+    if (!verified && !featured) return const SizedBox();
+    return Wrap(
+      spacing: 8,
+      runSpacing: 6,
+      children: <Widget>[
+        if (verified) AppChip(label: U.s.verifiedOnSite, icon: Icons.verified_rounded, tone: AppTone.positive),
+        if (featured) AppChip(label: U.s.featured, icon: Icons.local_fire_department_rounded, tone: AppTone.warning),
+      ],
+    ).pOnly(top: 10);
+  }
+
+  /// Building facts, internet, curfew and who can live here.
+  Widget _information(UDormResponse dorm) {
+    final UDormJson d = dorm.jsonData;
+    final List<Widget> rows = <Widget>[
+      if (d.yearBuilt != null) AppInfoRow(label: U.s.yearBuilt, value: d.yearBuilt.toString().toPersianNumber()),
+      if (d.floorCount != null) AppInfoRow(label: U.s.floorCount, value: d.floorCount.toString().toPersianNumber()),
+      if (d.wifiSpeedMbps != null) AppInfoRow(label: U.s.wifiSpeed, value: d.wifiSpeedMbps.toString().toPersianNumber()),
+      if (d.universityWalkMinutes != null) AppInfoRow(label: U.s.universityWalkMinutes, value: d.universityWalkMinutes.toString().toPersianNumber()),
+      if ((d.curfewTime ?? "").isNotEmpty) AppInfoRow(label: U.s.curfewTime, value: d.curfewTime!.toPersianNumber()),
+      if (d.residentTypes.isNotEmpty) AppInfoRow(label: U.s.acceptedResidents, value: placeLabels(UPlaceCatalog.residentTypes, d.residentTypes)),
+      if (d.servicesIncluded.isNotEmpty) AppInfoRow(label: U.s.includedInRent, value: placeLabels(UPlaceCatalog.dormServices, d.servicesIncluded)),
+      if (d.mealServices.isNotEmpty) AppInfoRow(label: U.s.mealServices, value: placeLabels(UPlaceCatalog.mealServices, d.mealServices)),
+    ];
+    if (rows.isEmpty) return const SizedBox();
+    return AppSectionCard(title: U.s.propertyInformation, icon: Icons.apartment_rounded, child: UColumn(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: rows)).pOnly(top: 16);
+  }
+
+  /// Contract terms.
+  Widget _policies(UDormResponse dorm) {
+    final UDormJson d = dorm.jsonData;
+    final List<Widget> rows = <Widget>[
+      if (d.minimumStayMonths != null) AppInfoRow(label: U.s.minimumStayMonths, value: d.minimumStayMonths.toString().toPersianNumber()),
+      if ((d.paymentSchedule ?? "").isNotEmpty) AppInfoRow(label: U.s.paymentSchedule, value: d.paymentSchedule!),
+      if ((d.depositPolicy ?? "").isNotEmpty) AppInfoRow(label: U.s.depositPolicy, value: d.depositPolicy!),
+      if ((d.earlyTerminationPolicy ?? "").isNotEmpty) AppInfoRow(label: U.s.earlyTerminationPolicy, value: d.earlyTerminationPolicy!),
+      if ((d.visitorsPolicy ?? "").isNotEmpty) AppInfoRow(label: U.s.visitorsPolicy, value: d.visitorsPolicy!),
+    ];
+    if (rows.isEmpty) return const SizedBox();
+    return AppSectionCard(title: U.s.bookingPolicies, icon: Icons.rule_rounded, child: UColumn(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: rows)).pOnly(top: 16);
   }
 
   /// Dorms are not booked online, so the side card explains the in-person flow and gives a way to reach them.
@@ -144,6 +223,7 @@ class _DormDetailPageState extends State<DormDetailPage> {
           AppInfoRow(label: U.s.monthlyRent, value: money(dorm.minMonthlyRent), emphasize: true),
           if (dorm.jsonData.visitingHours != null) AppInfoRow(label: U.s.visitingHours, value: dorm.jsonData.visitingHours!),
           if (dorm.address != null) AppInfoRow(label: U.s.address, value: dorm.address!),
+          if (!_social(dorm).isEmpty) _social(dorm).pOnly(top: 12),
           const SizedBox(height: 14),
           if (dorm.phoneNumber != null)
             UButton(
@@ -203,6 +283,16 @@ class _RoomRow extends StatelessWidget {
                   if (room.capacity > 0) UTextBodySmall("${U.s.roomCapacity}: ${room.capacity.toString().toPersianNumber()}", color: scheme.onSurfaceVariant),
                   if (room.capacity > 0 && room.jsonData.floor != null) const SizedBox(width: 12),
                   if (room.jsonData.floor != null) UTextBodySmall("${U.s.floor}: ${room.jsonData.floor.toString().toPersianNumber()}", color: scheme.onSurfaceVariant),
+                ],
+              ),
+            ],
+            if (room.jsonData.bathroomType != null || room.jsonData.view != null || room.jsonData.furnished == true) ...<Widget>[
+              const SizedBox(height: 8),
+              AppChipList(
+                items: <String>[
+                  if (room.jsonData.bathroomType != null) UPlaceCatalog.label(UPlaceCatalog.bathroomTypes, room.jsonData.bathroomType!),
+                  if (room.jsonData.view != null) UPlaceCatalog.label(UPlaceCatalog.roomViews, room.jsonData.view!),
+                  if (room.jsonData.furnished == true) U.s.furnished,
                 ],
               ),
             ],

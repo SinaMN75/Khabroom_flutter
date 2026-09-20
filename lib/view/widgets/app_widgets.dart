@@ -128,7 +128,7 @@ class AppCoverImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
-    final UMediaResponse? first = (media ?? <UMediaResponse>[]).firstOrDefault();
+    final UMediaResponse? first = (media ?? <UMediaResponse>[]).sortedForGallery().firstOrDefault();
     final String? source = first?.url ?? first?.path;
 
     if (source == null || source.isEmpty)
