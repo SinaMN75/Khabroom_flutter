@@ -11,7 +11,7 @@ class SplashController extends UBaseController {
     await UServices.user.readById(
       p: UIdParams(
         id: ULocalStorage.getUserId() ?? "",
-        selectorArgs: const UserSelectorArgs(wallet: WalletSelectorArgs()),
+        selectorArgs: const UUserSelectorArgs(wallet: UWalletSelectorArgs()),
       ),
       onOk: (UResponse<UUserResponse> response) async {
         U.user = response.result!;

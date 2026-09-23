@@ -1,7 +1,7 @@
 import "package:khabroom/view/widgets/app_widgets.dart";
 import "package:u/utilities.dart";
 
-// Widgets that show the rich details of hotels and dorms (gallery, amenities with icons, nearby places, FAQs...).
+// Widgets that show the rich details of hotels and dorms (gallery, amenities, nearby places, FAQs...).
 
 /// Horizontal strip of photos (cover first). Tap a photo to see it large.
 class AppGallery extends StatelessWidget {
@@ -35,11 +35,12 @@ class AppGallery extends StatelessWidget {
   }
 }
 
-/// Amenities with their icons. Codes are translated through the catalog; free text is shown as written.
+/// Amenities as small boxes with a check mark.
+/// The titles come from the tags: `AppAmenityList(items: TagHotel.values.group(500).titlesFromNumbers(hotel.tags))`.
 class AppAmenityList extends StatelessWidget {
-  const AppAmenityList({required this.keys, super.key});
+  const AppAmenityList({required this.items, super.key});
 
-  final List<String> keys;
+  final List<String> items;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,7 @@ class AppAmenityList extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
       children: <Widget>[
-        for (final String key in keys)
+        for (final String item in items)
           UContainer(
             radius: 10,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
@@ -57,9 +58,9 @@ class AppAmenityList extends StatelessWidget {
             child: URow(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Icon(UPlaceCatalog.iconOf(UPlaceCatalog.amenities, key), size: 15, color: scheme.primary),
+                Icon(Icons.check_circle_outline_rounded, size: 15, color: scheme.primary),
                 const SizedBox(width: 6),
-                UTextBodySmall(UPlaceCatalog.label(UPlaceCatalog.amenities, key), color: scheme.onSurface),
+                UTextBodySmall(item, color: scheme.onSurface),
               ],
             ),
           ),
@@ -113,7 +114,7 @@ class AppNearbyList extends StatelessWidget {
     children: <Widget>[
       for (final UPlaceNearby n in items)
         AppInfoRow(
-          icon: UPlaceCatalog.find(UPlaceCatalog.nearbyTypes, n.type ?? "")?.icon ?? Icons.place_outlined,
+          icon: Icons.place_outlined,
           label: n.title,
           value: <String>[
             if (n.distanceMeters != null) _distance(n.distanceMeters!),
@@ -153,17 +154,6 @@ class AppFaqList extends StatelessWidget {
   }
 }
 
-/// "Pets: allowed" style row; nothing when the value is unknown.
-class AppYesNoRow extends StatelessWidget {
-  const AppYesNoRow({required this.label, required this.value, super.key});
-
-  final String label;
-  final bool? value;
-
-  @override
-  Widget build(BuildContext context) => value == null ? const SizedBox() : AppInfoRow(label: label, value: value! ? U.s.yes : U.s.no, valueColor: value! ? null : Theme.of(context).colorScheme.error);
-}
-
 /// Website / WhatsApp / Telegram / Instagram buttons (only the ones the place has).
 class AppSocialLinks extends StatelessWidget {
   const AppSocialLinks({required this.website, required this.whatsapp, required this.instagram, required this.telegram, super.key});
@@ -193,5 +183,5 @@ class AppSocialLinks extends StatelessWidget {
   bool get isEmpty => !_has(website) && !_has(whatsapp) && !_has(instagram) && !_has(telegram);
 }
 
-/// Labels a list of catalog codes: "Breakfast, Dinner".
-String placeLabels(List<UPlaceOption> options, List<String> keys) => keys.map((String k) => UPlaceCatalog.label(options, k)).join("، ");
+/// Joins titles for one row: "Breakfast، Dinner".
+String joinTitles(List<String> titles) => titles.join("، ");

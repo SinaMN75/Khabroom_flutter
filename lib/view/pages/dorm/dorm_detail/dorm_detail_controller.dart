@@ -1,7 +1,7 @@
 import "package:u/utilities.dart";
 
 class DormDetailController extends UBaseController {
-  final RxState detailState = RxState();
+  final URxState detailState = URxState();
 
   late String dormId;
   UDormResponse? dorm;
@@ -16,10 +16,10 @@ class DormDetailController extends UBaseController {
     await UServices.hotel.readDormById(
       p: UIdParams(
         id: dormId,
-        selectorArgs: const DormSelectorArgs(
-          media: MediaSelectorArgs(),
-          rooms: DormRoomSelectorArgs(beds: DormBedSelectorArgs(), media: MediaSelectorArgs()),
-          comments: CommentSelectorArgs(user: UserSelectorArgs()),
+        selectorArgs: const UDormSelectorArgs(
+          media: UMediaSelectorArgs(),
+          rooms: UDormRoomSelectorArgs(beds: UDormBedSelectorArgs(), media: UMediaSelectorArgs()),
+          comments: UCommentSelectorArgs(user: UUserSelectorArgs()),
         ),
       ),
       onOk: (UResponse<UDormResponse> response) {

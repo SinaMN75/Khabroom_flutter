@@ -28,7 +28,7 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
   @override
   Widget build(BuildContext context) => UScaffold(
     appBar: AppBar(title: Text(U.s.hotels)),
-    body: Obx(() {
+    body: UObx(() {
       if (c.hotelDetailState.isLoading() || c.hotelDetailState.isInitial())
         return const UProgressCircular(size: 34, strokeWidth: 3).alignAtCenter();
       if (c.hotelDetailState.isError() || c.hotel == null) return UErrorRetry(onTap: c.readHotel);
@@ -49,6 +49,7 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
 
   Widget _content(BuildContext context, UHotelResponse hotel) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
+    final List<String> amenities = TagHotel.values.group(500).titlesFromNumbers(hotel.tags);
     return UColumn(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -104,15 +105,10 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
           AppSectionCard(title: U.s.highlights, icon: Icons.auto_awesome_rounded, child: AppHighlightList(items: hotel.jsonData.highlights)),
           const SizedBox(height: 16),
         ],
-        if (hotel.jsonData.amenities.isNotEmpty) ...<Widget>[
-          AppSectionCard(
-            title: U.s.amenities,
-            icon: Icons.check_circle_outline_rounded,
-            child: AppAmenityList(keys: hotel.jsonData.amenities),
-          ),
+        if (amenities.isNotEmpty) ...<Widget>[
+          AppSectionCard(title: U.s.amenities, icon: Icons.check_circle_outline_rounded, child: AppAmenityList(items: amenities)),
           const SizedBox(height: 16),
         ],
-        _information(hotel),
         AppSectionCard(
           title: U.s.roomsAndBeds,
           icon: Icons.bed_outlined,
@@ -202,55 +198,36 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
     return AppSocialLinks(website: d.website, whatsapp: d.whatsapp, instagram: d.instagram, telegram: d.telegram);
   }
 
-  /// Trust and type badges under the title.
+  /// "Featured" and the hotel type (boutique, resort...) under the title.
   Widget _badges(UHotelResponse hotel) {
-    final bool verified = hotel.tags.contains(TagHotel.verified.number);
     final bool featured = hotel.tags.contains(TagHotel.featured.number);
-    final String? type = hotel.jsonData.type;
-    if (!verified && !featured && type == null) return const SizedBox();
+    final List<String> types = TagHotel.values.group(100).titlesFromNumbers(hotel.tags);
+    if (!featured && types.isEmpty) return const SizedBox();
     return Wrap(
       spacing: 8,
       runSpacing: 6,
       children: <Widget>[
-        if (verified) AppChip(label: U.s.verifiedOnSite, icon: Icons.verified_rounded, tone: AppTone.positive),
         if (featured) AppChip(label: U.s.featured, icon: Icons.local_fire_department_rounded, tone: AppTone.warning),
-        if (type != null) AppChip(label: UPlaceCatalog.label(UPlaceCatalog.hotelTypes, type), filled: false),
+        for (final String type in types) AppChip(label: type, filled: false),
       ],
     ).pOnly(top: 10);
   }
 
-  /// Type, year built, floors and staff languages.
-  Widget _information(UHotelResponse hotel) {
-    final UHotelJson d = hotel.jsonData;
-    final List<Widget> rows = <Widget>[
-      if (d.type != null) AppInfoRow(label: U.s.propertyType, value: UPlaceCatalog.label(UPlaceCatalog.hotelTypes, d.type!)),
-      if (d.yearBuilt != null) AppInfoRow(label: U.s.yearBuilt, value: d.yearBuilt.toString().toPersianNumber()),
-      if (d.yearRenovated != null) AppInfoRow(label: U.s.yearRenovated, value: d.yearRenovated.toString().toPersianNumber()),
-      if (d.floorCount != null) AppInfoRow(label: U.s.floorCount, value: d.floorCount.toString().toPersianNumber()),
-      if (d.languages.isNotEmpty) AppInfoRow(label: U.s.languagesSpoken, value: placeLabels(UPlaceCatalog.languages, d.languages)),
-    ];
-    if (rows.isEmpty) return const SizedBox();
-    return AppSectionCard(title: U.s.propertyInformation, icon: Icons.apartment_rounded, child: UColumn(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: rows)).pOnly(bottom: 16);
-  }
-
-  /// Meal plans, payment methods, pets, smoking, children, extra bed and tax.
+  /// Meal plans, policy tags (pets allowed, extra bed...) and the policies text.
   Widget _policies(UHotelResponse hotel) {
-    final UHotelJson d = hotel.jsonData;
+    final List<String> mealPlans = TagHotel.values.group(600).titlesFromNumbers(hotel.tags);
+    final List<String> policies = TagHotel.values.group(300).titlesFromNumbers(hotel.tags);
+    final String text = hotel.jsonData.policies ?? "";
     final List<Widget> rows = <Widget>[
-      if (d.mealPlans.isNotEmpty) AppInfoRow(label: U.s.mealPlans, value: placeLabels(UPlaceCatalog.mealPlans, d.mealPlans)),
-      if (d.paymentMethods.isNotEmpty) AppInfoRow(label: U.s.paymentMethods, value: placeLabels(UPlaceCatalog.paymentMethods, d.paymentMethods)),
-      AppYesNoRow(label: U.s.pets, value: d.petsAllowed),
-      AppYesNoRow(label: U.s.smoking, value: d.smokingAllowed),
-      AppYesNoRow(label: U.s.children, value: d.childrenAllowed),
-      if ((d.childrenPolicy ?? "").isNotEmpty) AppInfoRow(label: U.s.childrenPolicy, value: d.childrenPolicy!),
-      AppYesNoRow(label: U.s.extraBed, value: d.extraBedAvailable),
-      AppYesNoRow(label: U.s.priceIncludesTax, value: d.priceIncludesTax),
-    ].where((Widget w) => w is! SizedBox).toList();
+      if (mealPlans.isNotEmpty) AppInfoRow(label: U.s.mealPlans, value: joinTitles(mealPlans)),
+      if (policies.isNotEmpty) AppChipList(items: policies, icon: Icons.check_rounded).pSymmetric(vertical: 6),
+      if (text.isNotEmpty) UTextBodyMedium(text, color: Theme.of(context).colorScheme.onSurface).pOnly(top: 4),
+    ];
     if (rows.isEmpty) return const SizedBox();
     return AppSectionCard(title: U.s.bookingPolicies, icon: Icons.rule_rounded, child: UColumn(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: rows)).pOnly(top: 16);
   }
 
-  Widget _rooms(BuildContext context) => Obx(() {
+  Widget _rooms(BuildContext context) => UObx(() {
     if (!c.hasDates) return UTextBodySmall(U.s.pickYourDatesToSeePrices, color: Theme.of(context).colorScheme.onSurfaceVariant);
     if (c.availabilityState.isLoading()) return const UProgressCircular(size: 28, strokeWidth: 3).alignAtCenter().pSymmetric(vertical: 20);
     if (c.availabilityState.isError()) return UErrorRetry(onTap: c.readAvailability);
@@ -313,7 +290,7 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                 labelText: U.s.checkInDate,
                 controller: c.controllerCheckIn,
                 initialDate: c.checkInDate.value,
-                onChange: (DateTime d, Jalali j) => c.setCheckIn(d),
+                onChange: (DateTime d, UJalali j) => c.setCheckIn(d),
               ),
               const SizedBox(width: 10),
               UTextFieldDatePicker(
@@ -322,14 +299,14 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                 labelText: U.s.checkOutDate,
                 controller: c.controllerCheckOut,
                 initialDate: c.checkOutDate.value,
-                onChange: (DateTime d, Jalali j) => c.setCheckOut(d),
+                onChange: (DateTime d, UJalali j) => c.setCheckOut(d),
               ),
             ],
           ),
           const SizedBox(height: 14),
           UTextTitleSmall(U.s.numberOfGuests, color: scheme.onSurface),
           const SizedBox(height: 8),
-          Obx(
+          UObx(
             () => URow(
               children: <Widget>[
                 UButton(type: UButtonType.icon, icon: const Icon(Icons.remove_rounded), onTap: () => c.changeGuestCount(c.guestCount.value - 1)),
@@ -339,7 +316,7 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
             ),
           ),
           const SizedBox(height: 14),
-          Obx(
+          UObx(
             () => AppInfoRow(
               label: U.s.numberOfNights,
               value: "${c.nightCount.toString().toPersianNumber()} ${U.s.night}",
@@ -362,6 +339,9 @@ class _RoomTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     final UHotelRoomResponse room = item.room;
+    // View and policies (breakfast included, non-refundable) and the amenities, straight from the tags.
+    final List<String> features = <String>[...TagRoom.values.group(400).titlesFromNumbers(room.tags), ...TagRoom.values.group(300).titlesFromNumbers(room.tags)];
+    final List<String> amenities = TagRoom.values.group(500).titlesFromNumbers(room.tags);
 
     return UContainer(
       radius: 14,
@@ -399,19 +379,13 @@ class _RoomTile extends StatelessWidget {
               AppPrice(amount: item.totalPrice, caption: "${item.nightCount.toString().toPersianNumber()} ${U.s.night}"),
             ],
           ),
-          if (room.jsonData.view != null || room.jsonData.bathroomType != null || room.jsonData.mealPlan != null) ...<Widget>[
+          if (features.isNotEmpty) ...<Widget>[
             const SizedBox(height: 10),
-            AppChipList(
-              items: <String>[
-                if (room.jsonData.view != null) UPlaceCatalog.label(UPlaceCatalog.roomViews, room.jsonData.view!),
-                if (room.jsonData.bathroomType != null) UPlaceCatalog.label(UPlaceCatalog.bathroomTypes, room.jsonData.bathroomType!),
-                if (room.jsonData.mealPlan != null) UPlaceCatalog.label(UPlaceCatalog.mealPlans, room.jsonData.mealPlan!),
-              ],
-            ),
+            AppChipList(items: features),
           ],
-          if (room.jsonData.amenities.isNotEmpty) ...<Widget>[
+          if (amenities.isNotEmpty) ...<Widget>[
             const SizedBox(height: 10),
-            AppAmenityList(keys: room.jsonData.amenities.take(5).toList()),
+            AppAmenityList(items: amenities.take(5).toList()),
           ],
           const SizedBox(height: 12),
           if (onBook == null)

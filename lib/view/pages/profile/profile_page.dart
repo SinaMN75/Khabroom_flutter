@@ -115,7 +115,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: <Widget>[
             UTextLabelMedium(U.s.walletBalance, color: AppColors.onGradient.withValues(alpha: 0.85)),
             const SizedBox(height: 8),
-            Obx(
+            UObx(
               () => c.walletState.isLoaded()
                   ? UTextHeadlineSmall(money(c.walletBalance), color: AppColors.onGradient)
                   : const UProgressCircular(size: 22, strokeWidth: 2, progressColor: AppColors.onGradient),

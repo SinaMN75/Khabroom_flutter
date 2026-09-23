@@ -43,7 +43,7 @@ class _WalletPageState extends State<WalletPage> {
                   children: <Widget>[
                     UTextLabelMedium(U.s.walletBalance, color: AppColors.onGradient.withValues(alpha: 0.85)),
                     const SizedBox(height: 10),
-                    Obx(
+                    UObx(
                       () => c.walletState.isLoaded()
                           ? UTextDisplaySmall(money(c.balance), color: AppColors.onGradient)
                           : const UProgressCircular(size: 26, strokeWidth: 2, progressColor: AppColors.onGradient),

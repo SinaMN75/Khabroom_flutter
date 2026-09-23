@@ -1,8 +1,8 @@
 import "package:u/utilities.dart";
 
 class ReservationsController extends UBaseController {
-  final RxState reservationState = RxState();
-  final RxInt selectedTab = 0.obs;
+  final URxState reservationState = URxState();
+  final URxInt selectedTab = 0.obs;
 
   List<UHotelReservationResponse> reservations = <UHotelReservationResponse>[];
 
@@ -20,10 +20,10 @@ class ReservationsController extends UBaseController {
       p: UHotelReservationReadParams(
         userId: U.user.id,
         pageSize: 50,
-        selectorArgs: const HotelReservationSelectorArgs(
-          hotel: HotelSelectorArgs(media: MediaSelectorArgs()),
-          room: HotelRoomSelectorArgs(),
-          invoice: HotelInvoiceSelectorArgs(),
+        selectorArgs: const UHotelReservationSelectorArgs(
+          hotel: UHotelSelectorArgs(media: UMediaSelectorArgs()),
+          room: UHotelRoomSelectorArgs(),
+          invoice: UHotelInvoiceSelectorArgs(),
         ),
       ),
       onOk: (UResponse<List<UHotelReservationResponse>> response) {

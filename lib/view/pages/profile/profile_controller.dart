@@ -2,7 +2,7 @@ import "package:khabroom/view/pages/splash/splash_page.dart";
 import "package:u/utilities.dart";
 
 class ProfileController extends UBaseController {
-  final RxState walletState = RxState();
+  final URxState walletState = URxState();
   double walletBalance = 0;
 
   Future<void> init() async {

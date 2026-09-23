@@ -1,7 +1,7 @@
 import "package:u/utilities.dart";
 
 class ReservationDetailController extends UBaseController {
-  final RxState detailState = RxState();
+  final URxState detailState = URxState();
 
   late String reservationId;
   UHotelReservationResponse? reservation;
@@ -26,10 +26,10 @@ class ReservationDetailController extends UBaseController {
     await UServices.hotel.readHotelReservationById(
       p: UIdParams(
         id: reservationId,
-        selectorArgs: const HotelReservationSelectorArgs(
-          hotel: HotelSelectorArgs(media: MediaSelectorArgs()),
-          room: HotelRoomSelectorArgs(),
-          invoice: HotelInvoiceSelectorArgs(),
+        selectorArgs: const UHotelReservationSelectorArgs(
+          hotel: UHotelSelectorArgs(media: UMediaSelectorArgs()),
+          room: UHotelRoomSelectorArgs(),
+          invoice: UHotelInvoiceSelectorArgs(),
         ),
       ),
       onOk: (UResponse<UHotelReservationResponse> response) {

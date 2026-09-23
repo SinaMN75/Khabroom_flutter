@@ -344,7 +344,7 @@ class AppEmpty extends StatelessWidget {
 class AppStateView extends StatelessWidget {
   const AppStateView({required this.state, required this.onLoaded, required this.onRetry, super.key, this.emptyTitle, this.emptyIcon = Icons.inbox_outlined, this.loadingHeight = 180});
 
-  final RxState state;
+  final URxState state;
   final WidgetBuilder onLoaded;
   final VoidCallback onRetry;
   final String? emptyTitle;
@@ -352,7 +352,7 @@ class AppStateView extends StatelessWidget {
   final double loadingHeight;
 
   @override
-  Widget build(BuildContext context) => Obx(() {
+  Widget build(BuildContext context) => UObx(() {
     if (state.isLoading() || state.isInitial())
       return SizedBox(height: loadingHeight, child: const UProgressCircular(size: 34, strokeWidth: 3).alignAtCenter());
     if (state.isError()) return UErrorRetry(onTap: onRetry);

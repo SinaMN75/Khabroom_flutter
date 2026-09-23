@@ -59,7 +59,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     final bool compact = AppResponsive.isCompact(context);
-    return Obx(
+    return UObx(
       () => UScaffold(
         safeArea: false,
         body: URow(
@@ -134,12 +134,12 @@ class _MainPageState extends State<MainPage> {
   );
 }
 
-/// Kept out of the shell's Obx so switching tabs doesn't rebuild the pages themselves.
+/// Kept out of the shell's UObx so switching tabs doesn't rebuild the pages themselves.
 class _ShellPages extends StatelessWidget {
   const _ShellPages();
 
   @override
-  Widget build(BuildContext context) => Obx(
+  Widget build(BuildContext context) => UObx(
     () => IndexedStack(
       index: AppShell.tabIndex.value,
       children: const <Widget>[

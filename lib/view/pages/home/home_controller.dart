@@ -1,14 +1,18 @@
 import "package:u/utilities.dart";
 
 class HomeController extends UBaseController {
-  final RxState hotelState = RxState();
-  final RxState dormState = RxState();
-  final RxState stayState = RxState();
+  final URxState hotelState = URxState();
+  final URxState dormState = URxState();
+  final URxState stayState = URxState();
 
   List<UHotelResponse> hotels = <UHotelResponse>[];
   List<UDormResponse> dorms = <UDormResponse>[];
   List<UHotelReservationResponse> upcomingReservations = <UHotelReservationResponse>[];
   List<UDormBedInvoiceResponse> unpaidInvoices = <UDormBedInvoiceResponse>[];
+
+  // Tags picked in the filter chips above each list. The backend returns only the places that have all of them.
+  final List<int> hotelFilters = <int>[];
+  final List<int> dormFilters = <int>[];
 
   Future<void> init() async {
     await Future.wait(<Future<void>>[readHotels(), readDorms(), readMyStay()]);
@@ -19,7 +23,8 @@ class HomeController extends UBaseController {
     await UServices.hotel.readHotels(
       p: UHotelReadParams(
         pageSize: 20,
-        selectorArgs: const HotelSelectorArgs(media: MediaSelectorArgs(), rooms: HotelRoomSelectorArgs(media: MediaSelectorArgs())),
+        tags: hotelFilters,
+        selectorArgs: const UHotelSelectorArgs(media: UMediaSelectorArgs(), rooms: UHotelRoomSelectorArgs(media: UMediaSelectorArgs())),
       ),
       onOk: (UResponse<List<UHotelResponse>> response) {
         hotels = response.result ?? <UHotelResponse>[];
@@ -35,7 +40,8 @@ class HomeController extends UBaseController {
     await UServices.hotel.readDorms(
       p: UDormReadParams(
         pageSize: 20,
-        selectorArgs: const DormSelectorArgs(media: MediaSelectorArgs(), beds: DormBedSelectorArgs()),
+        tags: dormFilters,
+        selectorArgs: const UDormSelectorArgs(media: UMediaSelectorArgs(), beds: UDormBedSelectorArgs()),
       ),
       onOk: (UResponse<List<UDormResponse>> response) {
         dorms = response.result ?? <UDormResponse>[];
@@ -53,7 +59,7 @@ class HomeController extends UBaseController {
       p: UHotelReservationReadParams(
         userId: U.user.id,
         pageSize: 5,
-        selectorArgs: const HotelReservationSelectorArgs(hotel: HotelSelectorArgs(media: MediaSelectorArgs()), room: HotelRoomSelectorArgs(), invoice: HotelInvoiceSelectorArgs()),
+        selectorArgs: const UHotelReservationSelectorArgs(hotel: UHotelSelectorArgs(media: UMediaSelectorArgs()), room: UHotelRoomSelectorArgs(), invoice: UHotelInvoiceSelectorArgs()),
       ),
       onOk: (UResponse<List<UHotelReservationResponse>> response) async {
         final DateTime now = DateTime.now();
@@ -72,7 +78,7 @@ class HomeController extends UBaseController {
       p: UDormBedInvoiceReadParams(
         pageSize: 20,
         isPaid: false,
-        selectorArgs: const DormBedInvoiceSelectorArgs(contract: DormBedContractSelectorArgs(bed: DormBedSelectorArgs(room: DormRoomSelectorArgs(dorm: DormSelectorArgs())))),
+        selectorArgs: const UDormBedInvoiceSelectorArgs(contract: UDormBedContractSelectorArgs(bed: UDormBedSelectorArgs(room: UDormRoomSelectorArgs(dorm: UDormSelectorArgs())))),
       ),
       onOk: (UResponse<List<UDormBedInvoiceResponse>> response) {
         unpaidInvoices = (response.result ?? <UDormBedInvoiceResponse>[]).where((UDormBedInvoiceResponse i) => i.tags.contains(TagDormBedInvoice.notPaid.number)).toList()

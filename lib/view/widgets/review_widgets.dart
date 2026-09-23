@@ -33,7 +33,7 @@ class ReviewSection extends StatelessWidget {
     String? dormId,
   }) async {
     final TextEditingController controller = TextEditingController();
-    final RxDouble score = 5.0.obs;
+    final URxDouble score = 5.0.obs;
 
     await UNavigator.bottomSheet(
       StatefulBuilder(
@@ -50,7 +50,7 @@ class ReviewSection extends StatelessWidget {
               const SizedBox(height: 16),
               UTextLabelMedium(U.s.yourRating, color: scheme.onSurfaceVariant),
               const SizedBox(height: 8),
-              Obx(
+              UObx(
                 () => URow(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[

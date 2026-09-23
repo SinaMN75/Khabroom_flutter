@@ -34,7 +34,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
           child: UColumn(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Obx(
+              UObx(
                 () => USegmentedControl<int>(
                   selectedValue: c.selectedTab.value,
                   items: <int, String>{0: U.s.upcoming, 1: U.s.past},
@@ -47,7 +47,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                 onRetry: c.read,
                 emptyTitle: U.s.youHaveNoReservationsYet,
                 emptyIcon: Icons.confirmation_number_outlined,
-                onLoaded: (BuildContext context) => Obx(() {
+                onLoaded: (BuildContext context) => UObx(() {
                   final List<UHotelReservationResponse> items = c.selectedTab.value == 0 ? c.upcoming : c.past;
                   if (items.isEmpty) return AppEmpty(title: U.s.youHaveNoReservationsYet, icon: Icons.confirmation_number_outlined);
                   return UColumn(

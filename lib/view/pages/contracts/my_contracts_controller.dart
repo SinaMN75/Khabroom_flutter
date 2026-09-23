@@ -1,7 +1,7 @@
 import "package:u/utilities.dart";
 
 class MyContractsController extends UBaseController {
-  final RxState contractState = RxState();
+  final URxState contractState = URxState();
 
   List<UDormBedContractResponse> contracts = <UDormBedContractResponse>[];
   Map<String, List<UDormBedInvoiceResponse>> invoicesByContract = <String, List<UDormBedInvoiceResponse>>{};
@@ -12,7 +12,7 @@ class MyContractsController extends UBaseController {
       p: UDormBedContractReadParams(
         userId: U.user.id,
         pageSize: 30,
-        selectorArgs: const DormBedContractSelectorArgs(bed: DormBedSelectorArgs(room: DormRoomSelectorArgs(dorm: DormSelectorArgs()))),
+        selectorArgs: const UDormBedContractSelectorArgs(bed: UDormBedSelectorArgs(room: UDormRoomSelectorArgs(dorm: UDormSelectorArgs()))),
       ),
       onOk: (UResponse<List<UDormBedContractResponse>> response) async {
         contracts = response.result ?? <UDormBedContractResponse>[];
@@ -32,7 +32,7 @@ class MyContractsController extends UBaseController {
       p: UDormBedInvoiceReadParams(
         userId: U.user.id,
         pageSize: 200,
-        selectorArgs: const DormBedInvoiceSelectorArgs(contract: DormBedContractSelectorArgs()),
+        selectorArgs: const UDormBedInvoiceSelectorArgs(contract: UDormBedContractSelectorArgs()),
       ),
       onOk: (UResponse<List<UDormBedInvoiceResponse>> response) {
         invoicesByContract = <String, List<UDormBedInvoiceResponse>>{};

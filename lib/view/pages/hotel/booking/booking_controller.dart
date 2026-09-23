@@ -10,9 +10,9 @@ class GuestForm {
 }
 
 class BookingController extends UBaseController {
-  final RxState walletState = RxState();
-  final RxList<GuestForm> guests = RxList<GuestForm>();
-  final RxBool useWallet = true.obs;
+  final URxState walletState = URxState();
+  final URxList<GuestForm> guests = URxList<GuestForm>();
+  final URxBool useWallet = true.obs;
   final TextEditingController controllerNotes = TextEditingController();
 
   double walletBalance = 0;

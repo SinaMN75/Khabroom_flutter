@@ -26,7 +26,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
   @override
   Widget build(BuildContext context) => UScaffold(
     appBar: AppBar(title: Text(U.s.reservationDetails)),
-    body: Obx(() {
+    body: UObx(() {
       if (c.detailState.isLoading() || c.detailState.isInitial()) return const UProgressCircular(size: 34, strokeWidth: 3).alignAtCenter();
       if (c.detailState.isError() || c.reservation == null) return UErrorRetry(onTap: c.read);
 

@@ -73,7 +73,7 @@ class _BookingPageState extends State<BookingPage> {
       AppSectionCard(
         title: U.s.guestDetails,
         icon: Icons.people_outline_rounded,
-        child: Obx(
+        child: UObx(
           () => UColumn(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
@@ -134,7 +134,7 @@ class _BookingPageState extends State<BookingPage> {
           const SizedBox(height: 16),
           UTextTitleSmall(U.s.chooseAPaymentMethod, color: scheme.onSurface),
           const SizedBox(height: 10),
-          Obx(
+          UObx(
             () => UColumn(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,

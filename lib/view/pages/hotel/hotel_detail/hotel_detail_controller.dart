@@ -1,16 +1,16 @@
 import "package:u/utilities.dart";
 
 class HotelDetailController extends UBaseController {
-  final RxState hotelDetailState = RxState();
-  final RxState availabilityState = RxState();
+  final URxState hotelDetailState = URxState();
+  final URxState availabilityState = URxState();
 
   late String hotelId;
   UHotelResponse? hotel;
   List<UHotelRoomAvailabilityResponse> availability = <UHotelRoomAvailabilityResponse>[];
 
-  final Rxn<DateTime> checkInDate = Rxn<DateTime>();
-  final Rxn<DateTime> checkOutDate = Rxn<DateTime>();
-  final RxInt guestCount = 1.obs;
+  final URxn<DateTime> checkInDate = URxn<DateTime>();
+  final URxn<DateTime> checkOutDate = URxn<DateTime>();
+  final URxInt guestCount = 1.obs;
   final TextEditingController controllerCheckIn = TextEditingController();
   final TextEditingController controllerCheckOut = TextEditingController();
 
@@ -34,10 +34,10 @@ class HotelDetailController extends UBaseController {
     await UServices.hotel.readHotelById(
       p: UIdParams(
         id: hotelId,
-        selectorArgs: const HotelSelectorArgs(
-          media: MediaSelectorArgs(),
-          rooms: HotelRoomSelectorArgs(media: MediaSelectorArgs()),
-          comments: CommentSelectorArgs(user: UserSelectorArgs()),
+        selectorArgs: const UHotelSelectorArgs(
+          media: UMediaSelectorArgs(),
+          rooms: UHotelRoomSelectorArgs(media: UMediaSelectorArgs()),
+          comments: UCommentSelectorArgs(user: UUserSelectorArgs()),
         ),
       ),
       onOk: (UResponse<UHotelResponse> response) {
@@ -58,7 +58,7 @@ class HotelDetailController extends UBaseController {
         checkInDate: checkInDate.value!,
         checkOutDate: checkOutDate.value!,
         guestCount: guestCount.value,
-        selectorArgs: const HotelRoomSelectorArgs(media: MediaSelectorArgs()),
+        selectorArgs: const UHotelRoomSelectorArgs(media: UMediaSelectorArgs()),
       ),
       onOk: (UResponse<List<UHotelRoomAvailabilityResponse>> response) {
         availability = response.result ?? <UHotelRoomAvailabilityResponse>[];

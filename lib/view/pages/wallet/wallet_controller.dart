@@ -1,8 +1,8 @@
 import "package:u/utilities.dart";
 
 class WalletController extends UBaseController {
-  final RxState walletState = RxState();
-  final RxState txnState = RxState();
+  final URxState walletState = URxState();
+  final URxState txnState = URxState();
 
   double balance = 0;
   List<UWalletTxnResponse> txns = <UWalletTxnResponse>[];

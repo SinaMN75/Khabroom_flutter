@@ -180,7 +180,7 @@ abstract class AppConstants {
 }
 
 abstract class AppShell {
-  static final RxInt tabIndex = 0.obs;
+  static final URxInt tabIndex = 0.obs;
 
   static void go(int index) => tabIndex(index);
 }

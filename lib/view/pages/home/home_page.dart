@@ -47,12 +47,13 @@ class _HomePageState extends State<HomePage> {
               children: <Widget>[
                 _header(context).fadeSlideIn(),
                 const SizedBox(height: 20),
-                Obx(() => c.stayState.isLoaded() ? _stayBanner(context) : const SizedBox.shrink()),
+                UObx(() => c.stayState.isLoaded() ? _stayBanner(context) : const SizedBox.shrink()),
                 AppSectionHeader(title: U.s.hotels, subtitle: U.s.hotelReservation).pOnly(bottom: 14),
+                _filters<TagHotel>(_hotelFilterOptions, c.hotelFilters, c.readHotels),
                 AppStateView(
                   state: c.hotelState,
                   onRetry: c.readHotels,
-                  emptyTitle: U.s.noPlacesHaveBeenAddedYet,
+                  emptyTitle: c.hotelFilters.isEmpty ? U.s.noPlacesHaveBeenAddedYet : U.s.noResults,
                   emptyIcon: Icons.apartment_outlined,
                   onLoaded: (BuildContext context) => UColumn(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -64,10 +65,11 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 12),
                 AppSectionHeader(title: U.s.dorms, subtitle: U.s.dormBedsAreBookedInPersonOnly).pOnly(bottom: 14),
+                _filters<TagDorm>(_dormFilterOptions, c.dormFilters, c.readDorms),
                 AppStateView(
                   state: c.dormState,
                   onRetry: c.readDorms,
-                  emptyTitle: U.s.noPlacesHaveBeenAddedYet,
+                  emptyTitle: c.dormFilters.isEmpty ? U.s.noPlacesHaveBeenAddedYet : U.s.noResults,
                   emptyIcon: Icons.bedroom_parent_outlined,
                   onLoaded: (BuildContext context) => AppGrid(
                     children: <Widget>[
@@ -81,6 +83,28 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+
+  // The most asked-for tags; any tag of TagHotel / TagDorm can be added here.
+  static const List<TagHotel> _hotelFilterOptions = <TagHotel>[TagHotel.breakfast, TagHotel.parking, TagHotel.wifi, TagHotel.pool, TagHotel.childrenAllowed, TagHotel.petsAllowed];
+  static const List<TagDorm> _dormFilterOptions = <TagDorm>[TagDorm.girls, TagDorm.boys, TagDorm.internetIncluded, TagDorm.utilitiesIncluded, TagDorm.sharedKitchen, TagDorm.studyRoom];
+
+  /// A row of on/off chips. Every change reloads the list with the picked tags.
+  Widget _filters<T extends UNumericIdentifiable>(List<T> options, List<int> selected, VoidCallback reload) => SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: Row(
+      children: <Widget>[
+        for (final T o in options)
+          FilterChip(
+            label: Text(o.localizedTitle),
+            selected: selected.contains(o.number),
+            onSelected: (bool on) {
+              setState(() => on ? selected.add(o.number) : selected.remove(o.number));
+              reload();
+            },
+          ).pOnly(left: 8),
+      ],
+    ),
+  ).pOnly(bottom: 14);
 
   Widget _header(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
@@ -200,7 +224,7 @@ class _HotelSpotlight extends StatelessWidget {
 
   Widget _body(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
-    final List<String> amenities = hotel.jsonData.amenities.take(4).toList();
+    final List<String> amenities = TagHotel.values.group(500).titlesFromNumbers(hotel.tags).take(4).toList();
 
     return UColumn(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -287,7 +311,7 @@ class _DormCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   UTextTitleMedium(dorm.title, color: scheme.onSurface, expanded: 1),
-                  if (girls || boys) AppChip(label: girls ? TagDorm.girls.titleFa : TagDorm.boys.titleFa, tone: AppTone.brand),
+                  if (girls || boys) AppChip(label: girls ? TagDorm.girls.localizedTitle : TagDorm.boys.localizedTitle, tone: AppTone.brand),
                 ],
               ),
               const SizedBox(height: 8),
