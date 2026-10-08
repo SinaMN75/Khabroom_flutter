@@ -172,7 +172,7 @@ abstract class Core {
 
 abstract class AppConstants {
   static const String appName = "خوابروم";
-  static const String baseUrl = "https://api.khabroom.com/api";
+  static const String baseUrl = kDebugMode ? "https://api.sinamn75.com/api" : "https://api.khabroom.com/api";
   static const String apiKey = "123";
   static const String termsUrl = "https://khabroom.com/terms";
   static const String privacyUrl = "https://khabroom.com/privacy";
