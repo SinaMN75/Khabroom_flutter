@@ -37,7 +37,7 @@ class HomeController extends UBaseController {
 
   Future<void> readDorms() async {
     dormState.loading();
-    await UServices.hotel.readDorms(
+    await UServices.dorm.readDorms(
       p: UDormReadParams(
         pageSize: 20,
         tags: dormFilters,
@@ -74,7 +74,7 @@ class HomeController extends UBaseController {
   }
 
   Future<void> _readUnpaidDormInvoices() async {
-    await UServices.hotel.readDormBedInvoice(
+    await UServices.dorm.readDormBedInvoice(
       p: UDormBedInvoiceReadParams(
         pageSize: 20,
         isPaid: false,

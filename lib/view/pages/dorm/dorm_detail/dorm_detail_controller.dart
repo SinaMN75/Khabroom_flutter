@@ -13,7 +13,7 @@ class DormDetailController extends UBaseController {
 
   Future<void> read() async {
     detailState.loading();
-    await UServices.hotel.readDormById(
+    await UServices.dorm.readDormById(
       p: UIdParams(
         id: dormId,
         selectorArgs: const UDormSelectorArgs(

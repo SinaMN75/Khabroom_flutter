@@ -25,7 +25,10 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
-    appBar: AppBar(title: Text(U.s.reservationDetails)),
+    appBar: AppBar(
+      title: Text(U.s.reservationDetails),
+      actions: <Widget>[IconButton(icon: const Icon(Icons.print_outlined), tooltip: U.s.print, onPressed: c.printFolio)],
+    ),
     body: UObx(() {
       if (c.detailState.isLoading() || c.detailState.isInitial()) return const UProgressCircular(size: 34, strokeWidth: 3).alignAtCenter();
       if (c.detailState.isError() || c.reservation == null) return UErrorRetry(onTap: c.read);
@@ -91,6 +94,10 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
                     ],
                   ),
                 ),
+              ],
+              if (c.isStaying) ...<Widget>[
+                const SizedBox(height: 20),
+                UButton(title: U.s.maintenanceRequest, type: UButtonType.outlined, fullWidth: true, onTap: _maintenanceSheet),
               ],
               if (c.canCancel) ...<Widget>[
                 const SizedBox(height: 20),
@@ -176,6 +183,24 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
           ],
         ],
       ),
+    );
+  }
+
+  Future<void> _maintenanceSheet() async {
+    final TextEditingController title = TextEditingController();
+    final TextEditingController description = TextEditingController();
+    bool urgent = false;
+    await UFormDialog.show(
+      title: U.s.maintenanceRequest,
+      onSubmit: () async {
+        if (title.text.trim().isEmpty) return false;
+        return c.maintenance(title.text.trim(), description.text.trim().nullIfEmpty(), urgent);
+      },
+      children: (BuildContext context, StateSetter setState) => <Widget>[
+        UTextField(controller: title, labelText: U.s.title).pSymmetric(vertical: 6),
+        UTextField(controller: description, labelText: U.s.description, lines: 3).pSymmetric(vertical: 6),
+        SwitchListTile(value: urgent, title: Text(TagStaffTask.urgent.localizedTitle), onChanged: (bool v) => setState(() => urgent = v)),
+      ],
     );
   }
 }

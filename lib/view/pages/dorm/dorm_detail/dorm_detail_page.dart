@@ -191,6 +191,36 @@ class _DormDetailPageState extends State<DormDetailPage> {
     return AppSectionCard(title: U.s.bookingPolicies, icon: Icons.rule_rounded, child: UColumn(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: rows)).pOnly(top: 16);
   }
 
+  Future<void> _apply(UDormResponse dorm) async {
+    DateTime? start = DateTime.now();
+    final TextEditingController startC = TextEditingController(text: start.toJalaliDate());
+    final TextEditingController note = TextEditingController();
+    await UFormDialog.show(
+      title: "${U.s.applyForResidence} · ${dorm.title}",
+      onSubmit: () async {
+        ULoading.show();
+        final (UResponse<String>? ok, UEmptyResponse? e, String? x) = await UServices.dorm.createApplication(
+          p: UDormApplicationCreateParams(dormId: dorm.id, desiredStartDate: start!, detail1: note.text.trim().nullIfEmpty()),
+        );
+        ULoading.dismiss();
+        if (ok == null) {
+          UToast.error(message: e?.message.nullIfEmpty() ?? x.nullIfEmpty() ?? U.s.errorSubmittingForm);
+          return false;
+        }
+        UToast.success(message: U.s.applicationSent);
+        return true;
+      },
+      children: (BuildContext context, StateSetter setState) => <Widget>[
+        UTextFieldDatePicker(controller: startC, labelText: U.s.startDate, jalali: true, initialDate: start, onChange: (DateTime d, UJalali j) {
+          start = d;
+          startC.text = d.toJalaliDate();
+        }).pSymmetric(vertical: 6),
+        UTextField(controller: note, labelText: U.s.description, lines: 3).pSymmetric(vertical: 6),
+        if (dorm.jsonData.requiredDocuments.isNotEmpty) UTextBodySmall("${U.s.requiredDocuments}: ${dorm.jsonData.requiredDocuments.join("، ")}"),
+      ],
+    );
+  }
+
   /// Dorms are not booked online, so the side card explains the in-person flow and gives a way to reach them.
   Widget _contactCard(BuildContext context, UDormResponse dorm) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
@@ -214,6 +244,12 @@ class _DormDetailPageState extends State<DormDetailPage> {
           if (dorm.address != null) AppInfoRow(label: U.s.address, value: dorm.address!),
           if (!_social(dorm).isEmpty) _social(dorm).pOnly(top: 12),
           const SizedBox(height: 14),
+          UButton(
+            title: U.s.applyForResidence,
+            icon: const Icon(Icons.assignment_ind_outlined),
+            fullWidth: true,
+            onTap: () => _apply(dorm),
+          ).pOnly(bottom: 8),
           if (dorm.phoneNumber != null)
             UButton(
               title: U.s.callTheDorm,

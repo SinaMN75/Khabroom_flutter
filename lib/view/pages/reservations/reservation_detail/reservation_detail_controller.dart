@@ -1,3 +1,4 @@
+import "package:khabroom/view/widgets/print_view.dart";
 import "package:u/utilities.dart";
 
 class ReservationDetailController extends UBaseController {
@@ -15,6 +16,28 @@ class ReservationDetailController extends UBaseController {
       !reservation!.tags.contains(TagHotelReservation.cancelled.number) &&
       !reservation!.tags.contains(TagHotelReservation.checkedIn.number) &&
       !reservation!.tags.contains(TagHotelReservation.checkedOut.number);
+
+  bool get isStaying =>
+      reservation != null &&
+      reservation!.tags.contains(TagHotelReservation.checkedIn.number) &&
+      !reservation!.tags.contains(TagHotelReservation.checkedOut.number) &&
+      !reservation!.tags.contains(TagHotelReservation.cancelled.number);
+
+  Future<void> printFolio() => AppPrint.show(UServices.hotel.printReservation(p: UIdParams(id: reservationId)));
+
+  Future<bool> maintenance(String title, String? description, bool urgent) async {
+    ULoading.show();
+    final (UResponse<String>? ok, UEmptyResponse? error, String? exception) = await UServices.organization.createTask(
+      p: UStaffTaskCreateParams(placeId: reservation!.hotelId, title: title, description: description, tags: <int>[(urgent ? TagStaffTask.urgent : TagStaffTask.normal).number]),
+    );
+    ULoading.dismiss();
+    if (ok == null) {
+      UToast.error(message: error?.message.nullIfEmpty() ?? exception.nullIfEmpty() ?? U.s.errorSubmittingForm);
+      return false;
+    }
+    UToast.success(message: U.s.submitted);
+    return true;
+  }
 
   Future<void> init({required String reservationId}) async {
     this.reservationId = reservationId;

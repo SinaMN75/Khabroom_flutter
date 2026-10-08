@@ -2,7 +2,9 @@ import "package:khabroom/main.dart";
 import "package:khabroom/utils/responsive.dart";
 import "package:khabroom/utils/status_helpers.dart";
 import "package:khabroom/view/pages/contracts/my_contracts_controller.dart";
+import "package:khabroom/view/pages/dorm/dorm_services/dorm_services_page.dart";
 import "package:khabroom/view/widgets/app_widgets.dart";
+import "package:khabroom/view/widgets/print_view.dart";
 import "package:u/utilities.dart";
 
 class MyContractsPage extends StatefulWidget {
@@ -81,6 +83,14 @@ class _MyContractsPageState extends State<MyContractsPage> {
           AppInfoRow(label: U.s.contractPeriod, value: "${contract.startDate.toJalaliDate()} — ${contract.endDate.toJalaliDate()}"),
           AppInfoRow(label: U.s.deposit, value: money(contract.deposit)),
           AppInfoRow(label: U.s.rent, value: money(contract.rent)),
+          const SizedBox(height: 12),
+          URow(
+            children: <Widget>[
+              if (contract.isActive) UButton(expanded: 1, title: U.s.dormServices, icon: const Icon(Icons.room_service_outlined), onTap: () => UNavigator.push(DormServicesPage(contract: contract))),
+              if (contract.isActive) const SizedBox(width: 10),
+              UButton(expanded: 1, title: U.s.print, type: UButtonType.outlined, icon: const Icon(Icons.print_outlined), onTap: () => AppPrint.show(UServices.dorm.printContract(p: UIdParams(id: contract.id)))),
+            ],
+          ),
           const Divider(height: 24),
           UTextTitleSmall(U.s.monthlyInvoices, color: scheme.onSurface),
           const SizedBox(height: 10),

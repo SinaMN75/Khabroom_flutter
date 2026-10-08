@@ -166,7 +166,7 @@ class AppSocialLinks extends StatelessWidget {
   static bool _has(String? v) => v != null && v.trim().isNotEmpty;
 
   /// Values may be a full address or just a number / username.
-  static Future<void> _open(String value, Future<void> Function(String) fallback) => value.startsWith("http") ? ULaunch.url(value) : fallback(value);
+  static Future<bool> _open(String value, UMessenger messenger) => value.startsWith("http") ? ULaunch.url(value) : ULaunch.chat(messenger, value);
 
   @override
   Widget build(BuildContext context) => Wrap(
@@ -174,9 +174,9 @@ class AppSocialLinks extends StatelessWidget {
     runSpacing: 8,
     children: <Widget>[
       if (_has(website)) ActionChip(avatar: const Icon(Icons.language_rounded, size: 16), label: Text(U.s.website), onPressed: () => ULaunch.url(website!.startsWith("http") ? website! : "https://$website")),
-      if (_has(whatsapp)) ActionChip(avatar: const Icon(Icons.chat_rounded, size: 16), label: Text(U.s.whatsapp), onPressed: () => _open(whatsapp!, ULaunch.whatsApp)),
-      if (_has(telegram)) ActionChip(avatar: const Icon(Icons.send_rounded, size: 16), label: Text(U.s.telegram), onPressed: () => _open(telegram!, ULaunch.telegram)),
-      if (_has(instagram)) ActionChip(avatar: const Icon(Icons.camera_alt_outlined, size: 16), label: Text(U.s.instagram), onPressed: () => _open(instagram!, ULaunch.instagram)),
+      if (_has(whatsapp)) ActionChip(avatar: const Icon(Icons.chat_rounded, size: 16), label: Text(U.s.whatsapp), onPressed: () => _open(whatsapp!, UMessenger.whatsapp)),
+      if (_has(telegram)) ActionChip(avatar: const Icon(Icons.send_rounded, size: 16), label: Text(U.s.telegram), onPressed: () => _open(telegram!, UMessenger.telegram)),
+      if (_has(instagram)) ActionChip(avatar: const Icon(Icons.camera_alt_outlined, size: 16), label: Text(U.s.instagram), onPressed: () => _open(instagram!, UMessenger.instagram)),
     ],
   );
 

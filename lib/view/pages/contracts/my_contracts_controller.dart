@@ -8,7 +8,7 @@ class MyContractsController extends UBaseController {
 
   Future<void> read() async {
     contractState.loading();
-    await UServices.hotel.readDormBedContract(
+    await UServices.dorm.readDormBedContract(
       p: UDormBedContractReadParams(
         userId: U.user.id,
         pageSize: 30,
@@ -28,7 +28,7 @@ class MyContractsController extends UBaseController {
   }
 
   Future<void> _readInvoices() async {
-    await UServices.hotel.readDormBedInvoice(
+    await UServices.dorm.readDormBedInvoice(
       p: UDormBedInvoiceReadParams(
         userId: U.user.id,
         pageSize: 200,
@@ -52,7 +52,7 @@ class MyContractsController extends UBaseController {
 
   Future<void> payFromWallet(UDormBedInvoiceResponse invoice) async {
     ULoading.show();
-    await UServices.hotel.payDormBedInvoice(
+    await UServices.dorm.payDormBedInvoice(
       p: UIdParams(id: invoice.id),
       onOk: (UEmptyResponse response) async {
         ULoading.dismiss();
