@@ -49,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     _MenuRow(icon: Icons.assignment_outlined, title: U.s.dormContracts, onTap: () => AppShell.go(2)),
                     _MenuRow(icon: Icons.person_outline_rounded, title: U.s.personalInformation, onTap: () => UNavigator.push(const PersonalInfoPage())).help("app.profile.personal"),
                     _MenuRow(icon: Icons.notifications_none_rounded, title: U.s.notifications, onTap: () => UNavigator.push(const NotificationPage())),
-                    _MenuRow(icon: Icons.dark_mode_outlined, title: U.s.theme, onTap: () => UApp.isDarkTheme() ? UApp.toLightMode() : UApp.toDarkMode(), showDivider: false),
+                    _MenuRow(icon: Icons.dark_mode_outlined, title: U.s.theme, onTap: () => UApp.isDarkTheme() ? UApp.toLightMode() : UApp.toDarkMode()),
                     const _HelpModeRow(),
                   ],
                 ),
