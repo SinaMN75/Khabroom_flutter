@@ -33,11 +33,11 @@ class _DormServicesPageState extends State<DormServicesPage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
-    appBar: AppBar(title: Text("${U.s.dormServices} · ${widget.contract.bed?.room?.dorm?.title ?? ""}")),
+    appBar: AppBar(title: Text("${U.s.dormServices} · ${widget.contract.bed?.room?.dorm?.title ?? ""}").help("app.services.page", inline: true), actions: const <Widget>[UHelpActions("app.services.")]),
     floatingActionButton: switch (c.tab) {
-      DormServicesTab.notices => FloatingActionButton.extended(onPressed: _requestSheet, icon: const Icon(Icons.add), label: Text(U.s.newRequest)),
-      DormServicesTab.laundry => FloatingActionButton.extended(onPressed: _laundrySheet, icon: const Icon(Icons.add), label: Text(U.s.booking)),
-      DormServicesTab.maintenance => FloatingActionButton.extended(onPressed: _maintenanceSheet, icon: const Icon(Icons.build_outlined), label: Text(U.s.newRequest)),
+      DormServicesTab.notices => FloatingActionButton.extended(onPressed: _requestSheet, icon: const Icon(Icons.add), label: Text(U.s.newRequest)).help("app.services.newRequest"),
+      DormServicesTab.laundry => FloatingActionButton.extended(onPressed: _laundrySheet, icon: const Icon(Icons.add), label: Text(U.s.booking)).help("app.services.newLaundry"),
+      DormServicesTab.maintenance => FloatingActionButton.extended(onPressed: _maintenanceSheet, icon: const Icon(Icons.build_outlined), label: Text(U.s.newRequest)).help("app.services.newMaintenance"),
       _ => null,
     },
     body: RefreshIndicator(
@@ -49,7 +49,7 @@ class _DormServicesPageState extends State<DormServicesPage> {
             spacing: 8,
             runSpacing: 8,
             children: DormServicesTab.values
-                .map((DormServicesTab t) => ChoiceChip(label: Text(_tabTitle(t)), selected: c.tab == t, onSelected: (_) => c.setTab(t).then((_) => setState(() {}))))
+                .map((DormServicesTab t) => ChoiceChip(label: Text(_tabTitle(t)).help("app.services.tab.${t.name}", inline: true), selected: c.tab == t, onSelected: (_) => c.setTab(t).then((_) => setState(() {}))))
                 .toList(),
           ).pOnly(bottom: 12),
           AppStateView(

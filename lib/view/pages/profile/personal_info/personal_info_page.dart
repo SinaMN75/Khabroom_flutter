@@ -15,7 +15,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
-    appBar: AppBar(title: Text(U.s.personalInformation)),
+    appBar: AppBar(title: Text(U.s.personalInformation).help("app.personal.page", inline: true), actions: const <Widget>[UHelpActions("app.personal.")]),
     body: SingleChildScrollView(
       padding: AppResponsive.pagePadding(context),
       child: AppContent(
@@ -37,7 +37,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                   keyboardType: TextInputType.number,
                   maxLength: 10,
                   validator: UValidators.iranianNationalCode(invalidMessage: U.s.theEnteredNationalCodeIsIncorrect),
-                ),
+                ).help("app.personal.nationalCode"),
                 const SizedBox(height: 12),
                 UTextField(labelText: U.s.email, controller: c.controllerEmail, keyboardType: TextInputType.emailAddress, validator: UValidators.email(isRequired: false)),
                 const SizedBox(height: 20),

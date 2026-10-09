@@ -15,7 +15,7 @@ class _LoginMobilePageState extends State<LoginMobilePage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
-    appBar: AppBar(title: Text(U.s.logIn)),
+    appBar: AppBar(title: Text(U.s.logIn).help("app.login.page", inline: true), actions: const <Widget>[UHelpActions("app.login.")]),
     body: SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: AppContent(
@@ -40,7 +40,7 @@ class _LoginMobilePageState extends State<LoginMobilePage> {
                     maxLength: 14,
                     autoFillHints: const <String>[AutofillHints.telephoneNumber],
                     validator: UValidators.number(minLength: 10, maxLength: 14),
-                  ).ltr().fadeSlideIn(milliseconds: 200),
+                  ).ltr().help("app.login.mobile").fadeSlideIn(milliseconds: 200),
                   const SizedBox(height: 16),
                   UButton(
                     title: U.s.continue_,

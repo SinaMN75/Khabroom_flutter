@@ -1,3 +1,4 @@
+import "package:khabroom/utils/app_help.dart";
 import "package:khabroom/view/pages/login/login_mobile/login_mobile_page.dart";
 import "package:khabroom/view/pages/splash/splash_page.dart";
 import "package:u/utilities.dart";
@@ -13,6 +14,7 @@ Future<void> main() async {
     baseUrl: AppConstants.baseUrl,
     apiKey: AppConstants.apiKey,
   );
+  AppHelp.register();
   UHttpClient.onAuthFailed = () async {
     UToast.error(message: U.s.yourSessionHasExpiredPleaseSignInAgain);
     await UNavigator.offAll(const LoginMobilePage());

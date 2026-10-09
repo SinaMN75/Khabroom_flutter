@@ -26,7 +26,7 @@ class _DormDetailPageState extends State<DormDetailPage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
-    appBar: AppBar(title: Text(U.s.dorms)),
+    appBar: AppBar(title: Text(U.s.dorms).help("app.dorm.page", inline: true), actions: const <Widget>[UHelpActions("app.dorm.")]),
     body: UObx(() {
       if (c.detailState.isLoading() || c.detailState.isInitial()) return const UProgressCircular(size: 34, strokeWidth: 3).alignAtCenter();
       if (c.detailState.isError() || c.dorm == null) return UErrorRetry(onTap: c.read);
@@ -197,6 +197,7 @@ class _DormDetailPageState extends State<DormDetailPage> {
     final TextEditingController note = TextEditingController();
     await UFormDialog.show(
       title: "${U.s.applyForResidence} · ${dorm.title}",
+      help: "app.dorm.apply.",
       onSubmit: () async {
         ULoading.show();
         final (UResponse<String>? ok, UEmptyResponse? e, String? x) = await UServices.dorm.createApplication(
@@ -214,8 +215,8 @@ class _DormDetailPageState extends State<DormDetailPage> {
         UTextFieldDatePicker(controller: startC, labelText: U.s.startDate, jalali: true, initialDate: start, onChange: (DateTime d, UJalali j) {
           start = d;
           startC.text = d.toJalaliDate();
-        }).pSymmetric(vertical: 6),
-        UTextField(controller: note, labelText: U.s.description, lines: 3).pSymmetric(vertical: 6),
+        }).help("app.dorm.apply.start").pSymmetric(vertical: 6),
+        UTextField(controller: note, labelText: U.s.description, lines: 3).help("app.dorm.apply.note").pSymmetric(vertical: 6),
         if (dorm.jsonData.requiredDocuments.isNotEmpty) UTextBodySmall("${U.s.requiredDocuments}: ${dorm.jsonData.requiredDocuments.join("، ")}"),
       ],
     );
@@ -239,7 +240,7 @@ class _DormDetailPageState extends State<DormDetailPage> {
           const SizedBox(height: 12),
           UTextBodySmall(U.s.toTakeABedCallTheDormOrVisitInPersonOnceYouAreRegisteredTheContractAndItsMonthlyInvoicesShowUpRightHere, color: scheme.onSurfaceVariant),
           const SizedBox(height: 16),
-          AppInfoRow(label: U.s.monthlyRent, value: money(dorm.minMonthlyRent), emphasize: true),
+          AppInfoRow(label: U.s.monthlyRent, value: money(dorm.minMonthlyRent), emphasize: true).help("app.dorm.rent"),
           if (dorm.jsonData.visitingHours != null) AppInfoRow(label: U.s.visitingHours, value: dorm.jsonData.visitingHours!),
           if (dorm.address != null) AppInfoRow(label: U.s.address, value: dorm.address!),
           if (!_social(dorm).isEmpty) _social(dorm).pOnly(top: 12),
@@ -249,7 +250,7 @@ class _DormDetailPageState extends State<DormDetailPage> {
             icon: const Icon(Icons.assignment_ind_outlined),
             fullWidth: true,
             onTap: () => _apply(dorm),
-          ).pOnly(bottom: 8),
+          ).help("app.dorm.applyButton").pOnly(bottom: 8),
           if (dorm.phoneNumber != null)
             UButton(
               title: U.s.callTheDorm,

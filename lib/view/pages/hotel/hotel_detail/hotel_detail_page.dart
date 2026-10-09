@@ -27,7 +27,7 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
-    appBar: AppBar(title: Text(U.s.hotels)),
+    appBar: AppBar(title: Text(U.s.hotels).help("app.hotel.page", inline: true), actions: const <Widget>[UHelpActions("app.hotel.")]),
     body: UObx(() {
       if (c.hotelDetailState.isLoading() || c.hotelDetailState.isInitial())
         return const UProgressCircular(size: 34, strokeWidth: 3).alignAtCenter();
@@ -39,7 +39,7 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
         child: AppContent(
           child: AppDetailLayout(
             content: _content(context, hotel),
-            side: _bookingCard(context, hotel),
+            side: _bookingCard(context, hotel).help("app.hotel.booking"),
             compactSideFirst: true,
           ),
         ),
@@ -74,7 +74,7 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  AppRating(score: hotel.averageScore, count: hotel.commentCount),
+                  AppRating(score: hotel.averageScore, count: hotel.commentCount).help("app.hotel.rating"),
                   _badges(hotel),
                   if (hotel.address != null) ...<Widget>[
                     const SizedBox(height: 10),
@@ -113,7 +113,7 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
           title: U.s.roomsAndBeds,
           icon: Icons.bed_outlined,
           child: _rooms(context),
-        ),
+        ).help("app.hotel.rooms"),
         const SizedBox(height: 16),
         AppSectionCard(
           title: U.s.cancellationPolicy,
@@ -128,7 +128,7 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
               UTextBodySmall(U.s.cancelBeforeTheFreeWindowEndsAndTheFullAmountGoesBackToYourWallet, color: scheme.onSurfaceVariant),
             ],
           ),
-        ),
+        ).help("app.hotel.cancellation"),
         if (hotel.jsonData.rules.isNotEmpty) ...<Widget>[
           const SizedBox(height: 16),
           AppSectionCard(title: U.s.rules, icon: Icons.gavel_rounded, child: AppBulletList(items: hotel.jsonData.rules)),

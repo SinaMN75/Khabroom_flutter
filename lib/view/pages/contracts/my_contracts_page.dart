@@ -25,7 +25,7 @@ class _MyContractsPageState extends State<MyContractsPage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
-    appBar: AppBar(title: Text(U.s.dormContracts)),
+    appBar: AppBar(title: Text(U.s.dormContracts).help("app.contracts.page", inline: true), actions: const <Widget>[UHelpActions("app.contracts.")]),
     body: RefreshIndicator(
       onRefresh: c.read,
       child: SingleChildScrollView(
@@ -86,13 +86,13 @@ class _MyContractsPageState extends State<MyContractsPage> {
           const SizedBox(height: 12),
           URow(
             children: <Widget>[
-              if (contract.isActive) UButton(expanded: 1, title: U.s.dormServices, icon: const Icon(Icons.room_service_outlined), onTap: () => UNavigator.push(DormServicesPage(contract: contract))),
+              if (contract.isActive) UButton(fullWidth: true, title: U.s.dormServices, icon: const Icon(Icons.room_service_outlined), onTap: () => UNavigator.push(DormServicesPage(contract: contract))).help("app.contracts.services").expanded(),
               if (contract.isActive) const SizedBox(width: 10),
-              UButton(expanded: 1, title: U.s.print, type: UButtonType.outlined, icon: const Icon(Icons.print_outlined), onTap: () => AppPrint.show(UServices.dorm.printContract(p: UIdParams(id: contract.id)))),
+              UButton(fullWidth: true, title: U.s.print, type: UButtonType.outlined, icon: const Icon(Icons.print_outlined), onTap: () => AppPrint.show(UServices.dorm.printContract(p: UIdParams(id: contract.id)))).help("app.contracts.print").expanded(),
             ],
           ),
           const Divider(height: 24),
-          UTextTitleSmall(U.s.monthlyInvoices, color: scheme.onSurface),
+          UTextTitleSmall(U.s.monthlyInvoices, color: scheme.onSurface).help("app.contracts.invoices", inline: true),
           const SizedBox(height: 10),
           if (invoices.isEmpty)
             UTextBodySmall(U.s.youHaveNoInvoices, color: scheme.onSurfaceVariant)
@@ -146,9 +146,9 @@ class _MyContractsPageState extends State<MyContractsPage> {
               const SizedBox(height: 12),
               URow(
                 children: <Widget>[
-                  UButton(expanded: 1, title: U.s.payFromWallet, type: UButtonType.outlined, onTap: () => c.payFromWallet(invoice)),
+                  UButton(fullWidth: true, title: U.s.payFromWallet, type: UButtonType.outlined, onTap: () => c.payFromWallet(invoice)).help("app.contracts.payWallet").expanded(),
                   const SizedBox(width: 10),
-                  UButton(expanded: 1, title: U.s.payWithTheBankGateway, onTap: () => c.payWithGateway(invoice)),
+                  UButton(fullWidth: true, title: U.s.payWithTheBankGateway, onTap: () => c.payWithGateway(invoice)).help("app.contracts.payGateway").expanded(),
                 ],
               ),
             ],

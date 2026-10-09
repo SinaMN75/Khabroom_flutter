@@ -126,8 +126,8 @@ class _MainPageState extends State<MainPage> {
     items: <BottomNavigationBarItem>[
       for (final AppDestination destination in _destinations)
         BottomNavigationBarItem(
-          icon: Icon(destination.icon, size: 21),
-          activeIcon: Icon(destination.activeIcon, size: 21),
+          icon: Icon(destination.icon, size: 21).help("app.home.nav.${destination.id}", inline: true),
+          activeIcon: Icon(destination.activeIcon, size: 21).help("app.home.nav.${destination.id}", inline: true),
           label: destination.title,
         ),
     ],

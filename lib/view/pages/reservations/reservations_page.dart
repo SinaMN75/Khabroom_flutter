@@ -23,7 +23,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
-    appBar: AppBar(title: Text(U.s.myReservations)),
+    appBar: AppBar(title: Text(U.s.myReservations).help("app.reservations.page", inline: true), actions: const <Widget>[UHelpActions("app.reservations.")]),
     body: RefreshIndicator(
       onRefresh: c.read,
       child: SingleChildScrollView(
@@ -39,7 +39,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                   selectedValue: c.selectedTab.value,
                   items: <int, String>{0: U.s.upcoming, 1: U.s.past},
                   onValueChanged: (int? value) => c.selectedTab(value ?? 0),
-                ),
+                ).help("app.reservations.tabs"),
               ),
               const SizedBox(height: 16),
               AppStateView(

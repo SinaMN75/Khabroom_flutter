@@ -24,7 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
-    appBar: AppBar(title: Text(U.s.profile)),
+    appBar: AppBar(title: Text(U.s.profile).help("app.profile.page", inline: true), actions: const <Widget>[UHelpActions("app.profile.")]),
     body: RefreshIndicator(
       onRefresh: c.init,
       child: SingleChildScrollView(
@@ -47,9 +47,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: <Widget>[
                     _MenuRow(icon: Icons.confirmation_number_outlined, title: U.s.myReservations, onTap: () => AppShell.go(1)),
                     _MenuRow(icon: Icons.assignment_outlined, title: U.s.dormContracts, onTap: () => AppShell.go(2)),
-                    _MenuRow(icon: Icons.person_outline_rounded, title: U.s.personalInformation, onTap: () => UNavigator.push(const PersonalInfoPage())),
+                    _MenuRow(icon: Icons.person_outline_rounded, title: U.s.personalInformation, onTap: () => UNavigator.push(const PersonalInfoPage())).help("app.profile.personal"),
                     _MenuRow(icon: Icons.notifications_none_rounded, title: U.s.notifications, onTap: () => UNavigator.push(const NotificationPage())),
                     _MenuRow(icon: Icons.dark_mode_outlined, title: U.s.theme, onTap: () => UApp.isDarkTheme() ? UApp.toLightMode() : UApp.toDarkMode(), showDivider: false),
+                    const _HelpModeRow(),
                   ],
                 ),
               ),
@@ -153,6 +154,25 @@ class _MenuRow extends StatelessWidget {
         ).pSymmetric(horizontal: 14, vertical: 14).onTapInk(onTap),
         if (showDivider) Divider(color: scheme.outlineVariant, height: 1, indent: 14, endIndent: 14),
       ],
+    );
+  }
+}
+
+class _HelpModeRow extends StatelessWidget {
+  const _HelpModeRow();
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+    return UObx(
+      () => URow(
+        children: <Widget>[
+          Icon(Icons.help_outline_rounded, size: 19, color: scheme.onSurfaceVariant),
+          const SizedBox(width: 14),
+          UTextBodyLarge(U.s.helpMode, color: scheme.onSurface, expanded: 1),
+          Switch(value: UHelp.enabled.value, onChanged: (_) => UHelp.toggle()),
+        ],
+      ).pSymmetric(horizontal: 14, vertical: 4).help("app.profile.helpMode"),
     );
   }
 }

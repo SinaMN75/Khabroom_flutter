@@ -38,7 +38,7 @@ class _BookingPageState extends State<BookingPage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
-    appBar: AppBar(title: Text(U.s.hotelReservation)),
+    appBar: AppBar(title: Text(U.s.hotelReservation).help("app.booking.page", inline: true), actions: const <Widget>[UHelpActions("app.booking.")]),
     body: SingleChildScrollView(
       padding: AppResponsive.pagePadding(context),
       child: AppContent(
@@ -68,7 +68,7 @@ class _BookingPageState extends State<BookingPage> {
             AppInfoRow(label: U.s.numberOfGuests, value: widget.guestCount.toString().toPersianNumber()),
           ],
         ),
-      ),
+      ).help("app.booking.stay"),
       const SizedBox(height: 16),
       AppSectionCard(
         title: U.s.guestDetails,
@@ -82,13 +82,13 @@ class _BookingPageState extends State<BookingPage> {
             ],
           ),
         ),
-      ),
+      ).help("app.booking.guests"),
       const SizedBox(height: 16),
       AppSectionCard(
         title: U.s.description,
         icon: Icons.edit_note_rounded,
         child: UTextField(hintText: U.s.description, controller: c.controllerNotes, lines: 3),
-      ),
+      ).help("app.booking.notes"),
     ],
   );
 
@@ -130,9 +130,9 @@ class _BookingPageState extends State<BookingPage> {
             value: money(_total),
           ),
           const Divider(height: 22),
-          AppInfoRow(label: U.s.totalPrice, value: money(_total), emphasize: true, valueColor: scheme.primary),
+          AppInfoRow(label: U.s.totalPrice, value: money(_total), emphasize: true, valueColor: scheme.primary).help("app.booking.total"),
           const SizedBox(height: 16),
-          UTextTitleSmall(U.s.chooseAPaymentMethod, color: scheme.onSurface),
+          UTextTitleSmall(U.s.chooseAPaymentMethod, color: scheme.onSurface).help("app.booking.payment", inline: true),
           const SizedBox(height: 10),
           UObx(
             () => UColumn(
@@ -162,7 +162,7 @@ class _BookingPageState extends State<BookingPage> {
             ),
           ),
           const SizedBox(height: 18),
-          UButton(title: U.s.payNow, fullWidth: true, onTap: _submit),
+          UButton(title: U.s.payNow, fullWidth: true, onTap: _submit).help("app.booking.pay"),
         ],
       ),
     );

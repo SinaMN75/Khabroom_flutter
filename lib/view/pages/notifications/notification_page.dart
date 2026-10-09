@@ -21,7 +21,7 @@ class _NotificationPageState extends State<NotificationPage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
-    appBar: AppBar(title: Text(U.s.notifications)),
+    appBar: AppBar(title: Text(U.s.notifications).help("app.notifications.page", inline: true), actions: const <Widget>[UHelpActions("app.notifications.")]),
     body: RefreshIndicator(
       onRefresh: c.read,
       child: SingleChildScrollView(

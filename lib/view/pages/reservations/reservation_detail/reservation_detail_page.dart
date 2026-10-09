@@ -26,8 +26,8 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
   @override
   Widget build(BuildContext context) => UScaffold(
     appBar: AppBar(
-      title: Text(U.s.reservationDetails),
-      actions: <Widget>[IconButton(icon: const Icon(Icons.print_outlined), tooltip: U.s.print, onPressed: c.printFolio)],
+      title: Text(U.s.reservationDetails).help("app.reservation.page", inline: true),
+      actions: <Widget>[IconButton(icon: const Icon(Icons.print_outlined), tooltip: U.s.print, onPressed: c.printFolio).help("app.reservation.print"), const UHelpActions("app.reservation.")],
     ),
     body: UObx(() {
       if (c.detailState.isLoading() || c.detailState.isInitial()) return const UProgressCircular(size: 34, strokeWidth: 3).alignAtCenter();
@@ -41,7 +41,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
           child: UColumn(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              _headerCard(context, r),
+              _headerCard(context, r).help("app.reservation.status"),
               const SizedBox(height: 16),
               AppSectionCard(
                 title: U.s.reservationDetails,
@@ -59,7 +59,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
                     AppInfoRow(label: U.s.totalPrice, value: money(r.totalPrice), emphasize: true),
                   ],
                 ),
-              ),
+              ).help("app.reservation.details"),
               if (r.jsonData.guests.isNotEmpty) ...<Widget>[
                 const SizedBox(height: 16),
                 AppSectionCard(
@@ -77,7 +77,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
               ],
               if (c.invoice != null) ...<Widget>[
                 const SizedBox(height: 16),
-                _invoiceCard(context, c.invoice!),
+                _invoiceCard(context, c.invoice!).help("app.reservation.invoice"),
               ],
               if (r.jsonData.cancelledAt != null) ...<Widget>[
                 const SizedBox(height: 16),
@@ -97,7 +97,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
               ],
               if (c.isStaying) ...<Widget>[
                 const SizedBox(height: 20),
-                UButton(title: U.s.maintenanceRequest, type: UButtonType.outlined, fullWidth: true, onTap: _maintenanceSheet),
+                UButton(title: U.s.maintenanceRequest, type: UButtonType.outlined, fullWidth: true, onTap: _maintenanceSheet).help("app.reservation.maintenance"),
               ],
               if (c.canCancel) ...<Widget>[
                 const SizedBox(height: 20),
@@ -108,7 +108,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
                   borderColor: Theme.of(context).colorScheme.error,
                   fullWidth: true,
                   onTap: c.cancel,
-                ),
+                ).help("app.reservation.cancel"),
               ],
             ],
           ),

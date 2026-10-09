@@ -22,7 +22,7 @@ class _WalletPageState extends State<WalletPage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
-    appBar: AppBar(title: Text(U.s.wallet)),
+    appBar: AppBar(title: Text(U.s.wallet).help("app.wallet.page", inline: true), actions: const <Widget>[UHelpActions("app.wallet.")]),
     body: RefreshIndicator(
       onRefresh: c.init,
       child: SingleChildScrollView(
@@ -55,12 +55,12 @@ class _WalletPageState extends State<WalletPage> {
                       backgroundColor: AppColors.onGradient,
                       foregroundColor: AppColors.brand,
                       onTap: c.topUp,
-                    ),
+                    ).help("app.wallet.topUp"),
                   ],
                 ),
               ),
               const SizedBox(height: 20),
-              AppSectionHeader(title: U.s.transactions),
+              AppSectionHeader(title: U.s.transactions).help("app.wallet.transactions"),
               const SizedBox(height: 12),
               AppStateView(
                 state: c.txnState,

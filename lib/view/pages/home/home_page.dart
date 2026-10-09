@@ -27,12 +27,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) => UScaffold(
       appBar: AppBar(
-        title: const Text(AppConstants.appName),
+        title: const Text(AppConstants.appName).help("app.home.page", inline: true),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.notifications_none_rounded),
             onPressed: () => UNavigator.push(const NotificationPage()),
-          ),
+          ).help("app.home.notifications"),
+          const UHelpActions("app.home."),
           const SizedBox(width: 4),
         ],
       ),
@@ -47,9 +48,9 @@ class _HomePageState extends State<HomePage> {
               children: <Widget>[
                 _header(context).fadeSlideIn(),
                 const SizedBox(height: 20),
-                UObx(() => c.stayState.isLoaded() ? _stayBanner(context) : const SizedBox.shrink()),
-                AppSectionHeader(title: U.s.hotels, subtitle: U.s.hotelReservation).pOnly(bottom: 14),
-                _filters<TagHotel>(_hotelFilterOptions, c.hotelFilters, c.readHotels),
+                UObx(() => c.stayState.isLoaded() ? _stayBanner(context).help("app.home.banner") : const SizedBox.shrink()),
+                AppSectionHeader(title: U.s.hotels, subtitle: U.s.hotelReservation).help("app.home.hotels").pOnly(bottom: 14),
+                _filters<TagHotel>(_hotelFilterOptions, c.hotelFilters, c.readHotels).help("app.home.hotelFilters"),
                 AppStateView(
                   state: c.hotelState,
                   onRetry: c.readHotels,
@@ -64,8 +65,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                AppSectionHeader(title: U.s.dorms, subtitle: U.s.dormBedsAreBookedInPersonOnly).pOnly(bottom: 14),
-                _filters<TagDorm>(_dormFilterOptions, c.dormFilters, c.readDorms),
+                AppSectionHeader(title: U.s.dorms, subtitle: U.s.dormBedsAreBookedInPersonOnly).help("app.home.dorms").pOnly(bottom: 14),
+                _filters<TagDorm>(_dormFilterOptions, c.dormFilters, c.readDorms).help("app.home.dormFilters"),
                 AppStateView(
                   state: c.dormState,
                   onRetry: c.readDorms,
