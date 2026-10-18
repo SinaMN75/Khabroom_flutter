@@ -15,6 +15,7 @@ Future<void> main() async {
     apiKey: AppConstants.apiKey,
   );
   AppHelp.register();
+  UReceipt.format = (int amount) => money(amount.toDouble());
   UHttpClient.onAuthFailed = () async {
     UToast.error(message: U.s.yourSessionHasExpiredPleaseSignInAgain);
     await UNavigator.offAll(const LoginMobilePage());
@@ -178,7 +179,7 @@ abstract class AppConstants {
   static const String apiKey = "123";
   static const String termsUrl = "https://khabroom.com/terms";
   static const String privacyUrl = "https://khabroom.com/privacy";
-  static const bool amountsAreRial = true;
+  static const bool amountsAreRial = false;
 }
 
 abstract class AppShell {
@@ -187,7 +188,7 @@ abstract class AppShell {
   static void go(int index) => tabIndex(index);
 }
 
-String money(double? amount) => AppConstants.amountsAreRial ? amount.rial() : amount.toman();
+String money(double? amount) => AppConstants.amountsAreRial ? amount.rial() : "${((amount ?? 0) / 10).round().toString().separateNumbers3By3()} ${U.s.toman}";
 
 abstract class AppImages {
   static const String _base = "lib/assets/images";

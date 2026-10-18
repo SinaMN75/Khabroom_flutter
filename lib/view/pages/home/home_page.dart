@@ -244,7 +244,7 @@ class _HotelSpotlight extends StatelessWidget {
           children: <Widget>[
             Icon(Icons.location_on_outlined, size: 14, color: scheme.onSurfaceVariant),
             const SizedBox(width: 5),
-            UTextBodySmall(hotel.address ?? hotel.cityCode, color: scheme.onSurfaceVariant, maxLines: 1, overflow: TextOverflow.ellipsis, expanded: 1),
+            UTextBodySmall(hotel.address ?? UCountries.cityFullName(hotel.cityCode) ?? "", color: scheme.onSurfaceVariant, maxLines: 1, overflow: TextOverflow.ellipsis, expanded: 1),
           ],
         ),
         const SizedBox(height: 8),
@@ -316,7 +316,7 @@ class _DormCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8),
-              UTextBodySmall(dorm.jsonData.nearbyUniversity ?? dorm.address ?? dorm.cityCode, color: scheme.onSurfaceVariant, maxLines: 2, overflow: TextOverflow.ellipsis),
+              UTextBodySmall(dorm.jsonData.nearbyUniversity ?? dorm.address ?? UCountries.cityFullName(dorm.cityCode) ?? "", color: scheme.onSurfaceVariant, maxLines: 2, overflow: TextOverflow.ellipsis),
               const SizedBox(height: 12),
               URow(
                 children: <Widget>[

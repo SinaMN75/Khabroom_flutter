@@ -39,9 +39,14 @@ class WalletController extends UBaseController {
   }
 
   Future<void> topUp() async {
-    final String? value = await UNavigator.inputDialog(title: U.s.topUpWallet, hint: U.s.amount, keyboardType: TextInputType.number, lines: 1);
-    final double amount = double.tryParse(value?.toLatinNumber().replaceAll(",", "") ?? "") ?? 0;
-    if (amount <= 0) return;
+    final String? value = await UNavigator.inputDialog(title: U.s.topUpWallet, hint: "${U.s.amount} (${U.s.toman})", keyboardType: TextInputType.number, lines: 1);
+    if (value == null || value.trim().isEmpty) return;
+    final double toman = double.tryParse(value.toLatinNumber().replaceAll(",", "").replaceAll("٬", "").trim()) ?? 0;
+    if (toman < 1000 || toman > 50000000) {
+      UToast.error(message: U.s.topUpAmountRange);
+      return;
+    }
+    final double amount = toman * 10;
     final bool paid = await UIpgFlow.pay(
       p: UIpgPayParams(amount: amount, tag: TagTxn.chargeWallet),
       receipt: UReceipt(

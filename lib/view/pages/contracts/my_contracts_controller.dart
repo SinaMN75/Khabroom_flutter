@@ -42,7 +42,12 @@ class MyContractsController extends UBaseController {
           invoicesByContract.putIfAbsent(contractId, () => <UDormBedInvoiceResponse>[]).add(invoice);
         }
         for (final List<UDormBedInvoiceResponse> list in invoicesByContract.values)
-          list.sort((UDormBedInvoiceResponse a, UDormBedInvoiceResponse b) => a.dueDate.compareTo(b.dueDate));
+          list.sort((UDormBedInvoiceResponse a, UDormBedInvoiceResponse b) {
+            final bool aOpen = a.tags.contains(TagDormBedInvoice.notPaid.number);
+            final bool bOpen = b.tags.contains(TagDormBedInvoice.notPaid.number);
+            if (aOpen != bOpen) return aOpen ? -1 : 1;
+            return aOpen ? a.dueDate.compareTo(b.dueDate) : b.dueDate.compareTo(a.dueDate);
+          });
         contractState.loaded();
       },
       onError: (UResponse<dynamic> response) => contractState.loaded(),
