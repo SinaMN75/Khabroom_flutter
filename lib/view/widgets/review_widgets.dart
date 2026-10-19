@@ -1,4 +1,6 @@
 import "package:khabroom/view/widgets/app_widgets.dart";
+import "package:khabroom/utils/app_session.dart";
+import "package:khabroom/view/pages/login/login_sheet.dart";
 import "package:u/utilities.dart";
 
 class ReviewSection extends StatelessWidget {
@@ -32,6 +34,7 @@ class ReviewSection extends StatelessWidget {
     String? hotelId,
     String? dormId,
   }) async {
+    if (!AppSession.signedIn.value && !await LoginSheet.show()) return;
     final TextEditingController controller = TextEditingController();
     final URxDouble score = 5.0.obs;
 

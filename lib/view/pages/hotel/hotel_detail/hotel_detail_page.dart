@@ -5,6 +5,7 @@ import "package:khabroom/view/pages/hotel/hotel_detail/hotel_detail_controller.d
 import "package:khabroom/view/widgets/app_widgets.dart";
 import "package:khabroom/view/widgets/place_widgets.dart";
 import "package:khabroom/view/widgets/review_widgets.dart";
+import "package:khabroom/utils/app_session.dart";
 import "package:u/utilities.dart";
 
 class HotelDetailPage extends StatefulWidget {
@@ -241,13 +242,15 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
           _RoomTile(
             item: item,
             onBook: item.isBookable
-                ? () => UNavigator.push(
-                    BookingPage(
-                      hotel: c.hotel!,
-                      availability: item,
-                      checkInDate: c.checkInDate.value!,
-                      checkOutDate: c.checkOutDate.value!,
-                      guestCount: c.guestCount.value,
+                ? () => AppSession.require(
+                    () => UNavigator.push(
+                      BookingPage(
+                        hotel: c.hotel!,
+                        availability: item,
+                        checkInDate: c.checkInDate.value!,
+                        checkOutDate: c.checkOutDate.value!,
+                        guestCount: c.guestCount.value,
+                      ),
                     ),
                   )
                 : null,

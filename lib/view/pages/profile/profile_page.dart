@@ -1,6 +1,12 @@
 import "package:khabroom/main.dart";
 import "package:khabroom/utils/responsive.dart";
+import "package:khabroom/utils/app_session.dart";
+import "package:khabroom/view/pages/contracts/my_contracts_page.dart";
+import "package:khabroom/view/pages/menu/my_orders_page.dart";
 import "package:khabroom/view/pages/notifications/notification_page.dart";
+import "package:khabroom/view/pages/wallet/wallet_page.dart";
+import "package:khabroom/view/pages/workspace/workspace_sheet.dart";
+import "package:khabroom/view/widgets/app_kit.dart";
 import "package:khabroom/view/pages/profile/personal_info/personal_info_page.dart";
 import "package:khabroom/view/pages/profile/profile_controller.dart";
 import "package:khabroom/view/widgets/app_widgets.dart";
@@ -18,7 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
-    c.init();
+    if (!AppSession.isGuest) c.init();
     super.initState();
   }
 
@@ -32,12 +38,18 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: AppResponsive.pagePadding(context),
         child: AppContent(
           maxWidth: AppResponsive.readableMaxWidth + 160,
-          child: UColumn(
+          child: UObx(
+            () => AppSession.isGuest ? _guest(context) : UColumn(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               _identityCard(context),
               const SizedBox(height: 16),
               _walletCard(context),
+              const SizedBox(height: 16),
+              AppCard(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                child: AppTile(icon: Icons.swap_horiz_rounded, title: U.s.whereDoYouWantToWork, subtitle: U.s.switchBetweenYourAccountAndYourBusinesses, onTap: WorkspaceSheet.show),
+              ).help("app.profile.workspace"),
               const SizedBox(height: 16),
               AppCard(
                 padding: const EdgeInsets.symmetric(vertical: 4),
@@ -46,7 +58,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     _MenuRow(icon: Icons.confirmation_number_outlined, title: U.s.myReservations, onTap: () => AppShell.go(1)),
-                    _MenuRow(icon: Icons.assignment_outlined, title: U.s.dormContracts, onTap: () => AppShell.go(2)),
+                    _MenuRow(icon: Icons.assignment_outlined, title: U.s.dormContracts, onTap: () => UNavigator.push(const MyContractsPage())),
+                    _MenuRow(icon: Icons.local_cafe_outlined, title: U.s.myOrders, onTap: () => UNavigator.push(const MyOrdersPage())),
                     _MenuRow(icon: Icons.person_outline_rounded, title: U.s.personalInformation, onTap: () => UNavigator.push(const PersonalInfoPage())).help("app.profile.personal"),
                     _MenuRow(icon: Icons.notifications_none_rounded, title: U.s.notifications, onTap: () => UNavigator.push(const NotificationPage())),
                     _MenuRow(icon: Icons.dark_mode_outlined, title: U.s.theme, onTap: () => UApp.isDarkTheme() ? UApp.toLightMode() : UApp.toDarkMode()),
@@ -66,9 +79,29 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
+          ),
         ),
       ),
     ),
+  );
+
+  Widget _guest(BuildContext context) => UColumn(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: <Widget>[
+      AppCard(child: AppSignInPrompt(title: U.s.signInToSeeYourProfile, icon: Icons.person_outline_rounded, onSignedIn: c.init)).help("app.profile.signIn"),
+      const SizedBox(height: 16),
+      AppCard(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: UColumn(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            _MenuRow(icon: Icons.dark_mode_outlined, title: U.s.theme, onTap: () => UApp.isDarkTheme() ? UApp.toLightMode() : UApp.toDarkMode()),
+            const _HelpModeRow(),
+          ],
+        ),
+      ),
+    ],
   );
 
   Widget _identityCard(BuildContext context) {
@@ -106,7 +139,7 @@ class _ProfilePageState extends State<ProfilePage> {
     radius: 18,
     padding: const EdgeInsets.all(18),
     gradient: const LinearGradient(colors: AppColors.gradient, begin: Alignment.topRight, end: Alignment.bottomLeft),
-    onTap: () => AppShell.go(3),
+    onTap: () => UNavigator.push(const WalletPage()),
     child: URow(
       children: <Widget>[
         UColumn(

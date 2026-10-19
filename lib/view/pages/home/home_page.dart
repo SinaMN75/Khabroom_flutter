@@ -3,7 +3,10 @@ import "package:khabroom/utils/responsive.dart";
 import "package:khabroom/view/pages/dorm/dorm_detail/dorm_detail_page.dart";
 import "package:khabroom/view/pages/home/home_controller.dart";
 import "package:khabroom/view/pages/hotel/hotel_detail/hotel_detail_page.dart";
+import "package:khabroom/utils/app_session.dart";
+import "package:khabroom/view/pages/menu/public_menu_page.dart";
 import "package:khabroom/view/pages/notifications/notification_page.dart";
+import "package:khabroom/view/pages/workspace/workspace_sheet.dart";
 import "package:khabroom/view/pages/reservations/reservation_detail/reservation_detail_page.dart";
 import "package:khabroom/view/widgets/app_widgets.dart";
 import "package:u/utilities.dart";
@@ -29,9 +32,10 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text(AppConstants.appName).help("app.home.page", inline: true),
         actions: <Widget>[
+          IconButton(icon: const Icon(Icons.swap_horiz_rounded), tooltip: U.s.whereDoYouWantToWork, onPressed: WorkspaceSheet.show).help("app.home.workspace"),
           IconButton(
             icon: const Icon(Icons.notifications_none_rounded),
-            onPressed: () => UNavigator.push(const NotificationPage()),
+            onPressed: () => AppSession.require(() => UNavigator.push(const NotificationPage())),
           ).help("app.home.notifications"),
           const UHelpActions("app.home."),
           const SizedBox(width: 4),
@@ -65,6 +69,18 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 const SizedBox(height: 12),
+                UObx(
+                  () => c.cafeState.isLoaded()
+                      ? UColumn(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            AppSectionHeader(title: U.s.cafesAndRestaurants, subtitle: U.s.seeTheMenuAndOrderFromYourTable).help("app.home.cafes").pOnly(bottom: 14),
+                            AppGrid(children: <Widget>[for (final UCafeResponse cafe in c.cafes) _CafeCard(cafe: cafe)]),
+                            const SizedBox(height: 24),
+                          ],
+                        )
+                      : const SizedBox.shrink(),
+                ),
                 AppSectionHeader(title: U.s.dorms, subtitle: U.s.dormBedsAreBookedInPersonOnly).help("app.home.dorms").pOnly(bottom: 14),
                 _filters<TagDorm>(_dormFilterOptions, c.dormFilters, c.readDorms).help("app.home.dormFilters"),
                 AppStateView(
@@ -113,7 +129,7 @@ class _HomePageState extends State<HomePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        UTextBodySmall("${U.s.welcome} ${U.user.firstName ?? ""}".trim(), color: scheme.onSurfaceVariant),
+        UTextBodySmall("${U.s.welcome} ${AppSession.isGuest ? "" : U.user.firstName ?? ""}".trim(), color: scheme.onSurfaceVariant),
         const SizedBox(height: 4),
         UTextHeadlineMedium(U.s.whereAreYouStaying, color: scheme.onSurface),
       ],
@@ -333,6 +349,40 @@ class _DormCard extends StatelessWidget {
                   AppChip(label: U.s.inPerson, icon: Icons.handshake_outlined),
                 ],
               ),
+            ],
+          ).pAll(14),
+        ],
+      ),
+    );
+  }
+}
+
+class _CafeCard extends StatelessWidget {
+  const _CafeCard({required this.cafe});
+
+  final UCafeResponse cafe;
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+    return AppCard(
+      padding: EdgeInsets.zero,
+      clip: true,
+      onTap: cafe.menuId == null ? null : () => UNavigator.push(PublicMenuPage(menuId: cafe.menuId!)),
+      child: UColumn(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          AppCoverImage(media: cafe.media, height: 130, fallbackIcon: Icons.local_cafe_rounded),
+          UColumn(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              UTextTitleMedium(cafe.title, color: scheme.onSurface, maxLines: 1),
+              const SizedBox(height: 4),
+              UTextBodySmall(cafe.jsonData.openHours ?? cafe.address ?? "", color: scheme.onSurfaceVariant, maxLines: 1),
+              const SizedBox(height: 8),
+              URow(children: <Widget>[AppRating(score: cafe.averageScore, count: cafe.commentCount, compact: true), const Spacer(), AppChip(label: U.s.menu, icon: Icons.restaurant_menu_rounded, tone: AppTone.brand)]),
             ],
           ).pAll(14),
         ],

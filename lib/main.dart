@@ -1,5 +1,7 @@
 import "package:khabroom/utils/app_help.dart";
-import "package:khabroom/view/pages/login/login_mobile/login_mobile_page.dart";
+import "package:khabroom/utils/app_session.dart";
+import "package:khabroom/view/pages/main/main_page.dart";
+import "package:khabroom/view/pages/menu/public_menu_page.dart";
 import "package:khabroom/view/pages/splash/splash_page.dart";
 import "package:u/utilities.dart";
 
@@ -18,19 +20,21 @@ Future<void> main() async {
   UReceipt.format = (int amount) => money(amount.toDouble());
   UHttpClient.onAuthFailed = () async {
     UToast.error(message: U.s.yourSessionHasExpiredPleaseSignInAgain);
-    await UNavigator.offAll(const LoginMobilePage());
+    await AppSession.signOut();
+    await UNavigator.offAll(const MainPage());
   };
   String? locale = ULocalStorage.getString(UConstants.locale);
   if (locale == null) {
     ULocalStorage.setLocale("fa");
     locale = "fa";
   }
+  final (String, int?)? link = AppLinks.menuOf(Uri.base);
   runApp(
     UMaterialApp(
       locale: Locale(locale),
       lightThemeData: Core.lightThemeData,
       darkThemeData: Core.darkThemeData,
-      home: const SplashPage(),
+      home: link == null ? const SplashPage() : PublicMenuPage(menuId: link.$1, table: link.$2, fromLink: true),
     ),
   );
 }
@@ -180,6 +184,21 @@ abstract class AppConstants {
   static const String termsUrl = "https://khabroom.com/terms";
   static const String privacyUrl = "https://khabroom.com/privacy";
   static const bool amountsAreRial = false;
+  static const String webAppUrl = "https://app.khabroom.com";
+}
+
+/// Links that open the app at a place: a table's QR code opens that café's menu with the table number.
+abstract class AppLinks {
+  static String menu(String menuId, {int? table}) => "${AppConstants.webAppUrl}/#/menu/$menuId${table == null ? "" : "?t=$table"}";
+
+  static (String, int?)? menuOf(Uri uri) {
+    final String path = uri.fragment.isNotEmpty ? uri.fragment : uri.path;
+    final Uri inner = Uri.parse(path.startsWith("/") ? path : "/$path");
+    final List<String> parts = inner.pathSegments;
+    final int i = parts.indexOf("menu");
+    if (i < 0 || i + 1 >= parts.length) return null;
+    return (parts[i + 1], int.tryParse(inner.queryParameters["t"] ?? uri.queryParameters["t"] ?? ""));
+  }
 }
 
 abstract class AppShell {

@@ -4,6 +4,7 @@ import "package:khabroom/view/pages/dorm/dorm_detail/dorm_detail_controller.dart
 import "package:khabroom/view/widgets/app_widgets.dart";
 import "package:khabroom/view/widgets/place_widgets.dart";
 import "package:khabroom/view/widgets/review_widgets.dart";
+import "package:khabroom/utils/app_session.dart";
 import "package:u/utilities.dart";
 
 class DormDetailPage extends StatefulWidget {
@@ -249,7 +250,7 @@ class _DormDetailPageState extends State<DormDetailPage> {
             title: U.s.applyForResidence,
             icon: const Icon(Icons.assignment_ind_outlined),
             fullWidth: true,
-            onTap: () => _apply(dorm),
+            onTap: () => AppSession.require(() => _apply(dorm)),
           ).help("app.dorm.applyButton").pOnly(bottom: 8),
           if (dorm.phoneNumber != null)
             UButton(

@@ -1,3 +1,4 @@
+import "package:khabroom/utils/app_session.dart";
 import "package:khabroom/view/pages/splash/splash_page.dart";
 import "package:u/utilities.dart";
 
@@ -25,7 +26,7 @@ class ProfileController extends UBaseController {
   Future<void> logout() async {
     final bool confirmed = await UNavigator.confirmAsync(title: U.s.logout, message: U.s.areYouSure, destructive: true);
     if (!confirmed) return;
-    await UAuth.signOut();
+    await AppSession.signOut();
     await UNavigator.offAll(const SplashPage());
   }
 }

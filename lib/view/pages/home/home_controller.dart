@@ -1,9 +1,12 @@
+import "package:khabroom/utils/app_session.dart";
 import "package:u/utilities.dart";
 
 class HomeController extends UBaseController {
   final URxState hotelState = URxState();
   final URxState dormState = URxState();
   final URxState stayState = URxState();
+  final URxState cafeState = URxState();
+  List<UCafeResponse> cafes = <UCafeResponse>[];
 
   List<UHotelResponse> hotels = <UHotelResponse>[];
   List<UDormResponse> dorms = <UDormResponse>[];
@@ -15,7 +18,18 @@ class HomeController extends UBaseController {
   final List<int> dormFilters = <int>[];
 
   Future<void> init() async {
-    await Future.wait(<Future<void>>[readHotels(), readDorms(), readMyStay()]);
+    await Future.wait(<Future<void>>[readHotels(), readDorms(), readCafes(), readMyStay()]);
+  }
+
+  Future<void> readCafes() async {
+    cafeState.loading();
+    final UResponse<List<UCafeResponse>>? r = (await UServices.cafe.readCafes(p: UCafeReadParams(pageSize: 20, pageNumber: 1, selectorArgs: const UCafeSelectorArgs(media: true)))).$1;
+    if (r == null) {
+      cafeState.error();
+      return;
+    }
+    cafes = r.result ?? <UCafeResponse>[];
+    cafes.isEmpty ? cafeState.emptying() : cafeState.loaded();
   }
 
   Future<void> readHotels() async {
@@ -54,6 +68,12 @@ class HomeController extends UBaseController {
 
   /// The one card at the top of the home page: the next stay, or the invoice that needs paying.
   Future<void> readMyStay() async {
+    if (AppSession.isGuest) {
+      upcomingReservations = <UHotelReservationResponse>[];
+      unpaidInvoices = <UDormBedInvoiceResponse>[];
+      stayState.emptying();
+      return;
+    }
     stayState.loading();
     await UServices.hotel.readHotelReservations(
       p: UHotelReservationReadParams(
@@ -76,6 +96,7 @@ class HomeController extends UBaseController {
   Future<void> _readUnpaidDormInvoices() async {
     await UServices.dorm.readDormBedInvoice(
       p: UDormBedInvoiceReadParams(
+        userId: U.user.id,
         pageSize: 20,
         isPaid: false,
         selectorArgs: const UDormBedInvoiceSelectorArgs(contract: UDormBedContractSelectorArgs(bed: UDormBedSelectorArgs(room: UDormRoomSelectorArgs(dorm: UDormSelectorArgs())))),
