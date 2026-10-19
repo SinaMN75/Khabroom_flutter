@@ -104,7 +104,6 @@ class _DormApplicationsPageState extends State<DormApplicationsPage> {
         ),
       ),
     ),
-    showDragHandle: true,
   );
 
   @override

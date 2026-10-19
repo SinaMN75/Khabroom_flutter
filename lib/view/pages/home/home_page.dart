@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                         )
                       : const SizedBox.shrink(),
                 ),
-                AppSectionHeader(title: U.s.dorms, subtitle: U.s.dormBedsAreBookedInPersonOnly).help("app.home.dorms").pOnly(bottom: 14),
+                AppSectionHeader(title: U.s.dorms, subtitle: U.s.applyForABedOnline).help("app.home.dorms").pOnly(bottom: 14),
                 _filters<TagDorm>(_dormFilterOptions, c.dormFilters, c.readDorms).help("app.home.dormFilters"),
                 AppStateView(
                   state: c.dormState,
@@ -346,7 +346,7 @@ class _DormCard extends StatelessWidget {
                       UTextTitleSmall(money(dorm.minMonthlyRent), color: scheme.onSurface),
                     ],
                   ),
-                  AppChip(label: U.s.inPerson, icon: Icons.handshake_outlined),
+                  AppChip(label: U.s.applyForResidence, icon: Icons.edit_note_rounded),
                 ],
               ),
             ],

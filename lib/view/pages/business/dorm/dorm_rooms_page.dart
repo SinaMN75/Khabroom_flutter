@@ -158,7 +158,6 @@ class _DormRoomsPageState extends State<DormRoomsPage> {
           ],
         ).pSymmetric(horizontal: 12),
       ),
-      showDragHandle: true,
     );
   }
 

@@ -71,7 +71,7 @@ class _MainPageState extends State<MainPage> {
         body: URow(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            if (!compact) _sideMenu(context),
+            if (compact) const SizedBox.shrink() else _sideMenu(context),
             const Expanded(child: _ShellPages()),
           ],
         ),

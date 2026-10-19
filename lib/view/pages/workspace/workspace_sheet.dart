@@ -15,7 +15,7 @@ class WorkspaceSheet extends StatelessWidget {
     ULoading.show();
     await AppWorkspace.load();
     ULoading.dismiss();
-    await UNavigator.bottomSheet<void>(const WorkspaceSheet(), showDragHandle: true);
+    await UNavigator.bottomSheet<void>(const WorkspaceSheet());
   });
 
   static Future<void> _open(UOrganizationResponse? o) async {

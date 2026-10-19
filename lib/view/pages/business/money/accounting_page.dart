@@ -153,7 +153,6 @@ class _AccountingPageState extends State<AccountingPage> {
           children: <Widget>[for (final TagCheck t in <TagCheck>[TagCheck.cleared, TagCheck.bounced, TagCheck.returned]) AppTile(title: t.localizedTitle, onTap: () => UNavigator.back(t))],
         ).pSymmetric(horizontal: 16),
       ),
-      showDragHandle: true,
     );
     if (s != null && await appSend(UServices.accounting.setCheckStatus(p: UCheckStatusParams(id: c.id, status: s.number, accountId: _boxes.firstOrNull?.id)))) await read();
   }

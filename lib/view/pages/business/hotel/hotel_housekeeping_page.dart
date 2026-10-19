@@ -54,7 +54,6 @@ class _HotelHousekeepingPageState extends State<HotelHousekeepingPage> {
           ],
         ).pSymmetric(horizontal: 12),
       ),
-      showDragHandle: true,
     );
     if (s == null) return;
     if (await appSend(UServices.hotel.setHousekeeping(p: UHotelHousekeepingParams(roomId: r.id, number: u.number, status: s.number)), toast: false)) await read();

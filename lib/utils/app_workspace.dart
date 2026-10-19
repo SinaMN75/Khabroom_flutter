@@ -147,9 +147,9 @@ abstract class AppWorkspace {
   /// The places this person may work in: all of them for the owner, only the assigned ones for staff.
   static List<AppPlace> get myPlaces => places.where((AppPlace p) => isOwner || canAny(p.kind.permissions, placeId: p.id)).toList();
 
-  static String roleOf(UOrganizationResponse o) {
-    if (isOwnerOf(o)) return U.s.owner;
-    final UOrganizationMember? m = memberOf(o);
+  static String roleOf(UOrganizationResponse o) => isOwnerOf(o) ? U.s.owner : roleOfMember(memberOf(o));
+
+  static String roleOfMember(UOrganizationMember? m) {
     if (m == null) return U.s.staff;
     if (m.can(TagUser.permissionManageAccounting) || m.can(TagUser.permissionViewAccounting)) return U.s.accountant;
     if (m.can(TagUser.permissionManageReservations)) return U.s.reception;

@@ -163,12 +163,11 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 class _MenuRow extends StatelessWidget {
-  const _MenuRow({required this.icon, required this.title, required this.onTap, this.showDivider = true});
+  const _MenuRow({required this.icon, required this.title, required this.onTap});
 
   final IconData icon;
   final String title;
   final VoidCallback onTap;
-  final bool showDivider;
 
   @override
   Widget build(BuildContext context) {
@@ -185,7 +184,7 @@ class _MenuRow extends StatelessWidget {
             Icon(Icons.chevron_left_rounded, size: 20, color: scheme.onSurfaceVariant),
           ],
         ).pSymmetric(horizontal: 14, vertical: 14).onTapInk(onTap),
-        if (showDivider) Divider(color: scheme.outlineVariant, height: 1, indent: 14, endIndent: 14),
+        Divider(color: scheme.outlineVariant, height: 1, indent: 14, endIndent: 14),
       ],
     );
   }

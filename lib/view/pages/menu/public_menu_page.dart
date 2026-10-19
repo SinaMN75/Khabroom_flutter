@@ -199,7 +199,7 @@ class _PublicMenuPageState extends State<PublicMenuPage> {
     UToast.snackBar(message: "${i.title} ${U.s.wasAddedToYourOrder}");
   }
 
-  Future<void> _openItem(UMenuItemResponse i) => UNavigator.bottomSheet<void>(_ItemSheet(item: i, c: c), showDragHandle: true);
+  Future<void> _openItem(UMenuItemResponse i) => UNavigator.bottomSheet<void>(_ItemSheet(item: i, c: c));
 
   Widget _cartBar(BuildContext context) => SafeArea(
     child: UContainer(
@@ -207,7 +207,7 @@ class _PublicMenuPageState extends State<PublicMenuPage> {
       radius: 20,
       color: _deep,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      onTap: () => UNavigator.bottomSheet<void>(_CartSheet(c: c), showDragHandle: true),
+      onTap: () => UNavigator.bottomSheet<void>(_CartSheet(c: c)),
       child: URow(
         children: <Widget>[
           UContainer(radius: 10, color: c.accent, padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4), child: UTextLabelLarge(c.count.toString().toPersianNumber(), color: Colors.white)),

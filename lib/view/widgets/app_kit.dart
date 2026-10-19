@@ -176,7 +176,7 @@ abstract class AppForm {
     String? submitTitle,
     String? help,
   }) async =>
-      await UNavigator.bottomSheet<bool>(_AppFormSheet(title: title, builder: children, onSubmit: onSubmit, submitTitle: submitTitle, help: help), showDragHandle: true) ?? false;
+      await UNavigator.bottomSheet<bool>(_AppFormSheet(title: title, builder: children, onSubmit: onSubmit, submitTitle: submitTitle, help: help)) ?? false;
 }
 
 class _AppFormSheet extends StatefulWidget {

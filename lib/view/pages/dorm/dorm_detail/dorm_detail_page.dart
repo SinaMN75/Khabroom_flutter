@@ -223,7 +223,6 @@ class _DormDetailPageState extends State<DormDetailPage> {
     );
   }
 
-  /// Dorms are not booked online, so the side card explains the in-person flow and gives a way to reach them.
   Widget _contactCard(BuildContext context, UDormResponse dorm) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     return AppCard(
@@ -235,11 +234,11 @@ class _DormDetailPageState extends State<DormDetailPage> {
             children: <Widget>[
               UIconBackground(Icons.handshake_outlined, color: scheme.primary),
               const SizedBox(width: 12),
-              UTextTitleSmall(U.s.dormBedsAreBookedInPersonOnly, color: scheme.onSurface, expanded: 1),
+              UTextTitleSmall(U.s.applyForABedOnline, color: scheme.onSurface, expanded: 1),
             ],
           ),
           const SizedBox(height: 12),
-          UTextBodySmall(U.s.toTakeABedCallTheDormOrVisitInPersonOnceYouAreRegisteredTheContractAndItsMonthlyInvoicesShowUpRightHere, color: scheme.onSurfaceVariant),
+          UTextBodySmall(U.s.sendYourApplicationFromThisPageOnceTheManagerApprovesItAndSignsTheContractTheContractAndItsMonthlyInvoicesShowUpUnderDormContracts, color: scheme.onSurfaceVariant),
           const SizedBox(height: 16),
           AppInfoRow(label: U.s.monthlyRent, value: money(dorm.minMonthlyRent), emphasize: true).help("app.dorm.rent"),
           if (dorm.jsonData.visitingHours != null) AppInfoRow(label: U.s.visitingHours, value: dorm.jsonData.visitingHours!),

@@ -7,7 +7,7 @@ import "package:u/utilities.dart";
 class LoginSheet extends StatefulWidget {
   const LoginSheet({super.key});
 
-  static Future<bool> show() async => await UNavigator.bottomSheet<bool>(const LoginSheet(), showDragHandle: true) ?? false;
+  static Future<bool> show() async => await UNavigator.bottomSheet<bool>(const LoginSheet()) ?? false;
 
   @override
   State<LoginSheet> createState() => _LoginSheetState();

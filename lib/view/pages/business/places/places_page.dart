@@ -53,7 +53,6 @@ class _PlacesPageState extends State<PlacesPage> {
                 children: <Widget>[for (final AppKind k in kinds) AppTile(icon: k.icon, iconColor: k.color, title: k.title, onTap: () => UNavigator.back(k)).pSymmetric(horizontal: 16)],
               ),
             ),
-            showDragHandle: true,
           );
     if (kind == null) return;
     if (await PlaceForm.show(kind)) await read();

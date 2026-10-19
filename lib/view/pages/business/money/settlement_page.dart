@@ -105,7 +105,6 @@ class _SettlementPageState extends State<SettlementPage> {
         ],
       ).pSymmetric(horizontal: 20, vertical: 8),
     ),
-    showDragHandle: true,
   );
 
   static String _txnTitle(UWalletTxnResponse t) => t.tag?.localizedTitle ?? t.jsonData.detail1 ?? U.s.payment;

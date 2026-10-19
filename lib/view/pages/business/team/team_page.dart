@@ -51,7 +51,7 @@ class _TeamPageState extends State<TeamPage> {
     final UOrganizationMember? m = o.jsonData.members.where((UOrganizationMember x) => x.userId == u.id).firstOrNull;
     if (m == null) return "";
     final List<String> places = m.places.map((UOrganizationMemberPlace p) => AppWorkspace.places.where((AppPlace x) => x.id == p.placeId).firstOrNull?.title).whereType<String>().toList();
-    return <String>[AppWorkspace.roleOf(o), if (places.isNotEmpty) places.join("، ")].join(" · ");
+    return <String>[AppWorkspace.roleOfMember(m), if (places.isNotEmpty) places.join("، ")].join(" · ");
   }
 
   @override

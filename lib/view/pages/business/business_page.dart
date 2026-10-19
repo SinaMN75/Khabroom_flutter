@@ -69,14 +69,23 @@ class _BusinessPageState extends State<BusinessPage> {
           body: URow(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              if (!compact)
+              if (compact)
+                const SizedBox.shrink()
+              else
                 USideMenu(
                   controller: menu,
                   enableSearch: false,
                   enablePinning: false,
                   header: URow(
                     children: <Widget>[
-                      UContainer(width: 36, height: 36, radius: 12, color: kind.color, alignment: Alignment.center, child: Icon(kind.icon, color: Colors.white, size: 20)),
+                      UContainer(
+                        width: 36,
+                        height: 36,
+                        radius: 12,
+                        color: kind.color,
+                        alignment: Alignment.center,
+                        child: Icon(kind.icon, color: Colors.white, size: 20),
+                      ),
                       const SizedBox(width: 10),
                       UTextTitleMedium(AppWorkspace.org.title, color: Theme.of(context).colorScheme.onPrimary, expanded: 1, maxLines: 1),
                     ],
@@ -95,7 +104,9 @@ class _BusinessPageState extends State<BusinessPage> {
                       UMenuItem(id: destinations[i].id, title: destinations[i].title, icon: destinations[i].icon, selectedIcon: destinations[i].activeIcon, pinnable: false, onTap: () => _select(i)),
                   ],
                 ),
-              Expanded(child: KeyedSubtree(key: ValueKey<String>(destinations[index].id), child: _page(destinations[index].id))),
+              Expanded(
+                child: KeyedSubtree(key: ValueKey<String>(destinations[index].id), child: _page(destinations[index].id)),
+              ),
             ],
           ),
           bottomNavigationBar: compact

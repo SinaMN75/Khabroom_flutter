@@ -26,7 +26,6 @@ abstract class AppPay {
     ULoading.dismiss();
     return await UNavigator.bottomSheet<bool>(
           _PaySheet(title: title, amount: amount, balance: balance, tag: tag, invoiceId: invoiceId, payFromWallet: payFromWallet, lines: lines),
-          showDragHandle: true,
         ) ??
         false;
   }

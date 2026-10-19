@@ -52,9 +52,8 @@ class _CafeHomePageState extends State<CafeHomePage> {
     final String? menuId = widget.place.menuId;
     if (menuId != null && menu == null) menu = (await UServices.cafe.openMenu(p: UMenuOpenParams(id: menuId, manage: true))).$1?.result;
     if (canOrders) {
-      final DateTime today = DateTime.now().copyWith(hour: 0, minute: 0);
       orders = (await UServices.cafe.readOrders(
-        p: UMenuOrderReadParams(manage: true, placeId: widget.place.id, fromDate: today.subtract(const Duration(hours: 6)), tags: open.map((TagMenuOrder t) => t.number).toList(), pageSize: 200, pageNumber: 1),
+        p: UMenuOrderReadParams(manage: true, placeId: widget.place.id, statuses: open.map((TagMenuOrder t) => t.number).toList(), pageSize: 200, pageNumber: 1),
       )).$1?.result ?? orders;
       final int newCount = orders.where((UMenuOrderResponse o) => o.status == TagMenuOrder.paid).length;
       if (silent && newCount > lastNew) UToast.snackBar(message: U.s.youHaveANewOrder);
