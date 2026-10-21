@@ -1,7 +1,6 @@
 import "package:khabroom/main.dart";
 import "package:khabroom/utils/app_workspace.dart";
 import "package:khabroom/utils/status_helpers.dart";
-import "package:khabroom/view/pages/business/shared/receive_sheet.dart";
 import "package:khabroom/view/widgets/app_kit.dart";
 import "package:khabroom/view/widgets/app_widgets.dart";
 import "package:u/utilities.dart";
@@ -155,15 +154,7 @@ class _HotelReservationPageState extends State<HotelReservationPage> {
                       icon: Icons.receipt_outlined,
                       title: "${i.jsonData.detail1 ?? (i.tags.contains(TagHotelInvoice.extra.number) ? U.s.extra : U.s.stay)} · ${money(i.debtAmount + i.penaltyAmount)}",
                       subtitle: i.paidAmount > 0 ? "${U.s.paid} ${money(i.paidAmount)}" : null,
-                      trailing: !i.tags.contains(TagHotelInvoice.notPaid.number) || !can(TagUser.permissionPayInvoices)
-                          ? AppStatusChip(status: AppStatus.hotelInvoice(i.tags, i.dueDate))
-                          : UButton(
-                              title: U.s.receive,
-                              size: UButtonSize.small,
-                              onTap: () async {
-                                if (await ReceiveSheet.show(title: U.s.receivePayment, due: _due(i), id: i.id, receive: (UInvoiceReceiveParams p) => UServices.hotel.receiveHotelInvoice(p: p))) await read();
-                              },
-                            ),
+                      trailing: AppStatusChip(status: AppStatus.hotelInvoice(i.tags, i.dueDate)),
                     ),
                 ],
               ),

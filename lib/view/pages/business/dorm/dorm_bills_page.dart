@@ -1,8 +1,6 @@
 import "package:khabroom/main.dart";
-import "package:khabroom/utils/app_workspace.dart";
 import "package:khabroom/utils/status_helpers.dart";
 import "package:khabroom/view/pages/business/dorm/dorm_contract_page.dart";
-import "package:khabroom/view/pages/business/shared/receive_sheet.dart";
 import "package:khabroom/view/widgets/app_kit.dart";
 import "package:khabroom/view/widgets/app_widgets.dart";
 import "package:u/utilities.dart";
@@ -104,15 +102,7 @@ class _DormBillsPageState extends State<DormBillsPage> {
                           title: "${i.contract?.user?.firstName ?? ""} ${i.contract?.user?.lastName ?? ""}".trim().isEmpty ? U.s.resident : "${i.contract?.user?.firstName ?? ""} ${i.contract?.user?.lastName ?? ""}",
                           subtitle: "${i.contract?.bed?.room?.title ?? ""} · ${money(tab == _BillTab.paid ? i.paidAmount : i.netDue)} · ${i.dueDate.toJalaliDate().toPersianNumber()}",
                           onTap: i.contract == null ? null : () => UNavigator.push(DormContractPage(contractId: i.contract!.id)).then((_) => read()),
-                          trailing: i.isPaid || !AppWorkspace.can(TagUser.permissionPayInvoices, placeId: widget.dormId)
-                              ? AppStatusChip(status: AppStatus.dormInvoice(i.tags, i.dueDate))
-                              : UButton(
-                                  title: U.s.receive,
-                                  size: UButtonSize.small,
-                                  onTap: () async {
-                                    if (await ReceiveSheet.show(title: U.s.receivePayment, due: i.netDue, id: i.id, receive: (UInvoiceReceiveParams p) => UServices.dorm.receiveDormBedInvoice(p: p))) await read();
-                                  },
-                                ),
+                          trailing: AppStatusChip(status: AppStatus.dormInvoice(i.tags, i.dueDate)),
                         ),
                     ],
                   ),

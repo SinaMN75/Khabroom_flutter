@@ -201,7 +201,7 @@ class _InventoryPageState extends State<InventoryPage> {
             icon: Icons.shopping_bag_outlined,
             title: "${U.s.purchase} ${p.number.toString().toPersianNumber()} · ${money(p.total)}",
             subtitle: "${p.supplierTitle ?? p.warehouseTitle ?? ""} · ${p.date.toJalaliDate().toPersianNumber()}",
-            trailing: p.tags.contains(TagPurchase.requested.number) && AppWorkspace.can(TagUser.permissionManageAccounting)
+            trailing: p.tags.contains(TagPurchase.requested.number) && AppWorkspace.can(TagUser.permissionManageInventory)
                 ? URow(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[

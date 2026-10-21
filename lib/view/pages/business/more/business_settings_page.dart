@@ -23,12 +23,11 @@ class _BusinessSettingsPageState extends State<BusinessSettingsPage> {
   late final TextEditingController iban = TextEditingController(text: o.bankAccount?.iBanNumber);
   late final TextEditingController nationalId = TextEditingController(text: o.jsonData.nationalId);
   late final TextEditingController economicCode = TextEditingController(text: o.jsonData.economicCode);
-  late final TextEditingController vat = TextEditingController(text: o.jsonData.vatPercent == 0 ? "" : o.jsonData.vatPercent.toInt().toString());
   bool busy = false;
 
   @override
   void dispose() {
-    for (final TextEditingController c in <TextEditingController>[title, phone, address, card, account, iban, nationalId, economicCode, vat]) c.dispose();
+    for (final TextEditingController c in <TextEditingController>[title, phone, address, card, account, iban, nationalId, economicCode]) c.dispose();
     super.dispose();
   }
 
@@ -47,7 +46,6 @@ class _BusinessSettingsPageState extends State<BusinessSettingsPage> {
           iBanNumber: iban.valueOrNull(),
           nationalId: nationalId.text.trim(),
           economicCode: economicCode.text.trim(),
-          vatPercent: double.tryParse(vat.numString()) ?? 0,
         ),
       ),
     );
@@ -98,7 +96,6 @@ class _BusinessSettingsPageState extends State<BusinessSettingsPage> {
               children: <Widget>[
                 UTextField(controller: nationalId, labelText: U.s.nationalId, keyboardType: TextInputType.number),
                 UTextField(controller: economicCode, labelText: U.s.economicCode, keyboardType: TextInputType.number),
-                UTextField(controller: vat, labelText: U.s.vatPercent, keyboardType: TextInputType.number).help("app.businessSettings.vat"),
               ],
             ),
           ),

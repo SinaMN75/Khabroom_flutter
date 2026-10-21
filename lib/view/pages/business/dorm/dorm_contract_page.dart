@@ -1,7 +1,6 @@
 import "package:khabroom/main.dart";
 import "package:khabroom/utils/app_workspace.dart";
 import "package:khabroom/utils/status_helpers.dart";
-import "package:khabroom/view/pages/business/shared/receive_sheet.dart";
 import "package:khabroom/view/widgets/app_kit.dart";
 import "package:khabroom/view/widgets/app_widgets.dart";
 import "package:u/utilities.dart";
@@ -224,15 +223,7 @@ class _DormContractPageState extends State<DormContractPage> {
                       icon: Icons.receipt_outlined,
                       title: "${TagDormBedInvoice.values.where((TagDormBedInvoice t) => t.number < 200 && i.tags.contains(t.number)).firstOrNull?.localizedTitle ?? U.s.invoice} · ${money(i.debtAmount + i.penaltyAmount)}",
                       subtitle: "${U.s.dueDate}: ${i.dueDate.toJalaliDate().toPersianNumber()}${i.paidAmount > 0 ? " · ${U.s.paid} ${money(i.paidAmount)}" : ""}",
-                      trailing: i.isPaid || !AppWorkspace.can(TagUser.permissionPayInvoices, placeId: dormId)
-                          ? AppStatusChip(status: AppStatus.dormInvoice(i.tags, i.dueDate))
-                          : UButton(
-                              title: U.s.receive,
-                              size: UButtonSize.small,
-                              onTap: () async {
-                                if (await ReceiveSheet.show(title: U.s.receivePayment, due: i.netDue, id: i.id, receive: (UInvoiceReceiveParams p) => UServices.dorm.receiveDormBedInvoice(p: p))) await read();
-                              },
-                            ),
+                      trailing: AppStatusChip(status: AppStatus.dormInvoice(i.tags, i.dueDate)),
                     ),
                 ],
               ),

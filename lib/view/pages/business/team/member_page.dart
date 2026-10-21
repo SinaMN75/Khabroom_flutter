@@ -40,8 +40,6 @@ class _MemberPageState extends State<MemberPage> {
   }
 
   String _label(TagUser p) => switch (p) {
-    TagUser.permissionManageAccounting => U.s.recordAccounting,
-    TagUser.permissionViewAccounting => U.s.seeTheBooks,
     TagUser.permissionManageInventory => U.s.storeroom,
     TagUser.permissionManageStaff => U.s.shiftsAndTasks,
     TagUser.permissionManageUsers => U.s.customersAndResidents,

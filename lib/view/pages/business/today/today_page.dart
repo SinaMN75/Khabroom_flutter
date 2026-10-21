@@ -91,7 +91,7 @@ class _TodayPageState extends State<TodayPage> {
               columns: 2,
               spacing: 12,
               children: <Widget>[
-                if (AppWorkspace.isOwner || AppWorkspace.can(TagUser.permissionManageAccounting))
+                if (AppWorkspace.isOwner)
                   AppStat(label: U.s.waitingForPayout, value: money(o.balance), icon: Icons.account_balance_outlined, onTap: () => UNavigator.push(const SettlementPage())).help("app.today.payout"),
                 if (dorm != null) AppStat(label: U.s.dormOccupancy, value: "${dorm!.dormOccupancyRate.round().toString().toPersianNumber()}٪", caption: "${dorm!.dormBedsAvailableCount.toString().toPersianNumber()} ${U.s.freeBeds}", icon: Icons.bed_outlined),
                 if (dorm != null) AppStat(label: U.s.unpaidBills, value: dorm!.overdueInvoicesCount.toString().toPersianNumber(), caption: money(dorm!.totalOutstanding), icon: Icons.receipt_outlined, tone: AppTone.danger),

@@ -53,7 +53,7 @@ class _SettlementPageState extends State<SettlementPage> {
       title: U.s.askForAnEarlyPayout,
       help: "app.settlement.early",
       submitTitle: U.s.sendRequest,
-      onSubmit: () => appSend(UServices.accounting.requestOrganizationSettlement(p: UOrganizationSettlementRequestParams(organizationId: org!.id, amount: tomanToRial(amount), note: note.valueOrNull()))),
+      onSubmit: () => appSend(UServices.organization.requestSettlement(p: UOrganizationSettlementRequestParams(organizationId: org!.id, amount: tomanToRial(amount), note: note.valueOrNull()))),
       children: (BuildContext context, StateSetter setState) => <Widget>[
         UTextBodySmall(U.s.earlyPayoutExplanation),
         AppMoneyField(controller: amount, label: U.s.amount),

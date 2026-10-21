@@ -151,7 +151,6 @@ abstract class AppWorkspace {
 
   static String roleOfMember(UOrganizationMember? m) {
     if (m == null) return U.s.staff;
-    if (m.can(TagUser.permissionManageAccounting) || m.can(TagUser.permissionViewAccounting)) return U.s.accountant;
     if (m.can(TagUser.permissionManageReservations)) return U.s.reception;
     if (m.can(TagUser.permissionManageOrders)) return U.s.cashier;
     if (m.can(TagUser.permissionManageInventory)) return U.s.storekeeper;
