@@ -2,7 +2,6 @@ import "package:khabroom/utils/app_workspace.dart";
 import "package:khabroom/view/pages/business/business_page.dart";
 import "package:khabroom/view/pages/business/more/activity_page.dart";
 import "package:khabroom/view/pages/business/more/business_settings_page.dart";
-import "package:khabroom/view/pages/business/more/inventory_page.dart";
 import "package:khabroom/view/pages/business/setup/subscription_page.dart";
 import "package:khabroom/view/pages/business/team/shifts_page.dart";
 import "package:khabroom/view/pages/business/team/tasks_page.dart";
@@ -28,8 +27,6 @@ class MorePage extends StatelessWidget {
               children: <Widget>[
                 AppTile(icon: Icons.task_alt_rounded, title: U.s.myTasks, onTap: () => UNavigator.push(const TasksPage(mine: true))),
                 AppTile(icon: Icons.schedule_outlined, title: U.s.myShifts, onTap: () => UNavigator.push(const ShiftsPage())),
-                if (AppWorkspace.hasModule(TagModule.inventory) && AppWorkspace.can(TagUser.permissionManageInventory))
-                  AppTile(icon: Icons.inventory_2_outlined, title: U.s.storeroom, subtitle: U.s.stockPurchasesAndEquipment, onTap: () => UNavigator.push(const InventoryPage())),
                 if (owner || AppWorkspace.can(TagUser.permissionManageStaff)) AppTile(icon: Icons.history_rounded, title: U.s.activity, subtitle: U.s.whoDidWhat, onTap: () => UNavigator.push(const ActivityPage())),
               ],
             ),
