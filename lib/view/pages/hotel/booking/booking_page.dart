@@ -263,7 +263,10 @@ class _BookingPageState extends State<BookingPage> {
         tag: TagTxn.hotelInvoice,
         invoiceId: invoice.id,),
     );
-    if (paid) UToast.success(message: U.s.yourReservationIsRegistered);
+    if (paid)
+      UToast.success(message: U.s.yourReservationIsRegistered);
+    else
+      UToast.snackBar(message: U.s.thePaymentHasNotBeenConfirmedYet);
     await UNavigator.off(ReservationDetailPage(reservationId: reservation.id));
   }
 }

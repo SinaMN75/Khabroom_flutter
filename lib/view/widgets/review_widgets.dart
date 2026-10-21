@@ -78,7 +78,7 @@ class ReviewSection extends StatelessWidget {
                   ULoading.show();
                   await UServices.comment.create(
                     p: UCommentCreateParams(
-                      tags: <int>[],
+                      tags: <int>[TagComment.released.number],
                       description: controller.text.trim(),
                       score: score.value,
                       hotelId: hotelId,

@@ -18,7 +18,9 @@ class PersonalInfoController extends UBaseController {
           nationalCode: controllerNationalCode.numString(),
           email: controllerEmail.text.trim().isEmpty ? null : controllerEmail.text.trim(),
         ),
-        onOk: (UEmptyResponse response) {
+        onOk: (UEmptyResponse response) async {
+          final (UResponse<UUserResponse>? ok, _, _) = await UServices.user.readById(p: UIdParams(id: U.user.id, selectorArgs: const UUserSelectorArgs(wallet: UWalletSelectorArgs())));
+          if (ok?.result != null) U.user = ok!.result!;
           ULoading.dismiss();
           UToast.success(message: U.s.changesSaved);
           UNavigator.back();

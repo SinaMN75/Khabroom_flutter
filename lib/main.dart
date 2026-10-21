@@ -181,8 +181,8 @@ abstract class AppConstants {
   static const String appName = "خوابروم";
   static const String baseUrl = kDebugMode ? "https://api.sinamn75.com/api" : "https://api.khabroom.com/api";
   static const String apiKey = "123";
-  static const String termsUrl = "https://khabroom.com/terms";
-  static const String privacyUrl = "https://khabroom.com/privacy";
+  static const String termsUrl = "https://khabroom.com/rules";
+  static const String privacyUrl = "https://khabroom.com/rules";
   static const bool amountsAreRial = false;
   static const String webAppUrl = "https://app.khabroom.com";
 }
