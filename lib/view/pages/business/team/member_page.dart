@@ -40,11 +40,10 @@ class _MemberPageState extends State<MemberPage> {
   }
 
   String _label(TagUser p) => switch (p) {
-    TagUser.permissionManageInventory => U.s.storeroom,
     TagUser.permissionManageStaff => U.s.shiftsAndTasks,
     TagUser.permissionManageUsers => U.s.customersAndResidents,
     TagUser.permissionViewDashboard => U.s.seeTheNumbers,
-    TagUser.permissionManageDorms || TagUser.permissionManageHotels || TagUser.permissionManageCafes => U.s.editRoomsAndDetails,
+    TagUser.permissionManageDorms || TagUser.permissionManageHotels => U.s.editRoomsAndDetails,
     TagUser.permissionManageContracts => U.s.contractsAndResidents,
     TagUser.permissionDeleteContracts => U.s.deleteContracts,
     TagUser.permissionManageInvoices => U.s.makeAndEditBills,
@@ -52,8 +51,6 @@ class _MemberPageState extends State<MemberPage> {
     TagUser.permissionPayInvoices => U.s.receivePayments,
     TagUser.permissionManageReservations => U.s.bookingsAndCheckIn,
     TagUser.permissionDeleteReservations => U.s.deleteBookings,
-    TagUser.permissionManageMenus => U.s.editTheMenu,
-    TagUser.permissionManageOrders => U.s.handleOrders,
     _ => p.localizedTitle,
   };
 

@@ -2,7 +2,6 @@ import "package:khabroom/main.dart";
 import "package:khabroom/utils/app_pay.dart";
 import "package:khabroom/utils/status_helpers.dart";
 import "package:khabroom/view/pages/contracts/my_contracts_page.dart";
-import "package:khabroom/view/pages/menu/my_orders_page.dart";
 import "package:khabroom/view/pages/wallet/wallet_page.dart";
 import "package:khabroom/view/widgets/app_kit.dart";
 import "package:khabroom/view/widgets/app_widgets.dart";
@@ -176,7 +175,6 @@ class _PaymentsPageState extends State<PaymentsPage> {
               child: UColumn(
                 children: <Widget>[
                   AppTile(icon: Icons.assignment_outlined, title: U.s.dormContracts, subtitle: U.s.contractsAndAllDormInvoices, onTap: () => UNavigator.push(const MyContractsPage())),
-                  AppTile(icon: Icons.local_cafe_outlined, title: U.s.myOrders, subtitle: U.s.yourCafeOrdersAndTheirStatus, onTap: () => UNavigator.push(const MyOrdersPage())),
                   AppTile(icon: Icons.account_balance_wallet_outlined, title: U.s.wallet, subtitle: U.s.topUpAndTransactions, onTap: () => UNavigator.push(const WalletPage())),
                 ],
               ),

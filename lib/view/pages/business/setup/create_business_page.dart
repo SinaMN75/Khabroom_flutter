@@ -113,7 +113,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
                   spacing: 10,
                   children: <Widget>[
                     UTextField(controller: title, labelText: U.s.businessName, hintText: U.s.forExampleYasGroup, validator: UValidators.required<String>()),
-                    UTextBodySmall(U.s.youCanAddDormsHotelsAndCafesToItLater, color: scheme.onSurfaceVariant),
+                    UTextBodySmall(U.s.youCanAddDormsAndHotelsToItLater, color: scheme.onSurfaceVariant),
                     URow(
                       spacing: 10,
                       children: <Widget>[

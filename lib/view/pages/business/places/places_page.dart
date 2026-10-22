@@ -6,7 +6,7 @@ import "package:khabroom/view/widgets/app_kit.dart";
 import "package:khabroom/view/widgets/app_widgets.dart";
 import "package:u/utilities.dart";
 
-/// The business's dorms, hotels and cafés. The owner adds new ones here; they show to customers after the platform approves them.
+/// The business's dorms and hotels. The owner adds new ones here; they show to customers after the platform approves them.
 class PlacesPage extends StatefulWidget {
   const PlacesPage({super.key});
 

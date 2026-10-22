@@ -6,7 +6,6 @@ import "package:khabroom/view/pages/payments/payments_page.dart";
 import "package:khabroom/view/pages/profile/profile_page.dart";
 import "package:khabroom/view/pages/reservations/reservations_page.dart";
 import "package:khabroom/view/pages/splash/splash_page.dart";
-import "package:khabroom/view/pages/scan/scan_page.dart";
 import "package:khabroom/view/widgets/app_kit.dart";
 import "package:khabroom/view/widgets/widgets.dart";
 import "package:u/utilities.dart";
@@ -35,7 +34,6 @@ class _MainPageState extends State<MainPage> {
   List<AppDestination> get _destinations => <AppDestination>[
     AppDestination(id: "home", title: U.s.accommodation, icon: Icons.holiday_village_outlined, activeIcon: Icons.holiday_village_rounded),
     AppDestination(id: "reservations", title: U.s.myReservations, icon: Icons.confirmation_number_outlined, activeIcon: Icons.confirmation_number_rounded),
-    AppDestination(id: "scan", title: U.s.scan, icon: Icons.qr_code_scanner_rounded, activeIcon: Icons.qr_code_scanner_rounded),
     AppDestination(id: "payments", title: U.s.myPayments, icon: Icons.receipt_long_outlined, activeIcon: Icons.receipt_long_rounded),
     AppDestination(id: "profile", title: U.s.profile, icon: Icons.person_outline_rounded, activeIcon: Icons.person_rounded),
   ];
@@ -54,10 +52,6 @@ class _MainPageState extends State<MainPage> {
   }
 
   void _select(int index) {
-    if (_destinations[index].id == "scan") {
-      ScanPage.open();
-      return;
-    }
     AppShell.go(index);
     menu.select(_destinations[index].id);
   }
@@ -131,33 +125,13 @@ class _MainPageState extends State<MainPage> {
     onTap: _select,
     items: <BottomNavigationBarItem>[
       for (final AppDestination destination in _destinations)
-        destination.id == "scan"
-            ? BottomNavigationBarItem(icon: const _ScanButton().help("app.home.nav.scan", inline: true), label: "")
-            : BottomNavigationBarItem(
-                icon: Icon(destination.icon, size: 21).help("app.home.nav.${destination.id}", inline: true),
-                activeIcon: Icon(destination.activeIcon, size: 21).help("app.home.nav.${destination.id}", inline: true),
-                label: destination.title,
-              ),
+        BottomNavigationBarItem(
+          icon: Icon(destination.icon, size: 21).help("app.home.nav.${destination.id}", inline: true),
+          activeIcon: Icon(destination.activeIcon, size: 21).help("app.home.nav.${destination.id}", inline: true),
+          label: destination.title,
+        ),
     ],
   );
-}
-
-class _ScanButton extends StatelessWidget {
-  const _ScanButton();
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme scheme = Theme.of(context).colorScheme;
-    return UContainer(
-      width: 52,
-      height: 52,
-      radius: 18,
-      alignment: Alignment.center,
-      color: scheme.primary,
-      boxShadow: <BoxShadow>[BoxShadow(color: scheme.primary.withValues(alpha: 0.35), blurRadius: 14, offset: const Offset(0, 6))],
-      child: Icon(Icons.qr_code_scanner_rounded, color: scheme.onPrimary, size: 24),
-    );
-  }
 }
 
 /// Kept out of the shell's UObx so switching tabs doesn't rebuild the pages themselves.
@@ -171,7 +145,6 @@ class _ShellPages extends StatelessWidget {
       children: <Widget>[
         const HomePage(),
         AppSignedIn(title: U.s.signInToSeeYourReservations, icon: Icons.confirmation_number_outlined, child: const ReservationsPage()),
-        const SizedBox.shrink(),
         AppSignedIn(title: U.s.signInToSeeYourPayments, icon: Icons.receipt_long_outlined, child: const PaymentsPage()),
         const ProfilePage(),
       ],

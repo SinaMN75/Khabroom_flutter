@@ -37,7 +37,6 @@ class _PlacePhotosPageState extends State<PlacePhotosPage> {
     media = switch (widget.place.kind) {
       AppKind.hotel => (await UServices.hotel.readHotelById(p: UIdParams(id: id, selectorArgs: const UHotelSelectorArgs(media: UMediaSelectorArgs())))).$1?.result?.media,
       AppKind.dorm => (await UServices.dorm.readDormById(p: UIdParams(id: id, selectorArgs: const UDormSelectorArgs(media: UMediaSelectorArgs())))).$1?.result?.media,
-      AppKind.cafe => (await UServices.cafe.readCafeById(p: UIdParams(id: id, selectorArgs: const UCafeSelectorArgs(media: true)))).$1?.result?.media,
     } ?? <UMediaResponse>[];
     photos = UFilePickerController.fromMedia(media);
     if (mounted) setState(() {});
@@ -53,7 +52,6 @@ class _PlacePhotosPageState extends State<PlacePhotosPage> {
       existing: media,
       hotelId: p.kind == AppKind.hotel ? p.id : null,
       dormId: p.kind == AppKind.dorm ? p.id : null,
-      cafeId: p.kind == AppKind.cafe ? p.id : null,
     );
     UToast.success(message: U.s.done);
     if (mounted) setState(() => busy = false);

@@ -23,7 +23,6 @@ class _TodayPageState extends State<TodayPage> {
   List<UStaffTaskResponse> tasks = <UStaffTaskResponse>[];
   UDormDashboardResponse? dorm;
   UHotelDashboardResponse? hotel;
-  int newOrders = 0;
 
   @override
   void initState() {
@@ -49,9 +48,6 @@ class _TodayPageState extends State<TodayPage> {
     final bool dashboard = AppWorkspace.can(TagUser.permissionViewDashboard);
     dorm = dashboard && AppWorkspace.placesOf(AppKind.dorm).isNotEmpty ? (await UServices.dorm.readDormDashboard(p: UDashboardRangeParams(organizationId: o.id))).$1?.result : null;
     hotel = dashboard && AppWorkspace.placesOf(AppKind.hotel).isNotEmpty ? (await UServices.hotel.readHotelDashboard(p: UDashboardRangeParams(organizationId: o.id))).$1?.result : null;
-    newOrders = AppWorkspace.placesOf(AppKind.cafe).isEmpty
-        ? 0
-        : (await UServices.cafe.readOrders(p: UMenuOrderReadParams(manage: true, organizationId: o.id, tags: <int>[TagMenuOrder.paid.number], pageSize: 1, pageNumber: 1))).$1?.totalCount ?? 0;
     if (mounted) setState(() {});
     state.loaded();
   }
@@ -96,7 +92,6 @@ class _TodayPageState extends State<TodayPage> {
                 if (dorm != null) AppStat(label: U.s.dormOccupancy, value: "${dorm!.dormOccupancyRate.round().toString().toPersianNumber()}٪", caption: "${dorm!.dormBedsAvailableCount.toString().toPersianNumber()} ${U.s.freeBeds}", icon: Icons.bed_outlined),
                 if (dorm != null) AppStat(label: U.s.unpaidBills, value: dorm!.overdueInvoicesCount.toString().toPersianNumber(), caption: money(dorm!.totalOutstanding), icon: Icons.receipt_outlined, tone: AppTone.danger),
                 if (hotel != null) AppStat(label: U.s.hotelOccupancy, value: "${hotel!.hotelOccupancyRate.round().toString().toPersianNumber()}٪", caption: "${hotel!.hotelRoomsAvailableCount.toString().toPersianNumber()} ${U.s.freeRooms}", icon: Icons.king_bed_outlined),
-                if (AppWorkspace.placesOf(AppKind.cafe).isNotEmpty) AppStat(label: U.s.newOrders, value: newOrders.toString().toPersianNumber(), icon: Icons.notifications_active_outlined, tone: newOrders > 0 ? AppTone.warning : AppTone.brand),
               ],
             ),
             if (tasks.isNotEmpty) ...<Widget>[

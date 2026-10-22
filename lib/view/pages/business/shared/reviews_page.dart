@@ -21,7 +21,6 @@ class _ReviewsPageState extends State<ReviewsPage> {
 
   String? get dormId => widget.place.kind == AppKind.dorm ? widget.place.id : null;
 
-  String? get cafeId => widget.place.kind == AppKind.cafe ? widget.place.id : null;
 
   @override
   void initState() {
@@ -38,7 +37,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
   Future<void> read() async {
     state.loading();
     final UResponse<List<UCommentResponse>>? r = (await UServices.comment.read(
-      p: UCommentReadParams(hotelId: hotelId, dormId: dormId, cafeId: cafeId, pageSize: 100, pageNumber: 1, selectorArgs: const UCommentSelectorArgs(creator: UUserSelectorArgs(), children: UCommentSelectorArgs())),
+      p: UCommentReadParams(hotelId: hotelId, dormId: dormId, pageSize: 100, pageNumber: 1, selectorArgs: const UCommentSelectorArgs(creator: UUserSelectorArgs(), children: UCommentSelectorArgs())),
     )).$1;
     if (r == null) {
       state.error();
@@ -53,7 +52,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
     final TextEditingController text = TextEditingController();
     final bool ok = await AppForm.show(
       title: U.s.reply,
-      onSubmit: () => appSend(UServices.comment.create(p: UCommentCreateParams(description: text.text.trim(), score: 0, parentId: c.id, hotelId: hotelId, dormId: dormId, cafeId: cafeId, tags: <int>[TagComment.values.first.number]))),
+      onSubmit: () => appSend(UServices.comment.create(p: UCommentCreateParams(description: text.text.trim(), score: 0, parentId: c.id, hotelId: hotelId, dormId: dormId, tags: <int>[TagComment.values.first.number]))),
       children: (BuildContext context, StateSetter setState) => <Widget>[UTextField(controller: text, labelText: U.s.yourReply, lines: 3, validator: UValidators.required<String>())],
     );
     text.dispose();

@@ -2,7 +2,6 @@ import "package:khabroom/main.dart";
 import "package:khabroom/utils/responsive.dart";
 import "package:khabroom/utils/app_session.dart";
 import "package:khabroom/view/pages/contracts/my_contracts_page.dart";
-import "package:khabroom/view/pages/menu/my_orders_page.dart";
 import "package:khabroom/view/pages/notifications/notification_page.dart";
 import "package:khabroom/view/pages/wallet/wallet_page.dart";
 import "package:khabroom/view/pages/workspace/workspace_sheet.dart";
@@ -59,7 +58,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: <Widget>[
                     _MenuRow(icon: Icons.confirmation_number_outlined, title: U.s.myReservations, onTap: () => AppShell.go(1)),
                     _MenuRow(icon: Icons.assignment_outlined, title: U.s.dormContracts, onTap: () => UNavigator.push(const MyContractsPage())),
-                    _MenuRow(icon: Icons.local_cafe_outlined, title: U.s.myOrders, onTap: () => UNavigator.push(const MyOrdersPage())),
                     _MenuRow(icon: Icons.person_outline_rounded, title: U.s.personalInformation, onTap: () => UNavigator.push(const PersonalInfoPage())).help("app.profile.personal"),
                     _MenuRow(icon: Icons.notifications_none_rounded, title: U.s.notifications, onTap: () => UNavigator.push(const NotificationPage())),
                     _MenuRow(icon: Icons.dark_mode_outlined, title: U.s.theme, onTap: () => UApp.isDarkTheme() ? UApp.toLightMode() : UApp.toDarkMode()),

@@ -5,8 +5,6 @@ class HomeController extends UBaseController {
   final URxState hotelState = URxState();
   final URxState dormState = URxState();
   final URxState stayState = URxState();
-  final URxState cafeState = URxState();
-  List<UCafeResponse> cafes = <UCafeResponse>[];
 
   List<UHotelResponse> hotels = <UHotelResponse>[];
   List<UDormResponse> dorms = <UDormResponse>[];
@@ -18,18 +16,7 @@ class HomeController extends UBaseController {
   final List<int> dormFilters = <int>[];
 
   Future<void> init() async {
-    await Future.wait(<Future<void>>[readHotels(), readDorms(), readCafes(), readMyStay()]);
-  }
-
-  Future<void> readCafes() async {
-    cafeState.loading();
-    final UResponse<List<UCafeResponse>>? r = (await UServices.cafe.readCafes(p: UCafeReadParams(pageSize: 20, pageNumber: 1, selectorArgs: const UCafeSelectorArgs(media: true)))).$1;
-    if (r == null) {
-      cafeState.error();
-      return;
-    }
-    cafes = r.result ?? <UCafeResponse>[];
-    cafes.isEmpty ? cafeState.emptying() : cafeState.loaded();
+    await Future.wait(<Future<void>>[readHotels(), readDorms(), readMyStay()]);
   }
 
   Future<void> readHotels() async {

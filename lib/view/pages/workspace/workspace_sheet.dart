@@ -62,7 +62,7 @@ class WorkspaceSheet extends StatelessWidget {
             icon: Icons.add_business_outlined,
             iconColor: scheme.onSurfaceVariant,
             title: U.s.newBusiness,
-            subtitle: U.s.dormHotelOrCafeStartWithAFreeTrial,
+            subtitle: U.s.dormOrHotelStartWithAFreeTrial,
             onTap: () {
               UNavigator.back();
               UNavigator.push(const CreateBusinessPage());
