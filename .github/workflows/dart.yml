@@ -31,6 +31,8 @@ jobs:
         with:
           local-dir: Build/web/
           server: 185.204.169.91
-          username: ftp_app_khabroom_com
-          password: ftp_app_khabroom_com
+#          username: ftp_app_khabroom_com
+#          password: ftp_app_khabroom_com
+          username: ftp_khabroom_sinamn75_com
+          password: ftp_khabroom_sinamn75_com
           timeout: 180000
