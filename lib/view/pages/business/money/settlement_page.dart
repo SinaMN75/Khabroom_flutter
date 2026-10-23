@@ -64,26 +64,6 @@ class _SettlementPageState extends State<SettlementPage> {
     note.dispose();
   }
 
-  Future<void> _issue([UOrganizationSettlement? s]) async {
-    final TextEditingController text = TextEditingController();
-    await AppForm.show(
-      title: U.s.reportAProblem,
-      help: "app.settlement.issue",
-      submitTitle: U.s.sendToSupport,
-      onSubmit: () => appSend(
-        UServices.ticket.create(
-          p: UTicketCreateParams(
-            title: "${U.s.payout} · ${org!.title}${s?.trackingCode == null ? "" : " · ${s!.trackingCode}"}",
-            description: "${text.text.trim()}\n${s == null ? "" : "${money(s.amount)} · ${(s.processedAt ?? s.createdAt).toJalaliDate()}"}",
-            tags: <int>[TagTicket.values.first.number],
-          ),
-        ),
-      ),
-      children: (BuildContext context, StateSetter setState) => <Widget>[UTextField(controller: text, labelText: U.s.whatHappened, lines: 4, validator: UValidators.required<String>())],
-    );
-    text.dispose();
-  }
-
   void _detail(UOrganizationSettlement s) => UNavigator.bottomSheet<void>(
     SafeArea(
       child: UColumn(
@@ -97,11 +77,6 @@ class _SettlementPageState extends State<SettlementPage> {
           AppInfoRow(label: U.s.iban, value: s.iban),
           if (s.trackingCode != null) AppInfoRow(label: U.s.trackingCode, value: s.trackingCode!.toPersianNumber(), emphasize: true),
           if (s.note != null) AppInfoRow(label: U.s.note, value: s.note!),
-          const SizedBox(height: 12),
-          UButton(title: U.s.didNotReceiveIt, type: UButtonType.outlined, onTap: () {
-            UNavigator.back();
-            _issue(s);
-          }),
         ],
       ).pSymmetric(horizontal: 20, vertical: 8),
     ),
@@ -199,7 +174,6 @@ class _SettlementPageState extends State<SettlementPage> {
                   ],
                 ),
               ).help("app.settlement.payouts"),
-            UButton(title: U.s.reportAProblem, type: UButtonType.text, onTap: _issue).pOnly(top: 8),
           ],
         );
       },
