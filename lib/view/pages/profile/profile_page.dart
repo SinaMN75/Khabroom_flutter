@@ -4,7 +4,7 @@ import "package:khabroom/utils/app_session.dart";
 import "package:khabroom/view/pages/contracts/my_contracts_page.dart";
 import "package:khabroom/view/pages/notifications/notification_page.dart";
 import "package:khabroom/view/pages/wallet/wallet_page.dart";
-import "package:khabroom/view/pages/workspace/workspace_sheet.dart";
+import "package:khabroom/view/pages/workspace/my_businesses_card.dart";
 import "package:khabroom/view/widgets/app_kit.dart";
 import "package:khabroom/view/pages/profile/personal_info/personal_info_page.dart";
 import "package:khabroom/view/pages/profile/profile_controller.dart";
@@ -45,10 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
               const SizedBox(height: 16),
               _walletCard(context),
               const SizedBox(height: 16),
-              AppCard(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                child: AppTile(icon: Icons.swap_horiz_rounded, title: U.s.whereDoYouWantToWork, subtitle: U.s.switchBetweenYourAccountAndYourBusinesses, onTap: WorkspaceSheet.show),
-              ).help("app.profile.workspace"),
+              const MyBusinessesCard(),
               const SizedBox(height: 16),
               AppCard(
                 padding: const EdgeInsets.symmetric(vertical: 4),
@@ -87,6 +84,8 @@ class _ProfilePageState extends State<ProfilePage> {
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: <Widget>[
       AppCard(child: AppSignInPrompt(title: U.s.signInToSeeYourProfile, icon: Icons.person_outline_rounded, onSignedIn: c.init)).help("app.profile.signIn"),
+      const SizedBox(height: 16),
+      const MyBusinessesCard(),
       const SizedBox(height: 16),
       AppCard(
         padding: const EdgeInsets.symmetric(vertical: 4),

@@ -2,6 +2,7 @@ import "package:khabroom/utils/app_workspace.dart";
 import "package:khabroom/view/pages/business/business_page.dart";
 import "package:khabroom/view/pages/business/places/place_form.dart";
 import "package:khabroom/view/pages/business/places/place_home_page.dart";
+import "package:khabroom/view/pages/business/setup/subscription_page.dart";
 import "package:khabroom/view/widgets/app_kit.dart";
 import "package:khabroom/view/widgets/app_widgets.dart";
 import "package:u/utilities.dart";
@@ -41,7 +42,9 @@ class _PlacesPageState extends State<PlacesPage> {
   Future<void> _add() async {
     final List<AppKind> kinds = _addable;
     if (kinds.isEmpty) {
-      UToast.error(message: U.s.yourPlanDoesNotIncludeAnyPlaceType);
+      final bool buy = await UNavigator.confirmAsync(title: U.s.newPlace, message: AppWorkspace.subscriptionEnded(AppWorkspace.org) ? U.s.yourSubscriptionHasEndedRenewItToAddPlaces : U.s.yourPlanDoesNotIncludeAnyPlaceTypeAddTheHotelOrDormSystemToIt, confirmText: U.s.subscription);
+      if (buy) await UNavigator.push(const SubscriptionPage());
+      await read();
       return;
     }
     final AppKind? kind = kinds.length == 1
@@ -61,7 +64,7 @@ class _PlacesPageState extends State<PlacesPage> {
   @override
   Widget build(BuildContext context) => UScaffold(
     appBar: businessAppBar(context, U.s.places, help: "app.places.page"),
-    floatingActionButton: _addable.isEmpty ? null : FloatingActionButton.extended(onPressed: _add, icon: const Icon(Icons.add_business_outlined), label: Text(U.s.newPlace)).help("app.places.add"),
+    floatingActionButton: !AppWorkspace.isOwner ? null : FloatingActionButton.extended(onPressed: _add, icon: const Icon(Icons.add_business_outlined), label: Text(U.s.newPlace)).help("app.places.add"),
     body: AppStateView(
       state: state,
       onRetry: read,
@@ -70,6 +73,7 @@ class _PlacesPageState extends State<PlacesPage> {
       onLoaded: (BuildContext context) => AppPageBody(
         onRefresh: read,
         children: <Widget>[
+          SubscriptionBanner(onReturn: read),
           for (final AppKind kind in AppKind.values)
             if (AppWorkspace.myPlaces.any((AppPlace p) => p.kind == kind)) ...<Widget>[
               AppLabel(kind.title),
@@ -93,7 +97,7 @@ class _PlacesPageState extends State<PlacesPage> {
                 ),
             ],
           if (AppWorkspace.myPlaces.any((AppPlace p) => p.pending))
-            UTextBodySmall(U.s.newPlacesAreShownToCustomersAfterKhabroomApprovesThem, color: Theme.of(context).colorScheme.onSurfaceVariant, textAlign: TextAlign.center).pOnly(top: 8),
+            UTextBodySmall(U.s.newPlacesAreShownToCustomersAfterKhabroomApprovesThem, color: Theme.of(context).colorScheme.onSurfaceVariant, textAlign: TextAlign.center, maxLines: 6).pOnly(top: 8),
         ],
       ),
     ),

@@ -123,6 +123,11 @@ abstract class AppWorkspace {
 
   static bool hasModule(TagModule m) => current.value?.hasModule(m) ?? false;
 
+  static List<UOrganizationSubscription> liveSubscriptions(UOrganizationResponse o) => o.jsonData.subscriptions.where((UOrganizationSubscription s) => s.isLive).toList();
+
+  /// The business bought a plan once but nothing is live now, so its systems are closed until it renews.
+  static bool subscriptionEnded(UOrganizationResponse o) => o.jsonData.subscriptions.isNotEmpty && liveSubscriptions(o).isEmpty;
+
   /// Owners can do everything their plan allows; staff only what the owner gave them, here or for one place.
   static bool can(TagUser permission, {String? placeId}) {
     final UOrganizationResponse? o = current.value;

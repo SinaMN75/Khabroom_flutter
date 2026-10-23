@@ -3,6 +3,7 @@ import "package:khabroom/utils/app_workspace.dart";
 import "package:khabroom/utils/status_helpers.dart";
 import "package:khabroom/view/widgets/app_kit.dart";
 import "package:khabroom/view/widgets/app_widgets.dart";
+import "package:khabroom/view/pages/business/team/customers_page.dart";
 import "package:u/utilities.dart";
 
 /// One booking: the guest, the room, the bill, and the steps of a stay — confirm, check in, check out.
@@ -85,7 +86,18 @@ class _HotelReservationPageState extends State<HotelReservationPage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
-    appBar: AppBar(title: Text(r?.jsonData.reservationCode ?? U.s.booking).help("app.hotelBooking.page", inline: true), actions: const <Widget>[UHelpActions("app.hotelBooking.")]),
+    appBar: AppBar(
+      title: Text(r?.jsonData.reservationCode ?? U.s.booking).help("app.hotelBooking.page", inline: true),
+      actions: <Widget>[
+        if (r != null && CustomersPage.allowed)
+          IconButton(
+            icon: const Icon(Icons.how_to_reg_outlined),
+            tooltip: U.s.vipAndBlacklist,
+            onPressed: () => CustomersPage.markUser(r!.userId, r!.jsonData.guestName ?? "${r!.user?.firstName ?? ""} ${r!.user?.lastName ?? ""}".trim()),
+          ).help("app.hotelBooking.customer"),
+        const UHelpActions("app.hotelBooking."),
+      ],
+    ),
     body: AppStateView(
       state: state,
       onRetry: read,

@@ -79,7 +79,7 @@ class _HotelHomePageState extends State<HotelHomePage> {
     appBar: AppBar(
       title: Text(widget.place.title).help("app.hotel.page", inline: true),
       actions: <Widget>[
-        if (AppWorkspace.isOwner) IconButton(icon: const Icon(Icons.edit_outlined), onPressed: () => PlaceForm.show(AppKind.hotel, place: widget.place).then((bool ok) => ok ? read() : null)),
+        if (AppWorkspace.can(TagUser.permissionManageHotels, placeId: widget.place.id)) IconButton(icon: const Icon(Icons.edit_outlined), tooltip: U.s.edit, onPressed: () => PlaceForm.show(AppKind.hotel, place: widget.place).then((bool ok) => ok ? read() : null)),
         const UHelpActions("app.hotel."),
       ],
     ),

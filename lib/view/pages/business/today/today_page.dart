@@ -3,6 +3,7 @@ import "package:khabroom/utils/app_workspace.dart";
 import "package:khabroom/view/pages/business/business_page.dart";
 import "package:khabroom/view/pages/business/money/settlement_page.dart";
 import "package:khabroom/view/pages/business/places/place_home_page.dart";
+import "package:khabroom/view/pages/business/setup/subscription_page.dart";
 import "package:khabroom/view/pages/business/team/tasks_page.dart";
 import "package:khabroom/view/widgets/app_kit.dart";
 import "package:khabroom/view/widgets/app_widgets.dart";
@@ -73,15 +74,7 @@ class _TodayPageState extends State<TodayPage> {
             UTextBodySmall("${U.s.welcome} ${U.user.firstName ?? ""} · ${AppWorkspace.roleOf(o)}", color: scheme.onSurfaceVariant),
             UTextHeadlineMedium(U.s.whatsHappeningToday),
             const SizedBox(height: 16),
-            if (o.subscriptionEndsAt != null && o.subscriptionEndsAt!.difference(DateTime.now()).inDays < 10)
-              AppCard(
-                child: AppTile(
-                  icon: Icons.workspace_premium_outlined,
-                  iconColor: AppColors.warning,
-                  title: U.s.yourSubscriptionEndsSoon,
-                  subtitle: "${U.s.endsOn} ${o.subscriptionEndsAt!.toJalaliDate().toPersianNumber()}",
-                ),
-              ).pOnly(bottom: 12).help("app.today.subscription"),
+            SubscriptionBanner(onReturn: read),
             if (shift != null) _shiftCard(context).pOnly(bottom: 12),
             AppGrid(
               columns: 2,

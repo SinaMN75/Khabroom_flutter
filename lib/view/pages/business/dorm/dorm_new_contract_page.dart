@@ -143,7 +143,7 @@ class _DormNewContractPageState extends State<DormNewContractPage> {
                     if (looked && person != null)
                       AppChip(label: "${person!.firstName ?? ""} ${person!.lastName ?? ""}".trim().isEmpty ? U.s.thisPersonHasAnAccount : "${person!.firstName ?? ""} ${person!.lastName ?? ""}", icon: Icons.verified_user_outlined, tone: AppTone.positive).pOnly(top: 8),
                     if (looked && person == null) ...<Widget>[
-                      UTextBodySmall(U.s.newPersonTheyCanSignInLaterWithThisNumber, color: scheme.onSurfaceVariant).pOnly(top: 8, bottom: 8),
+                      UTextBodySmall(U.s.newPersonTheyCanSignInLaterWithThisNumber, color: scheme.onSurfaceVariant, maxLines: 6).pOnly(top: 8, bottom: 8),
                       URow(
                         spacing: 10,
                         children: <Widget>[
@@ -214,7 +214,7 @@ class _DormNewContractPageState extends State<DormNewContractPage> {
             ),
             const SizedBox(height: 18),
             UButton(title: U.s.saveContract, isLoading: busy, onTap: busy ? null : _save),
-            UTextBodySmall(U.s.billsAreMadeAutomaticallyFromTheContract, color: scheme.onSurfaceVariant, textAlign: TextAlign.center).pOnly(top: 8),
+            UTextBodySmall(U.s.billsAreMadeAutomaticallyFromTheContract, color: scheme.onSurfaceVariant, textAlign: TextAlign.center, maxLines: 6).pOnly(top: 8),
           ],
         ),
       ),

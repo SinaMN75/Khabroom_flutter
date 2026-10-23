@@ -126,7 +126,7 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
               AppInfoRow(label: U.s.freeCancellationUpToAFewHoursBeforeCheckIn, value: "${hotel.jsonData.cancellationFreeHours.toString().toPersianNumber()} ${U.s.hour}"),
               AppInfoRow(label: U.s.cancellationFee, value: "${hotel.jsonData.cancellationPenaltyNights.toString().toPersianNumber()} ${U.s.night}"),
               const SizedBox(height: 4),
-              UTextBodySmall(U.s.cancelBeforeTheFreeWindowEndsAndTheFullAmountGoesBackToYourWallet, color: scheme.onSurfaceVariant),
+              UTextBodySmall(U.s.cancelBeforeTheFreeWindowEndsAndTheFullAmountGoesBackToYourWallet, color: scheme.onSurfaceVariant, maxLines: 6),
             ],
           ),
         ).help("app.hotel.cancellation"),

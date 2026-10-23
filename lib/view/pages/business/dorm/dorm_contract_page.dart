@@ -3,6 +3,7 @@ import "package:khabroom/utils/app_workspace.dart";
 import "package:khabroom/utils/status_helpers.dart";
 import "package:khabroom/view/widgets/app_kit.dart";
 import "package:khabroom/view/widgets/app_widgets.dart";
+import "package:khabroom/view/pages/business/team/customers_page.dart";
 import "package:u/utilities.dart";
 
 /// One resident's contract: their bed, dates and bills, and the things that happen to a stay — renew, move, check out.
@@ -163,7 +164,18 @@ class _DormContractPageState extends State<DormContractPage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
-    appBar: AppBar(title: Text(U.s.contract).help("app.contract.page", inline: true), actions: const <Widget>[UHelpActions("app.contract.")]),
+    appBar: AppBar(
+      title: Text(U.s.contract).help("app.contract.page", inline: true),
+      actions: <Widget>[
+        if (c != null && CustomersPage.allowed)
+          IconButton(
+            icon: const Icon(Icons.how_to_reg_outlined),
+            tooltip: U.s.vipAndBlacklist,
+            onPressed: () => CustomersPage.markUser(c!.userId, "${c!.user?.firstName ?? ""} ${c!.user?.lastName ?? ""}".trim()),
+          ).help("app.contract.customer"),
+        const UHelpActions("app.contract."),
+      ],
+    ),
     body: AppStateView(
       state: state,
       onRetry: read,

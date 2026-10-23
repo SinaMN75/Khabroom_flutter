@@ -3,7 +3,9 @@ import "package:khabroom/view/pages/business/business_page.dart";
 import "package:khabroom/view/pages/business/more/activity_page.dart";
 import "package:khabroom/view/pages/business/more/business_settings_page.dart";
 import "package:khabroom/view/pages/business/setup/subscription_page.dart";
+import "package:khabroom/view/pages/business/team/customers_page.dart";
 import "package:khabroom/view/pages/business/team/shifts_page.dart";
+import "package:khabroom/view/pages/business/team/team_page.dart";
 import "package:khabroom/view/pages/business/team/tasks_page.dart";
 import "package:khabroom/view/pages/workspace/workspace_sheet.dart";
 import "package:khabroom/view/widgets/app_kit.dart";
@@ -27,6 +29,7 @@ class MorePage extends StatelessWidget {
               children: <Widget>[
                 AppTile(icon: Icons.task_alt_rounded, title: U.s.myTasks, onTap: () => UNavigator.push(const TasksPage(mine: true))),
                 AppTile(icon: Icons.schedule_outlined, title: U.s.myShifts, onTap: () => UNavigator.push(const ShiftsPage())),
+                if (!TeamPage.allowed && CustomersPage.allowed) AppTile(icon: Icons.people_outline_rounded, title: U.s.customers, subtitle: U.s.vipAndBlacklist, onTap: () => UNavigator.push(const CustomersPage())),
                 if (owner || AppWorkspace.can(TagUser.permissionManageStaff)) AppTile(icon: Icons.history_rounded, title: U.s.activity, subtitle: U.s.whoDidWhat, onTap: () => UNavigator.push(const ActivityPage())),
               ],
             ),

@@ -43,7 +43,7 @@ class _DormRoomsPageState extends State<DormRoomsPage> {
         manage: true,
         pageSize: 200,
         pageNumber: 1,
-        selectorArgs: const UDormRoomSelectorArgs(beds: UDormBedSelectorArgs(contract: UDormBedContractSelectorArgs(user: UUserSelectorArgs()))),
+        selectorArgs: const UDormRoomSelectorArgs(media: UMediaSelectorArgs(), beds: UDormBedSelectorArgs(media: UMediaSelectorArgs(), contract: UDormBedContractSelectorArgs(user: UUserSelectorArgs()))),
       ),
     )).$1;
     if (r == null) {
@@ -64,25 +64,42 @@ class _DormRoomsPageState extends State<DormRoomsPage> {
     final TextEditingController beds = TextEditingController(text: room == null ? "2" : "");
     final TextEditingController rent = TextEditingController();
     final TextEditingController deposit = TextEditingController();
+    final TextEditingController description = TextEditingController(text: room?.jsonData.description);
+    final List<int> tags = List<int>.from(room?.tags ?? <int>[TagDormRoom.double_.number]);
+    final List<UMediaResponse> media = (room?.media ?? <UMediaResponse>[]).sortedForGallery();
+    final UFilePickerController photos = UFilePickerController.fromMedia(media);
     final bool ok = await AppForm.show(
       title: room == null ? U.s.newRoom : "${U.s.edit} · ${room.title}",
       help: "app.dormRooms.form",
       onSubmit: () async {
         if (room != null) {
-          return appSend(
-            UServices.dorm.updateDormRoom(p: UDormRoomUpdateParams(id: room.id, title: title.text.trim(), floor: int.tryParse(floor.numString()), sizeSquareMeters: double.tryParse(size.numString()))),
+          final bool saved = await appSend(
+            UServices.dorm.updateDormRoom(
+              p: UDormRoomUpdateParams(id: room.id, tags: tags, title: title.text.trim(), floor: int.tryParse(floor.numString()), sizeSquareMeters: double.tryParse(size.numString()), description: description.text.trim()),
+            ),
           );
+          if (saved) await UServices.media.syncGallery(photos, existing: media, dormRoomId: room.id);
+          return saved;
         }
         final (UResponse<String>? ok, UEmptyResponse? error, String? exception) = await UServices.dorm.createDormRoom(
-          p: UDormRoomCreateParams(tags: <int>[], title: title.text.trim(), dormId: widget.dormId, capacity: int.tryParse(beds.numString()) ?? 0, floor: int.tryParse(floor.numString()), sizeSquareMeters: double.tryParse(size.numString())),
+          p: UDormRoomCreateParams(
+            tags: tags,
+            title: title.text.trim(),
+            dormId: widget.dormId,
+            capacity: int.tryParse(beds.numString()) ?? 0,
+            floor: int.tryParse(floor.numString()),
+            sizeSquareMeters: double.tryParse(size.numString()),
+            description: description.text.trim().nullIfEmpty(),
+          ),
         );
         if (ok?.result == null) {
           UToast.error(message: error?.message ?? exception ?? U.s.error);
           return false;
         }
+        await UServices.media.syncGallery(photos, existing: media, dormRoomId: ok!.result);
         for (int i = 1; i <= (int.tryParse(beds.numString()) ?? 0); i++) {
           await UServices.dorm.createDormBed(
-            p: UDormBedCreateParams(tags: <int>[TagDormBed.single.number], title: "${U.s.bed} ${i.toString().toPersianNumber()}", deposit: tomanToRial(deposit), monthlyRent: tomanToRial(rent), roomId: ok!.result!),
+            p: UDormBedCreateParams(tags: <int>[TagDormBed.single.number], title: "${U.s.bed} ${i.toString().toPersianNumber()}", deposit: tomanToRial(deposit), monthlyRent: tomanToRial(rent), roomId: ok.result!),
           );
         }
         UToast.success(message: U.s.done);
@@ -97,14 +114,21 @@ class _DormRoomsPageState extends State<DormRoomsPage> {
             Expanded(child: UTextField(controller: size, labelText: U.s.sizeInSquareMeters, keyboardType: TextInputType.number)),
           ],
         ),
+        UTagChips<TagDormRoom>(title: U.s.type, options: TagDormRoom.values.group(100), tags: tags, single: true),
         if (room == null) ...<Widget>[
           UTextField(controller: beds, labelText: U.s.numberOfBeds, keyboardType: TextInputType.number).help("app.dormRooms.beds"),
           AppMoneyField(controller: rent, label: U.s.monthlyRentPerBed),
           AppMoneyField(controller: deposit, label: U.s.depositPerBed, required: false),
         ],
+        UTextField(controller: description, labelText: U.s.description, lines: 2),
+        UTagChips<TagDormRoom>(title: U.s.details, options: TagDormRoom.values.group(300), tags: tags),
+        UTagChips<TagDormRoom>(title: U.s.amenities, options: TagDormRoom.values.group(500), tags: tags),
+        UTextBodySmall(U.s.photos),
+        UFilePicker.gallery(photos),
       ],
     );
-    for (final TextEditingController c in <TextEditingController>[title, floor, size, beds, rent, deposit]) c.dispose();
+    for (final TextEditingController c in <TextEditingController>[title, floor, size, beds, rent, deposit, description]) c.dispose();
+    photos.dispose();
     if (ok) await read();
   }
 
@@ -112,20 +136,45 @@ class _DormRoomsPageState extends State<DormRoomsPage> {
     final TextEditingController title = TextEditingController(text: bed?.title ?? "${U.s.bed} ${((room.beds?.length ?? 0) + 1).toString().toPersianNumber()}");
     final TextEditingController rent = TextEditingController(text: rialToTomanText(bed?.monthlyRent ?? room.beds?.firstOrNull?.monthlyRent));
     final TextEditingController deposit = TextEditingController(text: rialToTomanText(bed?.deposit ?? room.beds?.firstOrNull?.deposit));
+    final TextEditingController description = TextEditingController(text: bed?.jsonData.description);
+    final List<int> tags = List<int>.from(bed?.tags ?? <int>[TagDormBed.single.number]);
+    final List<UMediaResponse> media = (bed?.media ?? <UMediaResponse>[]).sortedForGallery();
+    final UFilePickerController photos = UFilePickerController.fromMedia(media);
     final bool ok = await AppForm.show(
       title: bed == null ? "${U.s.newBed} · ${room.title}" : "${U.s.edit} · ${bed.title}",
-      onSubmit: () => appSend(
-        bed == null
-            ? UServices.dorm.createDormBed(p: UDormBedCreateParams(tags: <int>[TagDormBed.single.number], title: title.text.trim(), deposit: tomanToRial(deposit), monthlyRent: tomanToRial(rent), roomId: room.id))
-            : UServices.dorm.updateDormBed(p: UDormBedUpdateParams(id: bed.id, title: title.text.trim(), deposit: tomanToRial(deposit), monthlyRent: tomanToRial(rent))),
-      ),
+      onSubmit: () async {
+        String? id = bed?.id;
+        if (bed == null) {
+          final (UResponse<String>? ok, UEmptyResponse? error, String? exception) = await UServices.dorm.createDormBed(
+            p: UDormBedCreateParams(tags: tags, title: title.text.trim(), deposit: tomanToRial(deposit), monthlyRent: tomanToRial(rent), roomId: room.id, description: description.text.trim().nullIfEmpty()),
+          );
+          id = ok?.result;
+          if (id == null) UToast.error(message: error?.message ?? exception ?? U.s.error);
+        } else if (!await appSend(
+          UServices.dorm.updateDormBed(p: UDormBedUpdateParams(id: bed.id, tags: tags, title: title.text.trim(), deposit: tomanToRial(deposit), monthlyRent: tomanToRial(rent), description: description.text.trim())),
+          toast: false,
+        )) {
+          id = null;
+        }
+        if (id == null) return false;
+        await UServices.media.syncGallery(photos, existing: media, dormBedId: id);
+        UToast.success(message: U.s.done);
+        return true;
+      },
       children: (BuildContext context, StateSetter setState) => <Widget>[
         UTextField(controller: title, labelText: U.s.bedName, validator: UValidators.required<String>()),
         AppMoneyField(controller: rent, label: U.s.monthlyRent),
         AppMoneyField(controller: deposit, label: U.s.deposit, required: false),
+        UTagChips<TagDormBed>(title: U.s.type, options: TagDormBed.values.group(100), tags: tags, single: true),
+        UTagChips<TagDormBed>(title: U.s.bedLevel, options: TagDormBed.values.group(200), tags: tags, single: true),
+        UTagChips<TagDormBed>(title: U.s.bedAmenities, options: TagDormBed.values.group(500), tags: tags),
+        UTextField(controller: description, labelText: U.s.description, lines: 2),
+        UTextBodySmall(U.s.photos),
+        UFilePicker.gallery(photos),
       ],
     );
-    for (final TextEditingController c in <TextEditingController>[title, rent, deposit]) c.dispose();
+    for (final TextEditingController c in <TextEditingController>[title, rent, deposit, description]) c.dispose();
+    photos.dispose();
     if (ok) await read();
   }
 

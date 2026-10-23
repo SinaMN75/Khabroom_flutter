@@ -76,7 +76,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   @override
   Widget build(BuildContext context) {
     final UOrganizationResponse o = AppWorkspace.org;
-    final List<UOrganizationSubscription> live = o.jsonData.subscriptions.where((UOrganizationSubscription s) => s.isLive).toList();
+    final List<UOrganizationSubscription> live = AppWorkspace.liveSubscriptions(o);
+    final List<UOrganizationSubscription> upcoming = o.jsonData.subscriptions.where((UOrganizationSubscription s) => s.status == TagSubscription.active.number && (s.startsAt?.isAfter(DateTime.now()) ?? false)).toList();
     return UScaffold(
       appBar: AppBar(title: Text(U.s.subscription).help("app.subscription.page", inline: true), actions: const <Widget>[UHelpActions("app.subscription.")]),
       body: AppStateView(
@@ -90,14 +91,18 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
               icon: Icons.workspace_premium_outlined,
               child: UColumn(
                 children: <Widget>[
-                  if (live.isEmpty) UTextBodySmall(U.s.noActiveSubscription),
-                  for (final UOrganizationSubscription s in live)
+                  if (live.isEmpty) UTextBodySmall(AppWorkspace.subscriptionEnded(o) ? U.s.yourSubscriptionHasEnded : U.s.noActiveSubscription),
+                  for (final UOrganizationSubscription s in live) ...<Widget>[
                     AppInfoRow(label: s.title, value: "${U.s.until} ${s.expiresAt!.toJalaliDate().toPersianNumber()}${s.trial ? " · ${U.s.trial}" : ""}"),
+                    if (s.limits.isNotEmpty) PlanLimits(limits: s.limits).pOnly(bottom: 8),
+                  ],
+                  for (final UOrganizationSubscription s in upcoming) AppInfoRow(label: s.title, value: "${U.s.startsOn} ${s.startsAt!.toJalaliDate().toPersianNumber()}"),
                 ],
               ),
             ).help("app.subscription.current"),
             AppLabel(U.s.renewOrAddASystem),
             PlanPicker(
+              trial: false,
               plans: plans,
               selected: plan,
               months: months,
@@ -126,5 +131,40 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
         ),
       ),
     );
+  }
+}
+
+/// The business's plan at a glance: ended, on a free trial, or ending soon. The owner taps it to renew.
+class SubscriptionBanner extends StatelessWidget {
+  const SubscriptionBanner({super.key, this.onReturn});
+
+  final VoidCallback? onReturn;
+
+  @override
+  Widget build(BuildContext context) {
+    final UOrganizationResponse o = AppWorkspace.org;
+    final bool ended = AppWorkspace.subscriptionEnded(o);
+    final List<UOrganizationSubscription> live = AppWorkspace.liveSubscriptions(o);
+    final DateTime? endsAt = o.subscriptionEndsAt;
+    final int daysLeft = endsAt == null ? 0 : endsAt.difference(DateTime.now()).inDays;
+    final bool trial = live.isNotEmpty && live.every((UOrganizationSubscription s) => s.trial);
+    if (!ended && !trial && (endsAt == null || daysLeft >= 10)) return const SizedBox.shrink();
+    final AppTone tone = ended ? AppTone.danger : trial ? AppTone.positive : AppTone.warning;
+    final String title = ended ? U.s.yourSubscriptionHasEnded : trial ? U.s.youAreOnTheFreeTrial : U.s.yourSubscriptionEndsSoon;
+    final String subtitle = ended
+        ? AppWorkspace.isOwner
+              ? U.s.renewItToKeepUsingReservationsResidentsAndYourPlaces
+              : U.s.askTheOwnerToRenewTheSubscription
+        : "${U.s.endsOn} ${endsAt!.toJalaliDate().toPersianNumber()} · ${daysLeft.toString().toPersianNumber()} ${U.s.daysLeft}";
+    return AppCard(
+      onTap: AppWorkspace.isOwner ? () => UNavigator.push(const SubscriptionPage()).then((_) => onReturn?.call()) : null,
+      child: AppTile(
+        icon: ended ? Icons.lock_clock_outlined : Icons.workspace_premium_outlined,
+        iconColor: tone.foreground(context),
+        title: title,
+        subtitle: subtitle,
+        trailing: AppWorkspace.isOwner ? AppChip(label: ended ? U.s.renew : U.s.subscription, tone: tone) : null,
+      ),
+    ).pOnly(bottom: 12).help("app.today.subscription");
   }
 }

@@ -67,7 +67,7 @@ class _PlacePhotosPageState extends State<PlacePhotosPage> {
       onLoaded: (BuildContext context) => AppPageBody(
         maxWidth: 760,
         children: <Widget>[
-          UTextBodySmall(U.s.pickTheCoverPhotoItIsShownFirst, color: Theme.of(context).colorScheme.onSurfaceVariant).pOnly(bottom: 12),
+          UTextBodySmall(U.s.pickTheCoverPhotoItIsShownFirst, color: Theme.of(context).colorScheme.onSurfaceVariant, maxLines: 6).pOnly(bottom: 12),
           UFilePicker.gallery(photos!),
           const SizedBox(height: 16),
           UButton(title: U.s.save, isLoading: busy, onTap: busy ? null : _save),

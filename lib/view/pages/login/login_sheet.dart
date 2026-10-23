@@ -95,7 +95,7 @@ class _LoginSheetState extends State<LoginSheet> {
             const SizedBox(height: 16),
             UButton(title: codeSent ? U.s.signIn : U.s.getCode, isLoading: busy, onTap: busy ? null : (codeSent ? _verify : _send)),
             const SizedBox(height: 10),
-            GestureDetector(onTap: () => ULaunch.url(AppConstants.termsUrl), child: UTextBodySmall(U.s.bySigningInYouAcceptTheTerms, color: scheme.onSurfaceVariant, textAlign: TextAlign.center)),
+            GestureDetector(onTap: () => ULaunch.url(AppConstants.termsUrl), child: UTextBodySmall(U.s.bySigningInYouAcceptTheTerms, color: scheme.onSurfaceVariant, textAlign: TextAlign.center, maxLines: 6)),
           ],
         ),
       ),

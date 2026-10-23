@@ -29,13 +29,22 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   int months = 1;
   int step = 0;
   bool busy = false;
+  bool trialAvailable = true;
 
   @override
   void initState() {
-    UServices.organization.readPlans(p: USubscriptionPlanReadParams()).then(((UResponse<List<USubscriptionPlanResponse>>?, UEmptyResponse?, String?) r) {
-      if (mounted) setState(() => plans = r.$1?.result ?? <USubscriptionPlanResponse>[]);
-    });
+    readPlans();
     super.initState();
+  }
+
+  /// Plans, and whether this person still has a free trial: it is given once per owner, not per business.
+  Future<void> readPlans() async {
+    plans = (await UServices.organization.readPlans(p: USubscriptionPlanReadParams())).$1?.result ?? <USubscriptionPlanResponse>[];
+    final USubscriptionPlanResponse? withTrial = plans.where((USubscriptionPlanResponse p) => p.trialDays > 0).firstOrNull;
+    if (withTrial != null && !AppSession.isGuest) {
+      trialAvailable = (await UServices.organization.quoteSubscription(p: USubscriptionQuoteParams(planId: withTrial.id, months: 0, trial: true))).$1 != null;
+    }
+    if (mounted) setState(() {});
   }
 
   @override
@@ -63,7 +72,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       await UServices.user.update(p: UUserUpdateParams(id: U.user.id, firstName: firstName.text.trim(), lastName: lastName.text.trim()));
       await AppSession.load();
     }
-    final bool trial = plan!.trialDays > 0;
+    final bool trial = trialAvailable && plan!.trialDays > 0;
     final (UResponse<USubscriptionBuyResponse>? ok, UEmptyResponse? error, String? exception) = await UServices.organization.buySubscription(
       p: USubscriptionBuyParams(planId: plan!.id, months: trial ? 0 : months, trial: trial, title: title.text.trim(), iBanNumber: iban.text.trim(), cardNumber: card.text.trim(), accountNumber: account.text.trim()),
     );
@@ -113,7 +122,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
                   spacing: 10,
                   children: <Widget>[
                     UTextField(controller: title, labelText: U.s.businessName, hintText: U.s.forExampleYasGroup, validator: UValidators.required<String>()),
-                    UTextBodySmall(U.s.youCanAddDormsAndHotelsToItLater, color: scheme.onSurfaceVariant),
+                    UTextBodySmall(U.s.youCanAddDormsAndHotelsToItLater, color: scheme.onSurfaceVariant, maxLines: 6),
                     URow(
                       spacing: 10,
                       children: <Widget>[
@@ -135,9 +144,9 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   spacing: 10,
                   children: <Widget>[
-                    UTextBodySmall(U.s.customersPayInTheAppKhabroomDepositsToThisAccountDaily, color: scheme.onSurfaceVariant),
+                    UTextBodySmall(U.s.customersPayInTheAppKhabroomDepositsToThisAccountDaily, color: scheme.onSurfaceVariant, maxLines: 6),
                     UTextField(controller: iban, labelText: U.s.iban, validator: UValidators.iban()),
-                    UTextField(controller: card, labelText: U.s.cardNumber, keyboardType: TextInputType.number, validator: UValidators.required<String>()),
+                    UTextField(controller: card, labelText: U.s.cardNumber, keyboardType: TextInputType.number, validator: UValidators.cardNumber()),
                     UTextField(controller: account, labelText: U.s.accountNumber, keyboardType: TextInputType.number, validator: UValidators.required<String>()),
                   ],
                 ),
@@ -145,8 +154,8 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
             ),
           if (step == 2) ...<Widget>[
             AppLabel(U.s.pickAPlan),
-            PlanPicker(plans: plans, selected: plan, months: months, onSelected: (USubscriptionPlanResponse p) => setState(() => plan = p), onMonths: (int m) => setState(() => months = m)),
-            if (plan != null && plan!.trialDays > 0) UTextBodySmall(U.s.youStartWithTheFreeTrialAndPayWhenItEnds, color: scheme.onSurfaceVariant, textAlign: TextAlign.center),
+            PlanPicker(trial: trialAvailable, plans: plans, selected: plan, months: months, onSelected: (USubscriptionPlanResponse p) => setState(() => plan = p), onMonths: (int m) => setState(() => months = m)),
+            if (trialAvailable && plan != null && plan!.trialDays > 0) UTextBodySmall(U.s.youStartWithTheFreeTrialAndPayWhenItEnds, color: scheme.onSurfaceVariant, textAlign: TextAlign.center, maxLines: 6),
           ],
           const SizedBox(height: 16),
           URow(

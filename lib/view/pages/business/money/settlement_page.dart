@@ -105,7 +105,7 @@ class _SettlementPageState extends State<SettlementPage> {
               child: UColumn(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  UTextBodySmall(U.s.moneyYourCustomersPaidThatIsNotInYourAccountYet, color: scheme.surface.withValues(alpha: 0.75)),
+                  UTextBodySmall(U.s.moneyYourCustomersPaidThatIsNotInYourAccountYet, color: scheme.surface.withValues(alpha: 0.75), maxLines: 6),
                   const SizedBox(height: 6),
                   UTextDisplaySmall(money(o.balance), color: scheme.surface),
                   const SizedBox(height: 10),

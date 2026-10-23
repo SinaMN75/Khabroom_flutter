@@ -110,6 +110,33 @@ class _DormRecordsPageState extends State<DormRecordsPage> {
     if (ok) await read();
   }
 
+  Future<void> _open(UDormRecordResponse r) async {
+    final bool pending = r.tags.contains(TagDormRecord.pending.number);
+    final int? action = await UNavigator.bottomSheet<int>(
+      SafeArea(
+        child: UColumn(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            UTextTitleLarge(r.title).pAll(12),
+            if (r.body != null) UTextBodySmall(r.body!).pSymmetric(horizontal: 12),
+            if (pending) ...<Widget>[
+              AppTile(icon: Icons.check_circle_outline_rounded, iconColor: AppTone.positive.foreground(context), title: U.s.approve, onTap: () => UNavigator.back(1)),
+              AppTile(icon: Icons.cancel_outlined, iconColor: AppTone.danger.foreground(context), title: U.s.reject, onTap: () => UNavigator.back(2)),
+            ],
+            AppTile(icon: Icons.delete_outline_rounded, iconColor: Theme.of(context).colorScheme.error, title: U.s.delete, onTap: () => UNavigator.back(3)),
+          ],
+        ).pSymmetric(horizontal: 12),
+      ),
+    );
+    final bool ok = switch (action) {
+      1 => await appSend(UServices.dorm.updateRecord(p: UDormRecordUpdateParams(id: r.id, tags: <int>[TagDormRecord.approved.number]))),
+      2 => await appSend(UServices.dorm.updateRecord(p: UDormRecordUpdateParams(id: r.id, tags: <int>[TagDormRecord.rejected.number]))),
+      3 => await UNavigator.confirmAsync(title: U.s.delete, message: U.s.areYouSureYouWantToDelete, destructive: true) && await appSend(UServices.dorm.deleteRecord(p: UIdParams(id: r.id))),
+      _ => false,
+    };
+    if (ok) await read();
+  }
+
   @override
   Widget build(BuildContext context) => UScaffold(
     appBar: AppBar(title: Text(U.s.records).help("app.records.page", inline: true), actions: const <Widget>[UHelpActions("app.records.")]),
@@ -151,6 +178,14 @@ class _DormRecordsPageState extends State<DormRecordsPage> {
                           icon: iconOf(r.tags),
                           title: r.title,
                           subtitle: <String>[?r.userName, ?r.visitorName, r.date.toJalaliDate().toPersianNumber(), ?r.body].join(" · "),
+                          trailing: r.tags.contains(TagDormRecord.pending.number)
+                              ? AppChip(label: TagDormRecord.pending.localizedTitle, tone: AppTone.warning)
+                              : r.tags.contains(TagDormRecord.approved.number)
+                              ? AppChip(label: TagDormRecord.approved.localizedTitle, tone: AppTone.positive)
+                              : r.tags.contains(TagDormRecord.rejected.number)
+                              ? AppChip(label: TagDormRecord.rejected.localizedTitle, tone: AppTone.danger)
+                              : null,
+                          onTap: () => _open(r),
                         ),
                     ],
                   ),

@@ -49,7 +49,7 @@ class ReviewSection extends StatelessWidget {
             children: <Widget>[
               UTextTitleLarge(U.s.writeAReview, color: scheme.onSurface),
               const SizedBox(height: 6),
-              UTextBodySmall(U.s.yourReviewHelpsOtherGuests, color: scheme.onSurfaceVariant),
+              UTextBodySmall(U.s.yourReviewHelpsOtherGuests, color: scheme.onSurfaceVariant, maxLines: 6),
               const SizedBox(height: 16),
               UTextLabelMedium(U.s.yourRating, color: scheme.onSurfaceVariant),
               const SizedBox(height: 8),

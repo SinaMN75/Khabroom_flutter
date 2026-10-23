@@ -89,7 +89,19 @@ class _DormMealsPageState extends State<DormMealsPage> {
                     icon: Icons.restaurant_outlined,
                     title: "${TagDormMeal.values.where((TagDormMeal t) => m.tags.contains(t.number)).firstOrNull?.localizedTitle ?? ""} · ${m.title}",
                     subtitle: "${m.date.toJalaliDate().toPersianNumber()} · ${m.price > 0 ? money(m.price) : U.s.free}",
-                    trailing: AppChip(label: "${m.reservedCount.toString().toPersianNumber()}${m.capacity == null ? "" : "/${m.capacity.toString().toPersianNumber()}"}", icon: Icons.people_outline_rounded),
+                    trailing: URow(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        AppChip(label: "${m.reservedCount.toString().toPersianNumber()}${m.capacity == null ? "" : "/${m.capacity.toString().toPersianNumber()}"}", icon: Icons.people_outline_rounded),
+                        IconButton(
+                          icon: const Icon(Icons.delete_outline_rounded),
+                          tooltip: U.s.delete,
+                          onPressed: () async {
+                            if (await UNavigator.confirmAsync(title: U.s.delete, message: U.s.areYouSureYouWantToDelete, destructive: true) && await appSend(UServices.dorm.deleteMeal(p: UIdParams(id: m.id)))) await read();
+                          },
+                        ),
+                      ],
+                    ),
                     onTap: () => _form(m),
                   ),
               ],

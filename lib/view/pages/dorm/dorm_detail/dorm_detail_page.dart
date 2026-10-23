@@ -238,7 +238,7 @@ class _DormDetailPageState extends State<DormDetailPage> {
             ],
           ),
           const SizedBox(height: 12),
-          UTextBodySmall(U.s.sendYourApplicationFromThisPageOnceTheManagerApprovesItAndSignsTheContractTheContractAndItsMonthlyInvoicesShowUpUnderDormContracts, color: scheme.onSurfaceVariant),
+          UTextBodySmall(U.s.sendYourApplicationFromThisPageOnceTheManagerApprovesItAndSignsTheContractTheContractAndItsMonthlyInvoicesShowUpUnderDormContracts, color: scheme.onSurfaceVariant, maxLines: 6),
           const SizedBox(height: 16),
           AppInfoRow(label: U.s.monthlyRent, value: money(dorm.minMonthlyRent), emphasize: true).help("app.dorm.rent"),
           if (dorm.jsonData.visitingHours != null) AppInfoRow(label: U.s.visitingHours, value: dorm.jsonData.visitingHours!),

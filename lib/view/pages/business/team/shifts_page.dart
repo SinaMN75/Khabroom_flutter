@@ -139,9 +139,22 @@ class _ShiftsPageState extends State<ShiftsPage> {
                     icon: Icons.schedule_outlined,
                     title: s.userName ?? "-",
                     subtitle: "${s.startAt.toLocal().toJalaliDate().toPersianNumber()} · ${_time(s.startAt)} - ${_time(s.endAt)} · ${AppWorkspace.places.where((AppPlace p) => p.id == s.placeId).firstOrNull?.title ?? ""}",
-                    trailing: AppChip(
-                      label: s.checkedOutAt != null ? U.s.shiftDone : s.checkedInAt != null ? U.s.atWork : U.s.notYet,
-                      tone: s.checkedOutAt != null ? AppTone.neutral : s.checkedInAt != null ? AppTone.positive : AppTone.warning,
+                    trailing: URow(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        AppChip(
+                          label: s.checkedOutAt != null ? U.s.shiftDone : s.checkedInAt != null ? U.s.atWork : U.s.notYet,
+                          tone: s.checkedOutAt != null ? AppTone.neutral : s.checkedInAt != null ? AppTone.positive : AppTone.warning,
+                        ),
+                        if (canManage && s.checkedInAt == null)
+                          IconButton(
+                            icon: const Icon(Icons.delete_outline_rounded),
+                            tooltip: U.s.delete,
+                            onPressed: () async {
+                              if (await UNavigator.confirmAsync(title: U.s.delete, message: U.s.areYouSureYouWantToDelete, destructive: true) && await appSend(UServices.organization.deleteShift(p: UIdParams(id: s.id)))) await read();
+                            },
+                          ),
+                      ],
                     ),
                   ),
               ],

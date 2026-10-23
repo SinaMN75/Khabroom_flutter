@@ -64,7 +64,7 @@ class _DormHomePageState extends State<DormHomePage> {
     appBar: AppBar(
       title: Text(widget.place.title).help("app.dorm.page", inline: true),
       actions: <Widget>[
-        if (AppWorkspace.isOwner) IconButton(icon: const Icon(Icons.edit_outlined), tooltip: U.s.edit, onPressed: () => PlaceForm.show(AppKind.dorm, place: widget.place).then((bool ok) => ok ? read() : null)).help("app.dorm.edit"),
+        if (AppWorkspace.can(TagUser.permissionManageDorms, placeId: widget.place.id)) IconButton(icon: const Icon(Icons.edit_outlined), tooltip: U.s.edit, onPressed: () => PlaceForm.show(AppKind.dorm, place: widget.place).then((bool ok) => ok ? read() : null)).help("app.dorm.edit"),
         const UHelpActions("app.dorm."),
       ],
     ),

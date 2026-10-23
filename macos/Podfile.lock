@@ -1,7 +1,4 @@
 PODS:
-  - file_picker_darwin (1.0.0):
-    - Flutter
-    - FlutterMacOS
   - FlutterMacOS (1.0.0)
   - u (0.0.1):
     - FlutterMacOS
@@ -10,14 +7,11 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
-  - file_picker_darwin (from `Flutter/ephemeral/.symlinks/plugins/file_picker_darwin/darwin`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - u (from `Flutter/ephemeral/.symlinks/plugins/u/macos`)
   - webview_all_wkwebview (from `Flutter/ephemeral/.symlinks/plugins/webview_all_wkwebview/darwin`)
 
 EXTERNAL SOURCES:
-  file_picker_darwin:
-    :path: Flutter/ephemeral/.symlinks/plugins/file_picker_darwin/darwin
   FlutterMacOS:
     :path: Flutter/ephemeral
   u:
@@ -26,7 +20,6 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/webview_all_wkwebview/darwin
 
 SPEC CHECKSUMS:
-  file_picker_darwin: 4c2b9a50ea44cb3b071381ea0cf48591bdd80251
   FlutterMacOS: c232990155153907050900a2e175c7773903ba4e
   u: 6d22d5807509b5db0aa86750116babdd3a873e29
   webview_all_wkwebview: 552f6bf5ee38936a1b51c2195ac66b085aeb152f

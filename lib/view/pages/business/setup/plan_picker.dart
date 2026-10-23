@@ -4,13 +4,16 @@ import "package:u/utilities.dart";
 
 /// Plan cards: what each plan includes, its price for the chosen period, and the free trial when there is one.
 class PlanPicker extends StatelessWidget {
-  const PlanPicker({required this.plans, required this.selected, required this.months, required this.onSelected, required this.onMonths, super.key});
+  const PlanPicker({required this.plans, required this.selected, required this.months, required this.onSelected, required this.onMonths, super.key, this.trial = true});
 
   final List<USubscriptionPlanResponse> plans;
   final USubscriptionPlanResponse? selected;
   final int months;
   final ValueChanged<USubscriptionPlanResponse> onSelected;
   final ValueChanged<int> onMonths;
+
+  /// Shows the free-trial badge; off when renewing, because a business gets the trial only once.
+  final bool trial;
 
   static double? priceOf(USubscriptionPlanResponse p, int months) => p.prices.where((UPlanPrice x) => x.months == months).firstOrNull?.price;
 
@@ -26,7 +29,7 @@ class PlanPicker extends StatelessWidget {
             spacing: 8,
             children: <Widget>[for (final int m in periods) ChoiceChip(label: Text("${m.toString().toPersianNumber()} ${U.s.month}"), selected: months == m, onSelected: (_) => onMonths(m))],
           ).pOnly(bottom: 12),
-        for (final USubscriptionPlanResponse p in plans.where((USubscriptionPlanResponse p) => priceOf(p, months) != null || p.trialDays > 0))
+        for (final USubscriptionPlanResponse p in plans.where((USubscriptionPlanResponse p) => priceOf(p, months) != null || (trial && p.trialDays > 0)))
           UContainer(
             margin: const EdgeInsets.only(bottom: 10),
             radius: 18,
@@ -46,12 +49,13 @@ class PlanPicker extends StatelessWidget {
                 if (p.description != null) UTextBodySmall(p.description!, color: scheme.onSurfaceVariant),
                 const SizedBox(height: 6),
                 Wrap(spacing: 6, runSpacing: 6, children: <Widget>[for (final TagModule m in TagModule.values.where((TagModule m) => p.modules.contains(m.number))) AppChip(label: m.localizedTitle)]),
+                if (p.limits.isNotEmpty) PlanLimits(limits: p.limits).pOnly(top: 6),
                 for (final String f in p.features) UTextBodySmall("• $f", color: scheme.onSurfaceVariant),
                 const SizedBox(height: 6),
                 URow(
                   children: <Widget>[
                     UTextTitleMedium(priceOf(p, months) == null ? "-" : money(priceOf(p, months)), expanded: 1),
-                    if (p.trialDays > 0) AppChip(label: "${p.trialDays.toString().toPersianNumber()} ${U.s.daysFree}", tone: AppTone.positive),
+                    if (trial && p.trialDays > 0) AppChip(label: "${p.trialDays.toString().toPersianNumber()} ${U.s.daysFree}", tone: AppTone.positive),
                   ],
                 ),
               ],
@@ -60,4 +64,21 @@ class PlanPicker extends StatelessWidget {
       ],
     );
   }
+}
+
+/// How many places, rooms, beds and staff a plan allows.
+class PlanLimits extends StatelessWidget {
+  const PlanLimits({required this.limits, super.key});
+
+  final List<UPlanLimit> limits;
+
+  @override
+  Widget build(BuildContext context) => Wrap(
+    spacing: 6,
+    runSpacing: 6,
+    children: <Widget>[
+      for (final UPlanLimit l in limits)
+        if (TagPlanLimit.values.where((TagPlanLimit t) => t.number == l.kind).firstOrNull case final TagPlanLimit t) AppChip(label: "${t.localizedTitle}: ${l.value.toString().toPersianNumber()}")
+    ],
+  );
 }

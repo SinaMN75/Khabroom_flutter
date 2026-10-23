@@ -356,7 +356,7 @@ class AppStateView extends StatelessWidget {
     if (state.isLoading() || state.isInitial())
       return SizedBox(height: loadingHeight, child: const UProgressCircular(size: 34, strokeWidth: 3).alignAtCenter());
     if (state.isError()) return UErrorRetry(onTap: onRetry);
-    if (state.isEmpty()) return AppEmpty(title: emptyTitle ?? U.s.noData, icon: emptyIcon);
+    if (state.isEmpty()) return Center(child: AppEmpty(title: emptyTitle ?? U.s.noData, icon: emptyIcon));
     return onLoaded(context);
   });
 }

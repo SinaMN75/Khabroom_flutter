@@ -1,5 +1,6 @@
 import "package:khabroom/utils/app_workspace.dart";
 import "package:khabroom/view/pages/business/business_page.dart";
+import "package:khabroom/view/pages/business/team/customers_page.dart";
 import "package:khabroom/view/pages/business/team/member_page.dart";
 import "package:khabroom/view/pages/business/team/shifts_page.dart";
 import "package:khabroom/view/pages/business/team/tasks_page.dart";
@@ -70,6 +71,7 @@ class _TeamPageState extends State<TeamPage> {
             children: <Widget>[
               AppFeatureTile(title: U.s.shifts, subtitle: U.s.whoWorksWhen, icon: Icons.schedule_outlined, onTap: () => UNavigator.push(const ShiftsPage())),
               AppFeatureTile(title: U.s.tasks, subtitle: U.s.repairsCleaningAndToDos, icon: Icons.task_alt_rounded, onTap: () => UNavigator.push(const TasksPage())),
+              if (CustomersPage.allowed) AppFeatureTile(title: U.s.customers, subtitle: U.s.vipAndBlacklist, icon: Icons.people_outline_rounded, onTap: () => UNavigator.push(const CustomersPage())),
             ],
           ),
           AppLabel("${U.s.people} · ${people.length.toString().toPersianNumber()}"),

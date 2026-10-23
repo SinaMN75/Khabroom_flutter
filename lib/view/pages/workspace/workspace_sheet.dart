@@ -20,6 +20,11 @@ class WorkspaceSheet extends StatelessWidget {
 
   static Future<void> _open(UOrganizationResponse? o) async {
     UNavigator.back();
+    await enter(o);
+  }
+
+  /// Switches to [o] (null = the personal account) and opens its home.
+  static Future<void> enter(UOrganizationResponse? o) async {
     ULoading.show();
     await AppWorkspace.open(o);
     ULoading.dismiss();

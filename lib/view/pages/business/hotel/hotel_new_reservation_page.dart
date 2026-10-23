@@ -129,7 +129,7 @@ class _HotelNewReservationPageState extends State<HotelNewReservationPage> {
               child: loading
                   ? const UProgressCircular(size: 28).alignAtCenter().pAll(20)
                   : rooms.where((UHotelRoomAvailabilityResponse x) => x.isBookable).isEmpty
-                  ? UTextBodySmall(U.s.noRoomIsFreeForTheseDates, color: scheme.error)
+                  ? UTextBodySmall(U.s.noRoomIsFreeForTheseDates, color: scheme.error, maxLines: 6)
                   : UColumn(
                       children: <Widget>[
                         for (final UHotelRoomAvailabilityResponse a in rooms.where((UHotelRoomAvailabilityResponse x) => x.isBookable))

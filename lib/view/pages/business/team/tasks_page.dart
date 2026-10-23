@@ -159,7 +159,20 @@ class _TasksPageState extends State<TasksPage> {
                           iconColor: t.tags.contains(TagStaffTask.urgent.number) ? Theme.of(context).colorScheme.error : null,
                           title: t.title,
                           subtitle: <String>[?t.location, ?t.assigneeName, if (t.dueDate != null) t.dueDate!.toJalaliDate().toPersianNumber(), ?t.doneNote].join(" · "),
-                          trailing: done ? null : IconButton(icon: const Icon(Icons.check_circle_outline_rounded), tooltip: U.s.markAsDone, onPressed: () => _done(t)),
+                          trailing: URow(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              if (!done) IconButton(icon: const Icon(Icons.check_circle_outline_rounded), tooltip: U.s.markAsDone, onPressed: () => _done(t)),
+                              if (AppWorkspace.can(TagUser.permissionManageStaff))
+                                IconButton(
+                                  icon: const Icon(Icons.delete_outline_rounded),
+                                  tooltip: U.s.delete,
+                                  onPressed: () async {
+                                    if (await UNavigator.confirmAsync(title: U.s.delete, message: U.s.areYouSureYouWantToDelete, destructive: true) && await appSend(UServices.organization.deleteTask(p: UIdParams(id: t.id)))) await read();
+                                  },
+                                ),
+                            ],
+                          ),
                         ),
                     ],
                   ),
