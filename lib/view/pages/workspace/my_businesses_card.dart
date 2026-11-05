@@ -60,7 +60,7 @@ class _MyBusinessesCardState extends State<MyBusinessesCard> {
           AppTile(
             icon: Icons.add_business_outlined,
             iconColor: scheme.onSurfaceVariant,
-            title: list.isEmpty ? U.s.registerYourBusiness : U.s.newBusiness,
+            title: list.isEmpty ? U.s.registerYourBusiness : U.s.newItem(U.s.business),
             subtitle: U.s.dormOrHotelStartWithAFreeTrial,
             onTap: create,
           ),

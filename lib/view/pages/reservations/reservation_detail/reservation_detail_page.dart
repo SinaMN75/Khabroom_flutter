@@ -26,7 +26,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
   @override
   Widget build(BuildContext context) => UScaffold(
     appBar: AppBar(
-      title: Text(U.s.reservationDetails).help("app.reservation.page", inline: true),
+      title: Text(U.s.itemDetails(U.s.reservation)).help("app.reservation.page", inline: true),
       actions: <Widget>[IconButton(icon: const Icon(Icons.print_outlined), tooltip: U.s.print, onPressed: c.printFolio).help("app.reservation.print"), const UHelpActions("app.reservation.")],
     ),
     body: UObx(() {
@@ -44,19 +44,19 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
               _headerCard(context, r).help("app.reservation.status"),
               const SizedBox(height: 16),
               AppSectionCard(
-                title: U.s.reservationDetails,
+                title: U.s.itemDetails(U.s.reservation),
                 icon: Icons.event_available_outlined,
                 child: UColumn(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    if (r.jsonData.reservationCode != null) AppInfoRow(label: U.s.reservationCode, value: r.jsonData.reservationCode!),
+                    if (r.jsonData.reservationCode != null) AppInfoRow(label: U.s.itemCode(U.s.reservation), value: r.jsonData.reservationCode!),
                     AppInfoRow(label: U.s.room, value: r.room?.title ?? "-"),
                     AppInfoRow(label: U.s.checkInDate, value: r.checkInDate.toJalaliDate()),
                     AppInfoRow(label: U.s.checkOutDate, value: r.checkOutDate.toJalaliDate()),
                     AppInfoRow(label: U.s.numberOfNights, value: "${(r.jsonData.nightCount ?? 0).toString().toPersianNumber()} ${U.s.night}"),
                     AppInfoRow(label: U.s.numberOfGuests, value: r.guestCount.toString().toPersianNumber()),
-                    AppInfoRow(label: U.s.totalPrice, value: money(r.totalPrice), emphasize: true),
+                    AppInfoRow(label: U.s.totalItem(U.s.price), value: money(r.totalPrice), emphasize: true),
                   ],
                 ),
               ).help("app.reservation.details"),
@@ -154,7 +154,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     final double remaining = invoice.debtAmount + invoice.penaltyAmount - invoice.creditorAmount - invoice.paidAmount;
     return AppSectionCard(
-      title: U.s.invoiceDetails,
+      title: U.s.itemDetails(U.s.invoice),
       icon: Icons.receipt_long_outlined,
       child: UColumn(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -167,11 +167,11 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
             ],
           ),
           AppInfoRow(label: U.s.dueDate, value: invoice.dueDate.toJalaliDate()),
-          AppInfoRow(label: U.s.totalPrice, value: money(invoice.debtAmount)),
-          if (invoice.penaltyAmount > 0) AppInfoRow(label: U.s.penaltyAmount, value: money(invoice.penaltyAmount)),
+          AppInfoRow(label: U.s.totalItem(U.s.price), value: money(invoice.debtAmount)),
+          if (invoice.penaltyAmount > 0) AppInfoRow(label: U.s.itemAmount(U.s.penalty), value: money(invoice.penaltyAmount)),
           if (invoice.paidAmount > 0) AppInfoRow(label: U.s.paidAmount, value: money(invoice.paidAmount)),
           if (c.isUnpaid) ...<Widget>[
-            AppInfoRow(label: U.s.remainingAmount, value: money(remaining), emphasize: true, valueColor: scheme.primary),
+            AppInfoRow(label: U.s.itemAmount(U.s.remaining), value: money(remaining), emphasize: true, valueColor: scheme.primary),
             const SizedBox(height: 12),
             URow(
               children: <Widget>[

@@ -326,7 +326,7 @@ class _PlaceFormPageState extends State<PlaceFormPage> {
                 ),
                 const SizedBox(height: 12),
                 AppSectionCard(
-                  title: U.s.photos,
+                  title: U.s.images,
                   icon: Icons.photo_library_outlined,
                   child: UColumn(
                     crossAxisAlignment: CrossAxisAlignment.stretch,

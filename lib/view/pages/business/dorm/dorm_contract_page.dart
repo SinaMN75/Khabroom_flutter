@@ -63,7 +63,7 @@ class _DormContractPageState extends State<DormContractPage> {
       submitTitle: U.s.renew,
       onSubmit: () => appSend(UServices.dorm.renewDormBedContract(p: UDormBedContractRenewParams(id: c!.id, endDate: end!, rent: tomanToRial(rent)))),
       children: (BuildContext context, StateSetter setState) => <Widget>[
-        UTextFieldDatePicker(labelText: U.s.newEndDate, jalali: true, initialDate: end, onChange: (DateTime d, _) => end = d),
+        UTextFieldDatePicker(labelText: U.s.newItem(U.s.endDate), jalali: true, initialDate: end, onChange: (DateTime d, _) => end = d),
         AppMoneyField(controller: rent, label: U.s.monthlyRent),
       ],
     )) await read();
@@ -92,12 +92,12 @@ class _DormContractPageState extends State<DormContractPage> {
       },
       children: (BuildContext context, StateSetter setState) => <Widget>[
         UDropDownField<String?>(
-          labelText: U.s.newBed,
+          labelText: U.s.newItem(U.s.bed),
           initialValue: bedId,
           items: <DropdownMenuItem<String?>>[for (final UDormBedResponse b in free) DropdownMenuItem<String?>(value: b.id, child: Text("${b.room?.title ?? ""} · ${b.title}"))],
           onChanged: (String? v) => setState(() => bedId = v),
         ),
-        UTextFieldDatePicker(labelText: U.s.fromDate, jalali: true, initialDate: date, onChange: (DateTime d, _) => date = d),
+        UTextFieldDatePicker(labelText: U.s.fromItem(U.s.date), jalali: true, initialDate: date, onChange: (DateTime d, _) => date = d),
         AppMoneyField(controller: rent, label: U.s.newRentIfItChanges, required: false),
       ],
     )) await read();
@@ -111,7 +111,7 @@ class _DormContractPageState extends State<DormContractPage> {
     if (await AppForm.show(
       title: U.s.checkOut,
       help: "app.contract.settle",
-      submitTitle: U.s.checkOutAndSettle,
+      submitTitle: U.s.settleContract,
       onSubmit: () => appSend(
         UServices.dorm.settleDormBedContract(p: UDormBedContractSettleParams(id: c!.id, endDate: end, deductions: tomanToRial(deductions), deductionReason: reason.valueOrNull())),
       ),
@@ -132,7 +132,7 @@ class _DormContractPageState extends State<DormContractPage> {
     TagDormBedInvoice type = TagDormBedInvoice.service;
     DateTime? due = DateTime.now().add(const Duration(days: 3));
     if (await AppForm.show(
-      title: U.s.newBill,
+      title: U.s.newItem(U.s.bill),
       help: "app.contract.bill",
       onSubmit: () => appSend(
         UServices.dorm.createDormBedInvoice(
@@ -222,7 +222,7 @@ class _DormContractPageState extends State<DormContractPage> {
               ).help("app.contract.actions"),
             AppLabel(
               "${U.s.bills} · ${U.s.remaining} ${money(due)}",
-              action: can(TagUser.permissionManageInvoices) && !settled ? U.s.newBill : null,
+              action: can(TagUser.permissionManageInvoices) && !settled ? U.s.newItem(U.s.bill) : null,
               onAction: _newBill,
             ),
             AppCard(

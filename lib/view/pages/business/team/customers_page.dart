@@ -73,7 +73,7 @@ class _CustomersPageState extends State<CustomersPage> {
     final TextEditingController phone = TextEditingController();
     UUserResponse? found;
     final bool picked = await AppForm.show(
-      title: U.s.addCustomer,
+      title: U.s.addItem(U.s.customer),
       submitTitle: U.s.next,
       onSubmit: () async {
         final String q = phone.text.trim().toLatinNumber();
@@ -101,7 +101,7 @@ class _CustomersPageState extends State<CustomersPage> {
   @override
   Widget build(BuildContext context) => UScaffold(
     appBar: AppBar(title: Text(U.s.customers).help("app.customers.page", inline: true), actions: const <Widget>[UHelpActions("app.customers.")]),
-    floatingActionButton: FloatingActionButton.extended(onPressed: _add, icon: const Icon(Icons.person_add_alt_outlined), label: Text(U.s.addCustomer)),
+    floatingActionButton: FloatingActionButton.extended(onPressed: _add, icon: const Icon(Icons.person_add_alt_outlined), label: Text(U.s.addItem(U.s.customer))),
     body: UColumn(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[

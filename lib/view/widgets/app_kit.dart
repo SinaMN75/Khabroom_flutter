@@ -129,7 +129,7 @@ class AppSignInPrompt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Center(
-    child: AppEmpty(title: title, subtitle: U.s.signInWithYourPhoneNumberNoPasswordNeeded, icon: icon, actionTitle: U.s.signIn, onAction: () => AppSession.require(() => onSignedIn?.call())),
+    child: AppEmpty(title: title, subtitle: U.s.signInWithYourPhoneNumberNoPasswordNeeded, icon: icon, actionTitle: U.s.login, onAction: () => AppSession.require(() => onSignedIn?.call())),
   );
 }
 

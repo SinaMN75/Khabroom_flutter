@@ -144,7 +144,7 @@ class _ProfilePageState extends State<ProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            UTextLabelMedium(U.s.walletBalance, color: AppColors.onGradient.withValues(alpha: 0.85)),
+            UTextLabelMedium(U.s.itemBalance(U.s.wallet), color: AppColors.onGradient.withValues(alpha: 0.85)),
             const SizedBox(height: 8),
             UObx(
               () => c.walletState.isLoaded()

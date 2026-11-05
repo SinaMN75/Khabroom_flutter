@@ -4,7 +4,7 @@ import "package:u/utilities.dart";
 
 /// Plan cards: what each plan includes, its price for the chosen period, and the free trial when there is one.
 class PlanPicker extends StatelessWidget {
-  const PlanPicker({required this.plans, required this.selected, required this.months, required this.onSelected, required this.onMonths, super.key, this.trial = true});
+  const PlanPicker({required this.plans, required this.selected, required this.months, required this.onSelected, required this.onMonths, super.key, this.trial = true, this.free = false});
 
   final List<USubscriptionPlanResponse> plans;
   final USubscriptionPlanResponse? selected;
@@ -14,6 +14,10 @@ class PlanPicker extends StatelessWidget {
 
   /// Shows the free-trial badge; off when renewing, because a business gets the trial only once.
   final bool trial;
+
+  final bool free;
+
+  static bool isFree(USubscriptionPlanResponse p) => p.tags.contains(TagSubscriptionPlan.free.number);
 
   static double? priceOf(USubscriptionPlanResponse p, int months) => p.prices.where((UPlanPrice x) => x.months == months).firstOrNull?.price;
 
@@ -29,7 +33,7 @@ class PlanPicker extends StatelessWidget {
             spacing: 8,
             children: <Widget>[for (final int m in periods) ChoiceChip(label: Text("${m.toString().toPersianNumber()} ${U.s.month}"), selected: months == m, onSelected: (_) => onMonths(m))],
           ).pOnly(bottom: 12),
-        for (final USubscriptionPlanResponse p in plans.where((USubscriptionPlanResponse p) => priceOf(p, months) != null || (trial && p.trialDays > 0)))
+        for (final USubscriptionPlanResponse p in plans.where((USubscriptionPlanResponse p) => priceOf(p, months) != null || (trial && p.trialDays > 0) || (free && isFree(p))))
           UContainer(
             margin: const EdgeInsets.only(bottom: 10),
             radius: 18,
@@ -54,7 +58,7 @@ class PlanPicker extends StatelessWidget {
                 const SizedBox(height: 6),
                 URow(
                   children: <Widget>[
-                    UTextTitleMedium(priceOf(p, months) == null ? "-" : money(priceOf(p, months)), expanded: 1),
+                    UTextTitleMedium(isFree(p) ? U.s.freeOfCharge : priceOf(p, months) == null ? "-" : money(priceOf(p, months)), expanded: 1),
                     if (trial && p.trialDays > 0) AppChip(label: "${p.trialDays.toString().toPersianNumber()} ${U.s.daysFree}", tone: AppTone.positive),
                   ],
                 ),

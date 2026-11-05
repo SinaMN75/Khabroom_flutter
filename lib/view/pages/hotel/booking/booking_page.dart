@@ -54,7 +54,7 @@ class _BookingPageState extends State<BookingPage> {
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: <Widget>[
       AppSectionCard(
-        title: U.s.yourStay,
+        title: U.s.yourItem(U.s.stay),
         icon: Icons.event_available_outlined,
         child: UColumn(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -123,14 +123,14 @@ class _BookingPageState extends State<BookingPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          UTextTitleSmall(U.s.priceDetails, color: scheme.onSurface),
+          UTextTitleSmall(U.s.itemDetails(U.s.price), color: scheme.onSurface),
           const SizedBox(height: 12),
           AppInfoRow(
             label: "${money(widget.availability.room.pricePerNight)} × ${widget.availability.nightCount.toString().toPersianNumber()} ${U.s.night}",
             value: money(_total),
           ),
           const Divider(height: 22),
-          AppInfoRow(label: U.s.totalPrice, value: money(_total), emphasize: true, valueColor: scheme.primary).help("app.booking.total"),
+          AppInfoRow(label: U.s.totalItem(U.s.price), value: money(_total), emphasize: true, valueColor: scheme.primary).help("app.booking.total"),
           const SizedBox(height: 16),
           UTextTitleSmall(U.s.chooseAPaymentMethod, color: scheme.onSurface).help("app.booking.payment", inline: true),
           const SizedBox(height: 10),
@@ -143,7 +143,7 @@ class _BookingPageState extends State<BookingPage> {
                   context,
                   selected: c.useWallet.value,
                   title: U.s.payFromWallet,
-                  subtitle: c.walletState.isLoaded() ? "${U.s.walletBalance}: ${money(c.walletBalance)}" : U.s.payFromYourWalletBalance,
+                  subtitle: c.walletState.isLoaded() ? "${U.s.itemBalance(U.s.wallet)}: ${money(c.walletBalance)}" : U.s.payFromYourWalletBalance,
                   icon: Icons.account_balance_wallet_outlined,
                   enabled: c.canPayFromWallet(_total),
                   onTap: () => c.useWallet(true),

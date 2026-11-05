@@ -84,7 +84,7 @@ class _HotelHomePageState extends State<HotelHomePage> {
       ],
     ),
     floatingActionButton: AppWorkspace.can(TagUser.permissionManageReservations, placeId: id)
-        ? FloatingActionButton.extended(onPressed: () => UNavigator.push(HotelNewReservationPage(hotelId: id)).then((_) => read()), icon: const Icon(Icons.add_rounded), label: Text(U.s.newBooking)).help("app.hotel.new")
+        ? FloatingActionButton.extended(onPressed: () => UNavigator.push(HotelNewReservationPage(hotelId: id)).then((_) => read()), icon: const Icon(Icons.add_rounded), label: Text(U.s.newItem(U.s.reservation))).help("app.hotel.new")
         : null,
     body: AppStateView(
       state: state,
@@ -94,7 +94,7 @@ class _HotelHomePageState extends State<HotelHomePage> {
         return AppPageBody(
           onRefresh: read,
           children: <Widget>[
-            if (widget.place.pending) AppCard(child: AppTile(icon: Icons.hourglass_top_rounded, title: U.s.waitingForApproval, subtitle: U.s.newPlacesAreShownToCustomersAfterKhabroomApprovesThem)).pOnly(bottom: 12),
+            if (widget.place.pending) AppCard(child: AppTile(icon: Icons.hourglass_top_rounded, title: U.s.awaitingApproval, subtitle: U.s.newPlacesAreShownToCustomersAfterKhabroomApprovesThem)).pOnly(bottom: 12),
             if (t != null)
               AppGrid(
                 columns: 4,
@@ -111,13 +111,13 @@ class _HotelHomePageState extends State<HotelHomePage> {
               columns: 3,
               spacing: 10,
               children: <Widget>[
-                AppFeatureTile(title: U.s.bookings, icon: Icons.event_note_outlined, onTap: () => UNavigator.push(HotelReservationsPage(hotelId: id)).then((_) => read())),
+                AppFeatureTile(title: U.s.reservations, icon: Icons.event_note_outlined, onTap: () => UNavigator.push(HotelReservationsPage(hotelId: id)).then((_) => read())),
                 AppFeatureTile(title: U.s.board, icon: Icons.calendar_view_week_outlined, onTap: () => UNavigator.push(HotelBoardPage(hotelId: id))),
                 AppFeatureTile(title: U.s.housekeeping, icon: Icons.cleaning_services_outlined, onTap: () => UNavigator.push(HotelHousekeepingPage(hotelId: id)).then((_) => read())),
                 AppFeatureTile(title: U.s.rooms, icon: Icons.meeting_room_outlined, onTap: () => UNavigator.push(HotelRoomsPage(hotelId: id))),
                 AppFeatureTile(title: U.s.pricesAndClosedDays, icon: Icons.sell_outlined, onTap: () => UNavigator.push(HotelRatesPage(hotelId: id))),
-                AppFeatureTile(title: U.s.closeTheDay, icon: Icons.nightlight_outlined, onTap: () => UNavigator.push(HotelAuditPage(hotelId: id)).then((_) => read())),
-                AppFeatureTile(title: U.s.photos, icon: Icons.photo_library_outlined, onTap: () => UNavigator.push(PlacePhotosPage(place: widget.place))),
+                AppFeatureTile(title: U.s.closeDay, icon: Icons.nightlight_outlined, onTap: () => UNavigator.push(HotelAuditPage(hotelId: id)).then((_) => read())),
+                AppFeatureTile(title: U.s.images, icon: Icons.photo_library_outlined, onTap: () => UNavigator.push(PlacePhotosPage(place: widget.place))),
                 AppFeatureTile(title: U.s.reviews, icon: Icons.rate_review_outlined, onTap: () => UNavigator.push(ReviewsPage(place: widget.place))),
               ],
             ).help("app.hotel.tiles"),

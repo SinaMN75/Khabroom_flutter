@@ -61,7 +61,7 @@ class _ShiftsPageState extends State<ShiftsPage> {
     }
 
     final bool ok = await AppForm.show(
-      title: U.s.newShift,
+      title: U.s.newItem(U.s.shift),
       help: "app.shifts.form",
       onSubmit: () async {
         if (userId == null || day == null) return false;

@@ -97,7 +97,7 @@ class _MemberPageState extends State<MemberPage> {
   @override
   Widget build(BuildContext context) => UScaffold(
     appBar: AppBar(
-      title: Text(widget.user == null ? U.s.addStaff : "${widget.user!.firstName ?? ""} ${widget.user!.lastName ?? ""}").help("app.member.page", inline: true),
+      title: Text(widget.user == null ? U.s.addItem(U.s.teamMember) : "${widget.user!.firstName ?? ""} ${widget.user!.lastName ?? ""}").help("app.member.page", inline: true),
       actions: <Widget>[if (widget.user != null) IconButton(icon: const Icon(Icons.person_remove_outlined), onPressed: _remove), const UHelpActions("app.member.")],
     ),
     body: Form(

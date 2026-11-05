@@ -92,7 +92,7 @@ class _HotelNewReservationPageState extends State<HotelNewReservationPage> {
   Widget build(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     return UScaffold(
-      appBar: AppBar(title: Text(U.s.newBooking).help("app.newBooking.page", inline: true), actions: const <Widget>[UHelpActions("app.newBooking.")]),
+      appBar: AppBar(title: Text(U.s.newItem(U.s.reservation)).help("app.newBooking.page", inline: true), actions: const <Widget>[UHelpActions("app.newBooking.")]),
       body: Form(
         key: formKey,
         child: AppPageBody(

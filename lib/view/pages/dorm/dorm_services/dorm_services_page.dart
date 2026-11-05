@@ -36,7 +36,7 @@ class _DormServicesPageState extends State<DormServicesPage> {
     appBar: AppBar(title: Text("${U.s.dormServices} · ${widget.contract.bed?.room?.dorm?.title ?? ""}").help("app.services.page", inline: true), actions: const <Widget>[UHelpActions("app.services.")]),
     floatingActionButton: switch (c.tab) {
       DormServicesTab.notices => FloatingActionButton.extended(onPressed: _requestSheet, icon: const Icon(Icons.add), label: Text(U.s.newRequest)).help("app.services.newRequest"),
-      DormServicesTab.laundry => FloatingActionButton.extended(onPressed: _laundrySheet, icon: const Icon(Icons.add), label: Text(U.s.booking)).help("app.services.newLaundry"),
+      DormServicesTab.laundry => FloatingActionButton.extended(onPressed: _laundrySheet, icon: const Icon(Icons.add), label: Text(U.s.reservation)).help("app.services.newLaundry"),
       DormServicesTab.maintenance => FloatingActionButton.extended(onPressed: _maintenanceSheet, icon: const Icon(Icons.build_outlined), label: Text(U.s.newRequest)).help("app.services.newMaintenance"),
       _ => null,
     },
@@ -104,7 +104,7 @@ class _DormServicesPageState extends State<DormServicesPage> {
           if (booking != null)
             UButton(title: U.s.cancel, type: UButtonType.outlined, onTap: () => c.cancelBooking(booking).then((_) => setState(() {})))
           else
-            UButton(title: full ? U.s.capacityIsFull : U.s.reserve, onTap: full ? null : () => c.reserveMeal(m).then((_) => setState(() {}))),
+            UButton(title: full ? U.s.capacityIsFull : U.s.book, onTap: full ? null : () => c.reserveMeal(m).then((_) => setState(() {}))),
         ],
       ),
     ).pOnly(bottom: 10);

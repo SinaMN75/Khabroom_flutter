@@ -90,10 +90,10 @@ class _LoginSheetState extends State<LoginSheet> {
               ).help("app.login.phone")
             else ...<Widget>[
               UOtpField(controller: otp, autoFocus: true, onCompleted: (_) => _verify()).alignAtCenter(),
-              UButton(title: U.s.editPhoneNumber, type: UButtonType.text, onTap: () => setState(() => codeSent = false)),
+              UButton(title: U.s.editItem(U.s.number), type: UButtonType.text, onTap: () => setState(() => codeSent = false)),
             ],
             const SizedBox(height: 16),
-            UButton(title: codeSent ? U.s.signIn : U.s.getCode, isLoading: busy, onTap: busy ? null : (codeSent ? _verify : _send)),
+            UButton(title: codeSent ? U.s.login : U.s.getCode, isLoading: busy, onTap: busy ? null : (codeSent ? _verify : _send)),
             const SizedBox(height: 10),
             GestureDetector(onTap: () => ULaunch.url(AppConstants.termsUrl), child: UTextBodySmall(U.s.bySigningInYouAcceptTheTerms, color: scheme.onSurfaceVariant, textAlign: TextAlign.center, maxLines: 6)),
           ],

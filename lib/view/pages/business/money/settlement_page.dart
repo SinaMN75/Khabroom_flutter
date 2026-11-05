@@ -52,7 +52,7 @@ class _SettlementPageState extends State<SettlementPage> {
     if (await AppForm.show(
       title: U.s.askForAnEarlyPayout,
       help: "app.settlement.early",
-      submitTitle: U.s.sendRequest,
+      submitTitle: U.s.sendItem(U.s.request),
       onSubmit: () => appSend(UServices.organization.requestSettlement(p: UOrganizationSettlementRequestParams(organizationId: org!.id, amount: tomanToRial(amount), note: note.valueOrNull()))),
       children: (BuildContext context, StateSetter setState) => <Widget>[
         UTextBodySmall(U.s.earlyPayoutExplanation),

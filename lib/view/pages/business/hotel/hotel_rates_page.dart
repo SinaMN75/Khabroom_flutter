@@ -18,7 +18,7 @@ class _HotelRatesPageState extends State<HotelRatesPage> {
   List<UHotelRateResponse> list = <UHotelRateResponse>[];
   List<UHotelRoomResponse> rooms = <UHotelRoomResponse>[];
 
-  static const List<String> _weekdays = <String>["ش", "ی", "د", "س", "چ", "پ", "ج"];
+  static List<String> get _weekdayNames => <String>[U.s.sunday, U.s.monday, U.s.tuesday, U.s.wednesday, U.s.thursday, U.s.friday, U.s.saturday];
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _HotelRatesPageState extends State<HotelRatesPage> {
     final List<String> parts = <String>[
       if (r.price != null) money(r.price),
       if (r.percent != null) "${r.percent! > 0 ? "+" : ""}${r.percent!.round()}٪",
-      if (r.weekdays.isNotEmpty) r.weekdays.map((int d) => d >= 0 && d < 7 ? _weekdays[(d + 1) % 7] : "").join("، "),
+      if (r.weekdays.isNotEmpty) r.weekdays.map((int d) => d >= 0 && d < 7 ? _weekdayNames[d] : "").join("، "),
       if (r.minNights != null) "${U.s.atLeast} ${r.minNights} ${U.s.nights}",
     ];
     return parts.join(" · ").toPersianNumber();
@@ -105,10 +105,10 @@ class _HotelRatesPageState extends State<HotelRatesPage> {
           Wrap(
             spacing: 6,
             children: <Widget>[
-              for (int d = 0; d < 7; d++) FilterChip(label: Text(_weekdays[(d + 1) % 7]), selected: weekdays.contains(d), onSelected: (bool on) => setState(() => on ? weekdays.add(d) : weekdays.remove(d))),
+              for (int d = 0; d < 7; d++) FilterChip(label: Text(_weekdayNames[d]), selected: weekdays.contains(d), onSelected: (bool on) => setState(() => on ? weekdays.add(d) : weekdays.remove(d))),
             ],
           ),
-          UTextField(controller: minNights, labelText: U.s.minimumNights, keyboardType: TextInputType.number),
+          UTextField(controller: minNights, labelText: U.s.minimumItem(U.s.nights), keyboardType: TextInputType.number),
         ],
       ],
     );

@@ -121,7 +121,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                   children: <Widget>[
                     AppInfoRow(label: U.s.price, value: money(quote!.price)),
                     if (quote!.credit > 0) AppInfoRow(label: U.s.creditFromYourCurrentPlan, value: "− ${money(quote!.credit)}"),
-                    AppInfoRow(label: U.s.toPay, value: money(quote!.payable), emphasize: true),
+                    AppInfoRow(label: U.s.payable, value: money(quote!.payable), emphasize: true),
                     if (quote!.expiresAt != null) AppInfoRow(label: U.s.until, value: quote!.expiresAt!.toJalaliDate().toPersianNumber()),
                   ],
                 ),

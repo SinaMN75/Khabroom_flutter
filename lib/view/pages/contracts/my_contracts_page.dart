@@ -139,7 +139,7 @@ class _MyContractsPageState extends State<MyContractsPage> {
             URow(
               children: <Widget>[
                 AppPrice(amount: payable).expanded(),
-                if (invoice.penaltyAmount > 0) AppChip(label: "${U.s.penaltyAmount}: ${money(invoice.penaltyAmount)}", tone: AppTone.danger),
+                if (invoice.penaltyAmount > 0) AppChip(label: "${U.s.itemAmount(U.s.penalty)}: ${money(invoice.penaltyAmount)}", tone: AppTone.danger),
               ],
             ),
             if (unpaid) ...<Widget>[

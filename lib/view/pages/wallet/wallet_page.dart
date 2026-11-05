@@ -41,7 +41,7 @@ class _WalletPageState extends State<WalletPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    UTextLabelMedium(U.s.walletBalance, color: AppColors.onGradient.withValues(alpha: 0.85)),
+                    UTextLabelMedium(U.s.itemBalance(U.s.wallet), color: AppColors.onGradient.withValues(alpha: 0.85)),
                     const SizedBox(height: 10),
                     UObx(
                       () => c.walletState.isLoaded()

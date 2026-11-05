@@ -118,7 +118,7 @@ class AppNearbyList extends StatelessWidget {
           label: n.title,
           value: <String>[
             if (n.distanceMeters != null) _distance(n.distanceMeters!),
-            if (n.minutes != null) "${n.minutes.toString().toPersianNumber()} ${U.s.minuteUnit}",
+            if (n.minutes != null) "${n.minutes.toString().toPersianNumber()} ${U.s.min}",
           ].join(" · "),
         ),
     ],

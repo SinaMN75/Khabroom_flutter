@@ -142,7 +142,7 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                UTextLabelMedium(U.s.yourStay, color: AppColors.onGradient.withValues(alpha: 0.85)),
+                UTextLabelMedium(U.s.yourItem(U.s.stay), color: AppColors.onGradient.withValues(alpha: 0.85)),
                 const SizedBox(height: 6),
                 UTextTitleLarge(r.hotel?.title ?? U.s.hotelReservation, color: AppColors.onGradient),
                 const SizedBox(height: 6),

@@ -69,7 +69,7 @@ class _DormHomePageState extends State<DormHomePage> {
       ],
     ),
     floatingActionButton: can(TagUser.permissionManageContracts)
-        ? FloatingActionButton.extended(onPressed: () => UNavigator.push(DormNewContractPage(dormId: id)).then((_) => read()), icon: const Icon(Icons.person_add_alt_1_outlined), label: Text(U.s.newResident)).help("app.dorm.newResident")
+        ? FloatingActionButton.extended(onPressed: () => UNavigator.push(DormNewContractPage(dormId: id)).then((_) => read()), icon: const Icon(Icons.person_add_alt_1_outlined), label: Text(U.s.newItem(U.s.resident))).help("app.dorm.newResident")
         : null,
     body: AppStateView(
       state: state,
@@ -80,7 +80,7 @@ class _DormHomePageState extends State<DormHomePage> {
         return AppPageBody(
           onRefresh: read,
           children: <Widget>[
-            if (widget.place.pending) AppCard(child: AppTile(icon: Icons.hourglass_top_rounded, title: U.s.waitingForApproval, subtitle: U.s.newPlacesAreShownToCustomersAfterKhabroomApprovesThem)).pOnly(bottom: 12),
+            if (widget.place.pending) AppCard(child: AppTile(icon: Icons.hourglass_top_rounded, title: U.s.awaitingApproval, subtitle: U.s.newPlacesAreShownToCustomersAfterKhabroomApprovesThem)).pOnly(bottom: 12),
             AppGrid(
               columns: 3,
               spacing: 10,
@@ -107,7 +107,7 @@ class _DormHomePageState extends State<DormHomePage> {
                 AppFeatureTile(title: U.s.bills, subtitle: U.s.rentAndPayments, icon: Icons.receipt_long_outlined, onTap: () => UNavigator.push(DormBillsPage(dormId: id)).then((_) => read())),
                 AppFeatureTile(title: U.s.records, subtitle: U.s.visitorsLeavesAndNotices, icon: Icons.fact_check_outlined, onTap: () => UNavigator.push(DormRecordsPage(dormId: id))),
                 AppFeatureTile(title: U.s.meals, subtitle: U.s.menuAndReservations, icon: Icons.restaurant_outlined, onTap: () => UNavigator.push(DormMealsPage(dormId: id))),
-                AppFeatureTile(title: U.s.photos, subtitle: U.s.whatCustomersSee, icon: Icons.photo_library_outlined, onTap: () => UNavigator.push(PlacePhotosPage(place: widget.place))),
+                AppFeatureTile(title: U.s.images, subtitle: U.s.whatCustomersSee, icon: Icons.photo_library_outlined, onTap: () => UNavigator.push(PlacePhotosPage(place: widget.place))),
                 AppFeatureTile(title: U.s.reviews, subtitle: U.s.whatResidentsSay, icon: Icons.rate_review_outlined, onTap: () => UNavigator.push(ReviewsPage(place: widget.place))),
               ],
             ).help("app.dorm.tiles"),

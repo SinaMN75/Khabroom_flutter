@@ -60,7 +60,7 @@ class _PlacePhotosPageState extends State<PlacePhotosPage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
-    appBar: AppBar(title: Text(U.s.photos).help("app.photos.page", inline: true)),
+    appBar: AppBar(title: Text(U.s.images).help("app.photos.page", inline: true)),
     body: AppStateView(
       state: state,
       onRetry: read,

@@ -117,7 +117,7 @@ class _TodayPageState extends State<TodayPage> {
                       data: p.kind.theme(context),
                       child: AppFeatureTile(
                         title: p.title,
-                        subtitle: p.pending ? U.s.waitingForApproval : p.rejected ? U.s.notApproved : p.kind.title,
+                        subtitle: p.pending ? U.s.awaitingApproval : p.rejected ? U.s.notApproved : p.kind.title,
                         icon: p.kind.icon,
                         badge: p.pending ? U.s.inReview : null,
                         onTap: () => UNavigator.push(PlaceHomePage(place: p)),

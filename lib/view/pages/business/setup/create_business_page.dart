@@ -72,9 +72,10 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
       await UServices.user.update(p: UUserUpdateParams(id: U.user.id, firstName: firstName.text.trim(), lastName: lastName.text.trim()));
       await AppSession.load();
     }
-    final bool trial = trialAvailable && plan!.trialDays > 0;
+    final bool free = PlanPicker.isFree(plan!);
+    final bool trial = !free && trialAvailable && plan!.trialDays > 0;
     final (UResponse<USubscriptionBuyResponse>? ok, UEmptyResponse? error, String? exception) = await UServices.organization.buySubscription(
-      p: USubscriptionBuyParams(planId: plan!.id, months: trial ? 0 : months, trial: trial, title: title.text.trim(), iBanNumber: iban.text.trim(), cardNumber: card.text.trim(), accountNumber: account.text.trim()),
+      p: USubscriptionBuyParams(planId: plan!.id, months: trial || free ? 0 : months, trial: trial, title: title.text.trim(), iBanNumber: iban.text.trim(), cardNumber: card.text.trim(), accountNumber: account.text.trim()),
     );
     final USubscriptionBuyResponse? r = ok?.result;
     if (r == null) {
@@ -102,7 +103,7 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
   Widget build(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     return UScaffold(
-      appBar: AppBar(title: Text(U.s.newBusiness).help("app.create.page", inline: true), actions: const <Widget>[UHelpActions("app.create.")]),
+      appBar: AppBar(title: Text(U.s.newItem(U.s.business)).help("app.create.page", inline: true), actions: const <Widget>[UHelpActions("app.create.")]),
       body: AppPageBody(
         maxWidth: AppResponsive.readableMaxWidth,
         children: <Widget>[
@@ -121,13 +122,13 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   spacing: 10,
                   children: <Widget>[
-                    UTextField(controller: title, labelText: U.s.businessName, hintText: U.s.forExampleYasGroup, validator: UValidators.required<String>()),
+                    UTextField(controller: title, labelText: U.s.itemName(U.s.business), hintText: U.s.forExampleYasGroup, validator: UValidators.required<String>()),
                     UTextBodySmall(U.s.youCanAddDormsAndHotelsToItLater, color: scheme.onSurfaceVariant, maxLines: 6),
                     URow(
                       spacing: 10,
                       children: <Widget>[
-                        Expanded(child: UTextField(controller: firstName, labelText: U.s.yourFirstName, validator: UValidators.required<String>())),
-                        Expanded(child: UTextField(controller: lastName, labelText: U.s.yourLastName, validator: UValidators.required<String>())),
+                        Expanded(child: UTextField(controller: firstName, labelText: U.s.yourItem(U.s.firstName), validator: UValidators.required<String>())),
+                        Expanded(child: UTextField(controller: lastName, labelText: U.s.yourItem(U.s.lastName), validator: UValidators.required<String>())),
                       ],
                     ),
                   ],
@@ -145,17 +146,17 @@ class _CreateBusinessPageState extends State<CreateBusinessPage> {
                   spacing: 10,
                   children: <Widget>[
                     UTextBodySmall(U.s.customersPayInTheAppKhabroomDepositsToThisAccountDaily, color: scheme.onSurfaceVariant, maxLines: 6),
-                    UTextField(controller: iban, labelText: U.s.iban, validator: UValidators.iban()),
-                    UTextField(controller: card, labelText: U.s.cardNumber, keyboardType: TextInputType.number, validator: UValidators.cardNumber()),
-                    UTextField(controller: account, labelText: U.s.accountNumber, keyboardType: TextInputType.number, validator: UValidators.required<String>()),
+                    UTextField(controller: iban, labelText: U.s.iban, validator: UValidators.iban(isRequired: false)),
+                    UTextField(controller: card, labelText: U.s.cardNumber, keyboardType: TextInputType.number, validator: UValidators.cardNumber(isRequired: false)),
+                    UTextField(controller: account, labelText: U.s.itemNumber(U.s.account), keyboardType: TextInputType.number, validator: UValidators.number(isRequired: false)),
                   ],
                 ),
               ).help("app.create.bank"),
             ),
           if (step == 2) ...<Widget>[
             AppLabel(U.s.pickAPlan),
-            PlanPicker(trial: trialAvailable, plans: plans, selected: plan, months: months, onSelected: (USubscriptionPlanResponse p) => setState(() => plan = p), onMonths: (int m) => setState(() => months = m)),
-            if (trialAvailable && plan != null && plan!.trialDays > 0) UTextBodySmall(U.s.youStartWithTheFreeTrialAndPayWhenItEnds, color: scheme.onSurfaceVariant, textAlign: TextAlign.center, maxLines: 6),
+            PlanPicker(trial: trialAvailable, free: true, plans: plans, selected: plan, months: months, onSelected: (USubscriptionPlanResponse p) => setState(() => plan = p), onMonths: (int m) => setState(() => months = m)),
+            if (trialAvailable && plan != null && plan!.trialDays > 0 && !PlanPicker.isFree(plan!)) UTextBodySmall(U.s.youStartWithTheFreeTrialAndPayWhenItEnds, color: scheme.onSurfaceVariant, textAlign: TextAlign.center, maxLines: 6),
           ],
           const SizedBox(height: 16),
           URow(

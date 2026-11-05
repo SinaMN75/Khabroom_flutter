@@ -53,7 +53,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
     final bool ok = await AppForm.show(
       title: U.s.reply,
       onSubmit: () => appSend(UServices.comment.create(p: UCommentCreateParams(description: text.text.trim(), score: 0, parentId: c.id, hotelId: hotelId, dormId: dormId, tags: <int>[TagComment.values.first.number]))),
-      children: (BuildContext context, StateSetter setState) => <Widget>[UTextField(controller: text, labelText: U.s.yourReply, lines: 3, validator: UValidators.required<String>())],
+      children: (BuildContext context, StateSetter setState) => <Widget>[UTextField(controller: text, labelText: U.s.yourItem(U.s.reply), lines: 3, validator: UValidators.required<String>())],
     );
     text.dispose();
     if (ok) await read();

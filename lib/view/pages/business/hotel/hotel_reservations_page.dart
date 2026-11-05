@@ -67,7 +67,7 @@ class _HotelReservationsPageState extends State<HotelReservationsPage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
-    appBar: AppBar(title: Text(U.s.bookings).help("app.bookings.page", inline: true), actions: const <Widget>[UHelpActions("app.bookings.")]),
+    appBar: AppBar(title: Text(U.s.reservations).help("app.bookings.page", inline: true), actions: const <Widget>[UHelpActions("app.bookings.")]),
     body: UColumn(
       children: <Widget>[
         UColumn(

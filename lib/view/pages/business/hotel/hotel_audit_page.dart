@@ -44,7 +44,7 @@ class _HotelAuditPageState extends State<HotelAuditPage> {
   }
 
   Future<void> _close() async {
-    if (!await UNavigator.confirmAsync(title: U.s.closeTheDay, message: U.s.closeTheDayExplanation)) return;
+    if (!await UNavigator.confirmAsync(title: U.s.closeDay, message: U.s.closeTheDayExplanation)) return;
     setState(() => busy = true);
     final (UResponse<UHotelNightAuditResponse>? ok, UEmptyResponse? error, String? exception) = await UServices.hotel.closeNightAudit(p: UHotelNightAuditParams(hotelId: widget.hotelId, date: date));
     if (ok == null) UToast.error(message: error?.message ?? exception ?? U.s.error);
@@ -55,7 +55,7 @@ class _HotelAuditPageState extends State<HotelAuditPage> {
 
   @override
   Widget build(BuildContext context) => UScaffold(
-    appBar: AppBar(title: Text(U.s.closeTheDay).help("app.audit.page", inline: true), actions: const <Widget>[UHelpActions("app.audit.")]),
+    appBar: AppBar(title: Text(U.s.closeDay).help("app.audit.page", inline: true), actions: const <Widget>[UHelpActions("app.audit.")]),
     body: AppStateView(
       state: state,
       onRetry: read,
@@ -92,7 +92,7 @@ class _HotelAuditPageState extends State<HotelAuditPage> {
               Wrap(spacing: 8, runSpacing: 8, children: <Widget>[for (final UHotelRoomUnitItem u in a.dirtyUnits) AppChip(label: "${u.roomTitle ?? ""} ${u.number}".toPersianNumber(), tone: AppTone.danger)]),
             ],
             const SizedBox(height: 20),
-            UButton(title: U.s.closeTheDay, icon: const Icon(Icons.nightlight_outlined), isLoading: busy, onTap: busy ? null : _close).help("app.audit.close"),
+            UButton(title: U.s.closeDay, icon: const Icon(Icons.nightlight_outlined), isLoading: busy, onTap: busy ? null : _close).help("app.audit.close"),
           ],
         );
       },

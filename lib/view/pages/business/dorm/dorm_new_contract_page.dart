@@ -118,7 +118,7 @@ class _DormNewContractPageState extends State<DormNewContractPage> {
   Widget build(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     return UScaffold(
-      appBar: AppBar(title: Text(U.s.newResident).help("app.newContract.page", inline: true), actions: const <Widget>[UHelpActions("app.newContract.")]),
+      appBar: AppBar(title: Text(U.s.newItem(U.s.resident)).help("app.newContract.page", inline: true), actions: const <Widget>[UHelpActions("app.newContract.")]),
       body: Form(
         key: formKey,
         child: AppPageBody(

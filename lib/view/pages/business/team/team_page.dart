@@ -58,7 +58,7 @@ class _TeamPageState extends State<TeamPage> {
   @override
   Widget build(BuildContext context) => UScaffold(
     appBar: businessAppBar(context, U.s.team, help: "app.team.page"),
-    floatingActionButton: AppWorkspace.isOwner ? FloatingActionButton.extended(onPressed: () => UNavigator.push(const MemberPage()).then((_) => read()), icon: const Icon(Icons.person_add_alt_1_outlined), label: Text(U.s.addStaff)).help("app.team.add") : null,
+    floatingActionButton: AppWorkspace.isOwner ? FloatingActionButton.extended(onPressed: () => UNavigator.push(const MemberPage()).then((_) => read()), icon: const Icon(Icons.person_add_alt_1_outlined), label: Text(U.s.addItem(U.s.teamMember))).help("app.team.add") : null,
     body: AppStateView(
       state: state,
       onRetry: read,

@@ -87,7 +87,7 @@ class _HotelReservationPageState extends State<HotelReservationPage> {
   @override
   Widget build(BuildContext context) => UScaffold(
     appBar: AppBar(
-      title: Text(r?.jsonData.reservationCode ?? U.s.booking).help("app.hotelBooking.page", inline: true),
+      title: Text(r?.jsonData.reservationCode ?? U.s.reservation).help("app.hotelBooking.page", inline: true),
       actions: <Widget>[
         if (r != null && CustomersPage.allowed)
           IconButton(
@@ -147,11 +147,11 @@ class _HotelReservationPageState extends State<HotelReservationPage> {
                   if (!has(TagHotelReservation.cancelled) && !has(TagHotelReservation.checkedOut)) UButton(title: U.s.addToBill, type: UButtonType.outlined, onTap: _charge),
                   if (has(TagHotelReservation.pending) || has(TagHotelReservation.confirmed))
                     UButton(
-                      title: U.s.cancelBooking,
+                      title: U.s.cancelReservation,
                       type: UButtonType.outlined,
                       foregroundColor: scheme.error,
                       onTap: () async {
-                        if (await UNavigator.confirmAsync(title: U.s.cancelBooking, message: U.s.areYouSure, destructive: true)) await _do(UServices.hotel.cancelHotelReservation(p: UIdParams(id: x.id)));
+                        if (await UNavigator.confirmAsync(title: U.s.cancelReservation, message: U.s.areYouSure, destructive: true)) await _do(UServices.hotel.cancelHotelReservation(p: UIdParams(id: x.id)));
                       },
                     ),
                 ],

@@ -131,7 +131,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                     children: <Widget>[
                       const Icon(Icons.account_balance_wallet_outlined, size: 16, color: AppColors.onGradient),
                       const SizedBox(width: 6),
-                      UTextBodySmall("${U.s.walletBalance}: ${money(balance)}", color: AppColors.onGradient, expanded: 1),
+                      UTextBodySmall("${U.s.itemBalance(U.s.wallet)}: ${money(balance)}", color: AppColors.onGradient, expanded: 1),
                       UButton(title: U.s.wallet, type: UButtonType.text, foregroundColor: AppColors.onGradient, onTap: () => UNavigator.push(const WalletPage())),
                     ],
                   ),

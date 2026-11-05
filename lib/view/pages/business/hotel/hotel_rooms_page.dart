@@ -106,12 +106,12 @@ class _HotelRoomsPageState extends State<HotelRoomsPage> {
             Expanded(child: UTextField(controller: quantity, labelText: U.s.howManyRooms, keyboardType: TextInputType.number)),
           ],
         ),
-        AppMoneyField(controller: price, label: U.s.pricePerNight),
+        AppMoneyField(controller: price, label: U.s.pricePerItem(U.s.night)),
         UTextField(controller: numbers, labelText: U.s.roomNumbers, hintText: U.s.forExample101To104).help("app.hotelRooms.numbers"),
         URow(
           spacing: 10,
           children: <Widget>[
-            Expanded(child: UTextField(controller: bed, labelText: U.s.bedType)),
+            Expanded(child: UTextField(controller: bed, labelText: U.s.itemType(U.s.bed))),
             Expanded(child: UTextField(controller: size, labelText: U.s.sizeInSquareMeters, keyboardType: TextInputType.number)),
             Expanded(child: UTextField(controller: floor, labelText: U.s.floor, keyboardType: TextInputType.number)),
           ],
@@ -127,7 +127,7 @@ class _HotelRoomsPageState extends State<HotelRoomsPage> {
         UTagChips<TagRoom>(title: U.s.roomView, options: TagRoom.values.group(400), tags: tags),
         UTagChips<TagRoom>(title: U.s.amenities, options: TagRoom.values.group(500), tags: tags),
         UTagChips<TagRoom>(title: U.s.policies, options: TagRoom.values.group(300), tags: tags),
-        UTextBodySmall(U.s.photos),
+        UTextBodySmall(U.s.images),
         UFilePicker.gallery(photos),
         SwitchListTile(contentPadding: EdgeInsets.zero, value: available, onChanged: (bool v) => setState(() => available = v), title: Text(U.s.openForBooking)),
       ],

@@ -83,7 +83,7 @@ class _BusinessSettingsPageState extends State<BusinessSettingsPage> {
               children: <Widget>[
                 UTextField(controller: iban, labelText: U.s.iban, validator: UValidators.iban(isRequired: false)),
                 UTextField(controller: card, labelText: U.s.cardNumber, keyboardType: TextInputType.number),
-                UTextField(controller: account, labelText: U.s.accountNumber, keyboardType: TextInputType.number),
+                UTextField(controller: account, labelText: U.s.itemNumber(U.s.account), keyboardType: TextInputType.number),
               ],
             ),
           ).help("app.businessSettings.bank").pOnly(bottom: 12),

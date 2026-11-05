@@ -69,7 +69,7 @@ class _DormRoomsPageState extends State<DormRoomsPage> {
     final List<UMediaResponse> media = (room?.media ?? <UMediaResponse>[]).sortedForGallery();
     final UFilePickerController photos = UFilePickerController.fromMedia(media);
     final bool ok = await AppForm.show(
-      title: room == null ? U.s.newRoom : "${U.s.edit} · ${room.title}",
+      title: room == null ? U.s.newItem(U.s.room) : "${U.s.edit} · ${room.title}",
       help: "app.dormRooms.form",
       onSubmit: () async {
         if (room != null) {
@@ -106,7 +106,7 @@ class _DormRoomsPageState extends State<DormRoomsPage> {
         return true;
       },
       children: (BuildContext context, StateSetter setState) => <Widget>[
-        UTextField(controller: title, labelText: U.s.roomName, hintText: U.s.forExampleRoom102, validator: UValidators.required<String>()),
+        UTextField(controller: title, labelText: U.s.itemName(U.s.room), hintText: U.s.forExampleRoom102, validator: UValidators.required<String>()),
         URow(
           spacing: 10,
           children: <Widget>[
@@ -123,7 +123,7 @@ class _DormRoomsPageState extends State<DormRoomsPage> {
         UTextField(controller: description, labelText: U.s.description, lines: 2),
         UTagChips<TagDormRoom>(title: U.s.details, options: TagDormRoom.values.group(300), tags: tags),
         UTagChips<TagDormRoom>(title: U.s.amenities, options: TagDormRoom.values.group(500), tags: tags),
-        UTextBodySmall(U.s.photos),
+        UTextBodySmall(U.s.images),
         UFilePicker.gallery(photos),
       ],
     );
@@ -141,7 +141,7 @@ class _DormRoomsPageState extends State<DormRoomsPage> {
     final List<UMediaResponse> media = (bed?.media ?? <UMediaResponse>[]).sortedForGallery();
     final UFilePickerController photos = UFilePickerController.fromMedia(media);
     final bool ok = await AppForm.show(
-      title: bed == null ? "${U.s.newBed} · ${room.title}" : "${U.s.edit} · ${bed.title}",
+      title: bed == null ? "${U.s.newItem(U.s.bed)} · ${room.title}" : "${U.s.edit} · ${bed.title}",
       onSubmit: () async {
         String? id = bed?.id;
         if (bed == null) {
@@ -162,14 +162,14 @@ class _DormRoomsPageState extends State<DormRoomsPage> {
         return true;
       },
       children: (BuildContext context, StateSetter setState) => <Widget>[
-        UTextField(controller: title, labelText: U.s.bedName, validator: UValidators.required<String>()),
+        UTextField(controller: title, labelText: U.s.itemName(U.s.bed), validator: UValidators.required<String>()),
         AppMoneyField(controller: rent, label: U.s.monthlyRent),
         AppMoneyField(controller: deposit, label: U.s.deposit, required: false),
         UTagChips<TagDormBed>(title: U.s.type, options: TagDormBed.values.group(100), tags: tags, single: true),
         UTagChips<TagDormBed>(title: U.s.bedLevel, options: TagDormBed.values.group(200), tags: tags, single: true),
         UTagChips<TagDormBed>(title: U.s.bedAmenities, options: TagDormBed.values.group(500), tags: tags),
         UTextField(controller: description, labelText: U.s.description, lines: 2),
-        UTextBodySmall(U.s.photos),
+        UTextBodySmall(U.s.images),
         UFilePicker.gallery(photos),
       ],
     );
@@ -195,13 +195,13 @@ class _DormRoomsPageState extends State<DormRoomsPage> {
               UNavigator.push(DormNewContractPage(dormId: widget.dormId, bed: bed)).then((_) => read());
             }),
             if (canEdit) ...<Widget>[
-              AppTile(icon: Icons.edit_outlined, title: U.s.editBed, onTap: () {
+              AppTile(icon: Icons.edit_outlined, title: U.s.editItem(U.s.bed), onTap: () {
                 UNavigator.back();
                 _bedForm(room, bed);
               }),
-              AppTile(icon: Icons.delete_outline_rounded, iconColor: Theme.of(context).colorScheme.error, title: U.s.deleteBed, onTap: () async {
+              AppTile(icon: Icons.delete_outline_rounded, iconColor: Theme.of(context).colorScheme.error, title: U.s.deleteItem(U.s.bed), onTap: () async {
                 UNavigator.back();
-                if (await UNavigator.confirmAsync(title: U.s.deleteBed, message: U.s.areYouSureYouWantToDelete, destructive: true) && await appSend(UServices.dorm.deleteDormBed(p: UIdParams(id: bed.id)))) await read();
+                if (await UNavigator.confirmAsync(title: U.s.deleteItem(U.s.bed), message: U.s.areYouSureYouWantToDelete, destructive: true) && await appSend(UServices.dorm.deleteDormBed(p: UIdParams(id: bed.id)))) await read();
               }),
             ],
           ],
@@ -215,7 +215,7 @@ class _DormRoomsPageState extends State<DormRoomsPage> {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     return UScaffold(
       appBar: AppBar(title: Text(U.s.roomsAndBeds).help("app.dormRooms.page", inline: true), actions: const <Widget>[UHelpActions("app.dormRooms.")]),
-      floatingActionButton: canEdit ? FloatingActionButton.extended(onPressed: _roomForm, icon: const Icon(Icons.add_rounded), label: Text(U.s.newRoom)) : null,
+      floatingActionButton: canEdit ? FloatingActionButton.extended(onPressed: _roomForm, icon: const Icon(Icons.add_rounded), label: Text(U.s.newItem(U.s.room))) : null,
       body: AppStateView(
         state: state,
         onRetry: read,
@@ -239,12 +239,12 @@ class _DormRoomsPageState extends State<DormRoomsPage> {
                               onSelected: (int v) async {
                                 if (v == 0) await _roomForm(room);
                                 if (v == 1) await _bedForm(room);
-                                if (v == 2 && await UNavigator.confirmAsync(title: U.s.deleteRoom, message: U.s.areYouSureYouWantToDelete, destructive: true) && await appSend(UServices.dorm.deleteDormRoom(p: UIdParams(id: room.id)))) await read();
+                                if (v == 2 && await UNavigator.confirmAsync(title: U.s.deleteItem(U.s.room), message: U.s.areYouSureYouWantToDelete, destructive: true) && await appSend(UServices.dorm.deleteDormRoom(p: UIdParams(id: room.id)))) await read();
                               },
                               itemBuilder: (_) => <PopupMenuEntry<int>>[
-                                PopupMenuItem<int>(value: 0, child: Text(U.s.editRoom)),
-                                PopupMenuItem<int>(value: 1, child: Text(U.s.addBed)),
-                                PopupMenuItem<int>(value: 2, child: Text(U.s.deleteRoom)),
+                                PopupMenuItem<int>(value: 0, child: Text(U.s.editItem(U.s.room))),
+                                PopupMenuItem<int>(value: 1, child: Text(U.s.addItem(U.s.bed))),
+                                PopupMenuItem<int>(value: 2, child: Text(U.s.deleteItem(U.s.room))),
                               ],
                             ),
                           ],

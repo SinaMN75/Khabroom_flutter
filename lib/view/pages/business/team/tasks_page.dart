@@ -61,7 +61,7 @@ class _TasksPageState extends State<TasksPage> {
     TagStaffTask priority = TagStaffTask.normal;
     DateTime? due;
     final bool ok = await AppForm.show(
-      title: U.s.newTask,
+      title: U.s.newItem(U.s.task),
       help: "app.tasks.form",
       onSubmit: () => appSend(
         UServices.organization.createTask(
