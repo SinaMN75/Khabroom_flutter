@@ -45,7 +45,7 @@ class _HotelAuditPageState extends State<HotelAuditPage> {
 
   Future<void> _close() async {
     if (!await UNavigator.confirmAsync(title: U.s.closeDay, message: U.s.closeTheDayExplanation)) return;
-    setState(() => busy = true);
+    if (mounted) setState(() => busy = true);
     final (UResponse<UHotelNightAuditResponse>? ok, UEmptyResponse? error, String? exception) = await UServices.hotel.closeNightAudit(p: UHotelNightAuditParams(hotelId: widget.hotelId, date: date));
     if (ok == null) UToast.error(message: error?.message ?? exception ?? U.s.error);
     if (ok != null) UToast.success(message: U.s.theDayWasClosed);

@@ -62,7 +62,7 @@ class _HotelNewReservationPageState extends State<HotelNewReservationPage> {
     final List<String> parts = name.text.trim().split(" ");
     final String? userId = await AppPeople.findOrCreate(phone: phone.text, firstName: parts.first, lastName: parts.length > 1 ? parts.sublist(1).join(" ") : null);
     if (userId == null) {
-      setState(() => busy = false);
+      if (mounted) setState(() => busy = false);
       return;
     }
     final bool ok = await appSend(

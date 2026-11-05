@@ -80,8 +80,6 @@ linter:
     avoid_print: true
     avoid_redundant_argument_values: true
     avoid_return_types_on_setters: true
-    avoid_returning_null: true
-    avoid_returning_null_for_future: true
     avoid_returning_this: true
     avoid_unnecessary_containers: true
     avoid_unused_constructor_parameters: true
@@ -91,9 +89,6 @@ linter:
     cast_nullable_to_non_nullable: true
     close_sinks: true
     control_flow_in_finally: true
-    invariant_booleans: true
-    iterable_contains_unrelated_type: true
-    list_remove_unrelated_type: true
     no_logic_in_create_state: true
     null_check_on_nullable_type_parameter: true
     prefer_const_constructors: true
@@ -111,7 +106,6 @@ linter:
     throw_in_finally: true
     type_annotate_public_apis: true
     unawaited_futures: true
-    unnecessary_await_in_return: true
     unnecessary_const: true
     unnecessary_null_checks: true
     unnecessary_nullable_for_final_variable_declarations: true

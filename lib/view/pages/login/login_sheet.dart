@@ -63,7 +63,7 @@ class _LoginSheetState extends State<LoginSheet> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
-    return Form(
+    return USubmitScope(onSubmit: () { if (!busy && !codeSent) _send(); }, child: Form(
       key: formKey,
       child: SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(20, 4, 20, 24 + MediaQuery.viewInsetsOf(context).bottom),
@@ -99,6 +99,6 @@ class _LoginSheetState extends State<LoginSheet> {
           ],
         ),
       ),
-    );
+    ));
   }
 }

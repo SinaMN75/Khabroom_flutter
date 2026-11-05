@@ -158,7 +158,7 @@ class _DormServicesPageState extends State<DormServicesPage> {
       title: U.s.newRequest,
       onSubmit: () async {
         await c.request(kind, kind.localizedTitle, from, to, visitor.text.trim().nullIfEmpty(), note.text.trim().nullIfEmpty());
-        setState(() {});
+        if (mounted) setState(() {});
         return true;
       },
       children: (BuildContext context, StateSetter setState) => <Widget>[
@@ -194,7 +194,7 @@ class _DormServicesPageState extends State<DormServicesPage> {
         final List<int> parts = time.text.trim().toLatinNumber().split(":").map((String x) => int.tryParse(x) ?? 0).toList();
         final DateTime at = DateTime(day!.year, day!.month, day!.day, parts.firstOrNull ?? 0, parts.length > 1 ? parts[1] : 0);
         await c.bookLaundry(machine, at);
-        setState(() {});
+        if (mounted) setState(() {});
         return true;
       },
       children: (BuildContext context, StateSetter setState) => <Widget>[
@@ -221,7 +221,7 @@ class _DormServicesPageState extends State<DormServicesPage> {
       onSubmit: () async {
         if (title.text.trim().isEmpty) return false;
         await c.maintenance(title.text.trim(), description.text.trim().nullIfEmpty(), urgent);
-        setState(() {});
+        if (mounted) setState(() {});
         return true;
       },
       children: (BuildContext context, StateSetter setState) => <Widget>[

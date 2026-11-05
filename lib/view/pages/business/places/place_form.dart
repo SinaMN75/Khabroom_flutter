@@ -269,7 +269,7 @@ class _PlaceFormPageState extends State<PlaceFormPage> {
   Future<void> _pickLocation() async {
     final LatLng? point = await UNavigator.push<LatLng>(LocationPickerPage(latitude: latitude, longitude: longitude));
     if (point == null) return;
-    setState(() {
+    if (mounted) setState(() {
       latitude = point.latitude;
       longitude = point.longitude;
     });

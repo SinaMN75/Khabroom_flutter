@@ -72,7 +72,7 @@ class _DormNewContractPageState extends State<DormNewContractPage> {
   Future<void> _lookup() async {
     if (phone.text.trim().length < 10) return;
     final UUserResponse? u = await AppPeople.find(phone.text);
-    setState(() {
+    if (mounted) setState(() {
       person = u;
       looked = true;
     });
@@ -87,7 +87,7 @@ class _DormNewContractPageState extends State<DormNewContractPage> {
     setState(() => busy = true);
     final String? userId = widget.userId ?? person?.id ?? await AppPeople.findOrCreate(phone: phone.text, firstName: firstName.valueOrNull(), lastName: lastName.valueOrNull());
     if (userId == null) {
-      setState(() => busy = false);
+      if (mounted) setState(() => busy = false);
       return;
     }
     final bool ok = await appSend(

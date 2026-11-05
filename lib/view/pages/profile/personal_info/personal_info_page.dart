@@ -20,7 +20,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
       padding: AppResponsive.pagePadding(context),
       child: AppContent(
         maxWidth: AppResponsive.readableMaxWidth,
-        child: Form(
+        child: USubmitScope(onSubmit: c.submit, child: Form(
           key: c.formKey,
           child: AppCard(
             child: UColumn(
@@ -45,7 +45,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
               ],
             ),
           ),
-        ),
+        )),
       ),
     ),
   );
