@@ -371,10 +371,6 @@ class _RoomTile extends StatelessWidget {
                       Icon(Icons.person_outline_rounded, size: 13, color: scheme.onSurfaceVariant),
                       const SizedBox(width: 4),
                       UTextBodySmall("${U.s.roomCapacity}: ${room.capacity.toString().toPersianNumber()}", color: scheme.onSurfaceVariant),
-                      if (room.jsonData.bedType != null) ...<Widget>[
-                        const SizedBox(width: 10),
-                        UTextBodySmall(room.jsonData.bedType!, color: scheme.onSurfaceVariant),
-                      ],
                     ],
                   ),
                 ],

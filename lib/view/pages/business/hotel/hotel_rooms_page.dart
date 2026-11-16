@@ -52,7 +52,6 @@ class _HotelRoomsPageState extends State<HotelRoomsPage> {
     final TextEditingController quantity = TextEditingController(text: room?.quantity.toString() ?? "1");
     final TextEditingController price = TextEditingController(text: rialToTomanText(room?.pricePerNight));
     final TextEditingController numbers = TextEditingController(text: room?.roomNumber);
-    final TextEditingController bed = TextEditingController(text: room?.jsonData.bedType);
     final TextEditingController description = TextEditingController(text: room?.jsonData.description);
     final TextEditingController size = TextEditingController(text: room?.jsonData.sizeSquareMeters?.toInt().toString());
     final TextEditingController floor = TextEditingController(text: room?.jsonData.floor?.toString());
@@ -76,7 +75,6 @@ class _HotelRoomsPageState extends State<HotelRoomsPage> {
           quantity: int.tryParse(quantity.numString()) ?? 1,
           isAvailable: available,
           roomNumber: numbers.text.trim(),
-          bedType: bed.text.trim(),
           description: description.text.trim(),
           sizeSquareMeters: double.tryParse(size.numString()),
           floor: int.tryParse(floor.numString()),
@@ -111,7 +109,6 @@ class _HotelRoomsPageState extends State<HotelRoomsPage> {
         URow(
           spacing: 10,
           children: <Widget>[
-            Expanded(child: UTextField(controller: bed, labelText: U.s.itemType(U.s.bed))),
             Expanded(child: UTextField(controller: size, labelText: U.s.sizeInSquareMeters, keyboardType: TextInputType.number)),
             Expanded(child: UTextField(controller: floor, labelText: U.s.floor, keyboardType: TextInputType.number)),
           ],
@@ -132,7 +129,7 @@ class _HotelRoomsPageState extends State<HotelRoomsPage> {
         SwitchListTile(contentPadding: EdgeInsets.zero, value: available, onChanged: (bool v) => setState(() => available = v), title: Text(U.s.openForBooking)),
       ],
     );
-    for (final TextEditingController c in <TextEditingController>[title, capacity, quantity, price, numbers, bed, description, size, floor, extraGuests, extraPrice]) c.dispose();
+    for (final TextEditingController c in <TextEditingController>[title, capacity, quantity, price, numbers, description, size, floor, extraGuests, extraPrice]) c.dispose();
     photos.dispose();
     if (ok) await read();
   }
